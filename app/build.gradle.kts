@@ -1,6 +1,14 @@
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id ("androidx.navigation.safeargs.kotlin")
+    id("androidx.room")
+
+   // id("com.google.gms.google-services")
 }
 
 android {
@@ -13,7 +21,11 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
+/*
+<major> : 컨셉이나 앱이 지향하는 기본 디자인이 변경된 경우 (앱의 큰틀이 변화된 경우 )
+<minor> : 기능 추가, 기능 삭제 및 사양 등이 변경된 경우
+<point> : 버그 수정,디자인 수정 등
+* */
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -47,9 +59,17 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
+    //val nav_version = rootProject.extra["nav_version"]
+    val hilt_version = rootProject.extra["hilt_version"]
+    val timber_version = rootProject.extra["timber_version"]
+    val retrofit_version = rootProject.extra["retrofit_version"]
+    val gson_version = rootProject.extra["gson_version"]
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -66,4 +86,26 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.45")
+
+    //datastore
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-core:1.0.0")
+
+    // Timber
+    implementation("com.jakewharton.timber:timber:$timber_version")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofit_version")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:$gson_version")
+
 }
