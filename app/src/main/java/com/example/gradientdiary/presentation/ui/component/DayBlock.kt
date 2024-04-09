@@ -17,7 +17,9 @@ fun DayBlock(
     day: Int
 ){
     Column(modifier = modifier) {
-        Text(text = day.toString(), style = MaterialTheme.typography.bodySmall)
+        if(day != 0) {
+            Text(text = day.toString(), style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
 
@@ -29,7 +31,7 @@ fun PreviewDayBlock() {
             repeat(7) {
                 DayBlock(
                     Modifier.padding(vertical = 15.dp, horizontal = 20.dp),
-                    it + 1
+                    it
                 )
             }
         }

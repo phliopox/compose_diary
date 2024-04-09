@@ -22,9 +22,10 @@ import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GradationDiaryScreen() {
+fun DiaryScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,25 +69,9 @@ fun GradationDiaryScreen() {
             end = 20.dp,
             bottom = innerPadding.calculateBottomPadding()
         )
-        Column(modifier = Modifier.padding(paddingValues)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    "${getMonth()}월의",
-                    style = MaterialTheme.typography.displayMedium,
-                    modifier = Modifier.padding(end = 10.dp)
-                )
-                Text("일기", style = MaterialTheme.typography.displayMedium,
-                    modifier = Modifier.padding(end = 10.dp)
-                )
-                Icon(
-                    painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
-                    contentDescription = null
-                )
-            }
-            Row {
 
-            }
-        }
+        CalendarScreen(paddingValues)
+
     }
 }
 
@@ -94,6 +79,6 @@ fun GradationDiaryScreen() {
 @Composable
 fun PreviewGradationDiary() {
     GradientDiaryTheme {
-        GradationDiaryScreen()
+        DiaryScreen()
     }
 }

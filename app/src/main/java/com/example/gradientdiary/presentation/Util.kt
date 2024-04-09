@@ -3,6 +3,8 @@ package com.example.gradientdiary.presentation
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 fun getDaysInCurrentMonth() : Int{
     // 현재 월의 일 갯수 구하기
@@ -13,6 +15,14 @@ fun getDaysInCurrentMonth() : Int{
     return daysInCurrentMonth
 }
 
+fun getFirstDayNameOfMonth():String {
+    val today = LocalDate.now()
+    val firstDayOfMonth = LocalDate.of(today.year, today.month, 1)
+    val dayOfWeek = firstDayOfMonth.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+
+    Timber.e("현재 월의 1일은 $dayOfWeek 입니다.")
+    return dayOfWeek
+}
 fun getNow(): LocalDate =  LocalDate.now()
 
 fun getMonth(): Int {
