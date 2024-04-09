@@ -23,6 +23,15 @@ fun getFirstDayNameOfMonth():String {
     Timber.e("현재 월의 1일은 $dayOfWeek 입니다.")
     return dayOfWeek
 }
+fun getBlankCountOfMonth():Int {
+    val today = LocalDate.now()
+    val firstDayOfMonth = LocalDate.of(today.year, today.month, 1)
+    val blankCount = firstDayOfMonth.dayOfWeek.value
+
+    Timber.e("달력 블럭을 비워야할 blank day는 $blankCount 개 입니다")
+    return blankCount
+}
+
 fun getNow(): LocalDate =  LocalDate.now()
 
 fun getMonth(): Int {
