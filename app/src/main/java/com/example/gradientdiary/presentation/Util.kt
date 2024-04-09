@@ -6,6 +6,9 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
+fun getNow(): LocalDate =  LocalDate.now()
+
+
 fun getDaysInCurrentMonth() : Int{
     // 현재 월의 일 갯수 구하기
     val currentYearMonth = YearMonth.now()
@@ -16,7 +19,7 @@ fun getDaysInCurrentMonth() : Int{
 }
 
 fun getFirstDayNameOfMonth():String {
-    val today = LocalDate.now()
+    val today = getNow()
     val firstDayOfMonth = LocalDate.of(today.year, today.month, 1)
     val dayOfWeek = firstDayOfMonth.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
 
@@ -24,7 +27,7 @@ fun getFirstDayNameOfMonth():String {
     return dayOfWeek
 }
 fun getBlankCountOfMonth():Int {
-    val today = LocalDate.now()
+    val today = getNow()
     val firstDayOfMonth = LocalDate.of(today.year, today.month, 1)
     val blankCount = firstDayOfMonth.dayOfWeek.value
 
@@ -32,7 +35,6 @@ fun getBlankCountOfMonth():Int {
     return blankCount
 }
 
-fun getNow(): LocalDate =  LocalDate.now()
 
 fun getMonth(): Int {
     return getNow().monthValue
