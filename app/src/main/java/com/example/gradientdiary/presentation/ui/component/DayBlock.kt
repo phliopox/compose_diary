@@ -15,7 +15,7 @@ import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 fun DayBlock(
     modifier: Modifier,
     day: Int
-) {
+){
     Column(modifier = modifier) {
         Text(text = day.toString(), style = MaterialTheme.typography.bodySmall)
     }
