@@ -33,16 +33,8 @@ fun getBlankCountOfMonth():Int {
 }
 
 fun getNow(): LocalDate =  LocalDate.now()
+fun getMonth(): Int  = getNow().monthValue
+fun getYear() : Int = getNow().year
+fun getDay() : Int = getNow().dayOfMonth
 
-fun getMonth(): Int {
-    return getNow().monthValue
-}
-
-fun getYear() : Int{
-    return getNow().year
-}
-
-fun getDay() : Int{
-    return getNow().dayOfMonth
-}
 
