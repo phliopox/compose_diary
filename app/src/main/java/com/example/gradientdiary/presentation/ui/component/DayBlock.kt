@@ -27,14 +27,13 @@ fun DayBlock(
 ) {
     val day1 = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
-        modifier = Modifier.size(50.dp, 60.dp),
+        modifier = Modifier.size(50.dp, 70.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            //modifier = Modifier.fillMaxSize(),
             text = day1,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
     }

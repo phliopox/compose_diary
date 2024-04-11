@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,16 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
 import com.example.gradientdiary.presentation.getDaysInCurrentMonth
 import com.example.gradientdiary.presentation.getMonth
+import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 
-val dayName = listOf("일","월","화","수","목","금","토")
+val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
+
 @Composable
-fun CalendarScreen(paddingValues : PaddingValues) {
+fun CalendarScreen(paddingValues: PaddingValues) {
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -30,7 +35,8 @@ fun CalendarScreen(paddingValues : PaddingValues) {
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(end = 10.dp)
             )
-            Text("일기", style = MaterialTheme.typography.displayMedium,
+            Text(
+                "일기", style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(end = 10.dp)
             )
             Icon(
@@ -38,8 +44,15 @@ fun CalendarScreen(paddingValues : PaddingValues) {
                 contentDescription = null
             )
         }
-        Row {
-            dayName.forEach { Text(text = it, style = MaterialTheme.typography.titleMedium) }
+        Row(modifier = Modifier.padding(top = 30.dp)) {
+            dayName.forEach {
+                Text(
+                    text = it,
+                    modifier = Modifier.width(50.dp),
+                    style = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         CustomCalendarView()

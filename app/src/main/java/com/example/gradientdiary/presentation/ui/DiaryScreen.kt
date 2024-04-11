@@ -29,7 +29,7 @@ fun DiaryScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { /*TODO*/ },
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = { }) {
                         Icon(
