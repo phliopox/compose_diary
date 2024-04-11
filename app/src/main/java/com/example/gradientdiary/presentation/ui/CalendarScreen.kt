@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,12 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
 import com.example.gradientdiary.presentation.getDaysInCurrentMonth
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.theme.DefaultText
+import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
@@ -33,22 +32,22 @@ fun CalendarScreen(paddingValues: PaddingValues) {
             Text(
                 "${getMonth()}월의",
                 style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(end = 10.dp)
+                modifier = Modifier.padding(end = Paddings.large)
             )
             Text(
                 "일기", style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(end = 10.dp)
+                modifier = Modifier.padding(end = Paddings.large)
             )
             Icon(
                 painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
                 contentDescription = null
             )
         }
-        Row(modifier = Modifier.padding(top = 30.dp)) {
+        Row(modifier = Modifier.padding(top = Paddings.extra3)) {
             dayName.forEach {
                 Text(
                     text = it,
-                    modifier = Modifier.width(50.dp),
+                    modifier = Modifier.width(Paddings.xxextra),
                     style = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
                     textAlign = TextAlign.Center
                 )
