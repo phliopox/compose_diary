@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
+import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
 
@@ -64,15 +65,15 @@ fun WriteScreen() {
                 onValueChange = { newText ->
                     text = newText
                 },
-                 modifier = Modifier
-                     .fillMaxSize(),
-                textStyle = MaterialTheme.typography.labelSmall,
+                modifier = Modifier
+                    .fillMaxSize(),
+                textStyle = MaterialTheme.typography.titleMedium.copy(DefaultText),
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = Modifier
                             .background(Color.White)
                             .padding(
-                                horizontal = Paddings.xlarge,
+                                horizontal = Paddings.extra,
                                 vertical = Paddings.medium
                             ), // inner padding
                     ) {
@@ -81,7 +82,12 @@ fun WriteScreen() {
                 }
             )
         }
-        Row(modifier = Modifier.height(30.dp).fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .height(30.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
                 contentDescription = null
