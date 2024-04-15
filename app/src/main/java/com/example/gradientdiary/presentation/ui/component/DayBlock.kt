@@ -1,5 +1,6 @@
 package com.example.gradientdiary.presentation.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,16 +18,23 @@ import com.example.gradientdiary.presentation.ui.CustomCalendarView
 
 @Composable
 fun DayBlock(
-    day: Int
+    day: Int,
+    dayClick :(Int)-> Unit
 ) {
-    val day1 = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
+    val dayText = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
-        modifier = Modifier.size(Paddings.xxextra, Paddings.xxextra7),
+        modifier = Modifier
+            .size(Paddings.xxextra, Paddings.xxextra7)
+            .clickable {
+                if(day>0) {
+                    dayClick(day)
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = day1,
+            text = dayText,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
@@ -41,12 +49,13 @@ fun PreviewDayBlock() {
             repeat(7) {
                 DayBlock(
                     it
-                )
+                ){
+
+                }
             }
         }
     }
 }
-
 
 
 @Preview(showBackground = true)

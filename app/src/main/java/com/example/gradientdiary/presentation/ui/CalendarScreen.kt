@@ -15,16 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
 import com.example.gradientdiary.presentation.getDaysInCurrentMonth
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.theme.DefaultText
+import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
-
 @Composable
 fun CalendarScreen(paddingValues: PaddingValues) {
     Column(modifier = Modifier.padding(paddingValues)) {
@@ -77,14 +78,20 @@ fun CustomCalendarView() {
                     if (dayIndex in 0 until daysInMonth) {
                         DayBlock(
                             day = currentDay++
-                        )
+                        ){
+
+                        }
                     } else {
                         DayBlock(
                             day = 0
-                        )
+                        ){
+
+                        }
                     }
                 }
             }
         }
     }
+
+
 }
