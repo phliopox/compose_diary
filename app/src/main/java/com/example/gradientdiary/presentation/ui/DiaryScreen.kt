@@ -16,7 +16,10 @@ import com.example.gradientdiary.presentation.theme.Paddings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryScreen() {
+fun DiaryScreen(
+    handleClickAddDiaryButton : () -> Unit,
+    handleClickCalendarColumn : () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,6 +73,6 @@ fun DiaryScreen() {
 @Composable
 fun PreviewGradationDiary() {
     GradientDiaryTheme {
-        DiaryScreen()
+        DiaryScreen({},{})
     }
 }
