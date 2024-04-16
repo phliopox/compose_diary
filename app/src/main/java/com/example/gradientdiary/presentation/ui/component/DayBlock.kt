@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
-import com.example.gradientdiary.presentation.ui.CustomCalendarView
+import com.example.gradientdiary.presentation.ui.home.CustomCalendarView
 
 @Composable
 fun DayBlock(

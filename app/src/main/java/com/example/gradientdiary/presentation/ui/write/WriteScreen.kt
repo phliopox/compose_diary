@@ -1,4 +1,4 @@
-package com.example.gradientdiary.presentation.ui
+package com.example.gradientdiary.presentation.ui.write
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

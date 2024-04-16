@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.gradientdiary.presentation.ui.home.DiaryScreen
+import com.example.gradientdiary.presentation.ui.write.WriteScreen
 
 @Composable
 fun DiaryAppNavHost(

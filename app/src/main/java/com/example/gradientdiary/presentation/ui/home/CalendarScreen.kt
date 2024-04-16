@@ -1,4 +1,4 @@
-package com.example.gradientdiary.presentation.ui
+package com.example.gradientdiary.presentation.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -24,19 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
-import com.example.gradientdiary.presentation.getDaysInCurrentMonth
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getYear
 import com.example.gradientdiary.presentation.theme.DefaultText
-import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
-import timber.log.Timber
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 

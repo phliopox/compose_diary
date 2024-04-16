@@ -1,4 +1,4 @@
-package com.example.gradientdiary.presentation.ui
+package com.example.gradientdiary.presentation.ui.home
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
