@@ -33,18 +33,18 @@ fun DiaryScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {handleClickCalendarColumn }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),
                             contentDescription = " "
                         )
                     }
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { handleClickCalendarColumn}) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),
                             contentDescription = " "
                         )
-                    }
+                        handleClickCalendarColumn  }
                     IconButton(onClick = { }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),

@@ -35,5 +35,8 @@ fun DiaryAppNavHost(
                 //tagViewModel = tagViewModel
             )
         }
+        composable(DiaryAppScreen.Write.name){
+            WriteScreen()
+        }
     }
 }

@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Greeting("Android")
                 }*/
-                DiaryScreen()
+                DiaryScreen({},{})
             }
         }
     }
