@@ -30,12 +30,9 @@ fun DayBlock(
     val dayText = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
         modifier = Modifier
-            //.size(Paddings.xxextra, Paddings.xxextra7)
             .size(dayNameWidth,Paddings.xxextra7)
-            .clickable {
-                if(day>0) {
-                    dayClick(day)
-                }
+            .clickable(day>0) {
+                dayClick(day)
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -69,6 +66,6 @@ fun PreviewDayBlock() {
 @Composable
 fun PreviewCustomCalendarView() {
     GradientDiaryTheme {
-        CustomCalendarView({})
+        CustomCalendarView(2024,4,{})
     }
 }

@@ -32,6 +32,22 @@ fun getBlankCountOfMonth():Int {
     return blankCount
 }
 
+fun getDaysInMonth(year: Int, month: Int): Int {
+    // 특정 연도와 월의 일 갯수 구하기
+    val yearMonth = YearMonth.of(year, month)
+    val daysInMonth = yearMonth.lengthOfMonth()
+    Timber.e("$year 년 $month 월의 일 갯수: $daysInMonth")
+    return daysInMonth
+}
+
+fun getBlankCountOfMonth(year: Int, month: Int): Int {
+    // 특정 연도와 월의 첫 날의 요일로부터 빈 칸의 수 구하기
+    val firstDayOfMonth = LocalDate.of(year, month, 1)
+    val blankCount = firstDayOfMonth.dayOfWeek.value
+    Timber.e("$year 년 $month 월의 빈 칸 개수: $blankCount")
+    return blankCount
+}
+
 fun getNow(): LocalDate =  LocalDate.now()
 fun getMonth(): Int  = getNow().monthValue
 fun getYear() : Int = getNow().year
