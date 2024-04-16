@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.CustomCalendarView
@@ -21,10 +23,15 @@ fun DayBlock(
     day: Int,
     dayClick :(Int)-> Unit
 ) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
+    val dayNameWidth = availableWidth / 7
+
     val dayText = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
         modifier = Modifier
-            .size(Paddings.xxextra, Paddings.xxextra7)
+            //.size(Paddings.xxextra, Paddings.xxextra7)
+            .size(dayNameWidth,Paddings.xxextra7)
             .clickable {
                 if(day>0) {
                     dayClick(day)
@@ -62,6 +69,6 @@ fun PreviewDayBlock() {
 @Composable
 fun PreviewCustomCalendarView() {
     GradientDiaryTheme {
-        CustomCalendarView()
+        CustomCalendarView({})
     }
 }

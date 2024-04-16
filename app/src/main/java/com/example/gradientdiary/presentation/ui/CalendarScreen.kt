@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
 import com.example.gradientdiary.presentation.getDaysInCurrentMonth
@@ -26,8 +28,17 @@ import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
+
 @Composable
-fun CalendarScreen(paddingValues: PaddingValues) {
+fun CalendarScreen(
+    paddingValues: PaddingValues,
+    handleClickAddDiaryButton: () -> Unit,
+    handleClickCalendarColumn: () -> Unit
+) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
+    val dayNameWidth = availableWidth / 7
+
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -44,24 +55,33 @@ fun CalendarScreen(paddingValues: PaddingValues) {
                 contentDescription = null
             )
         }
-        Row(modifier = Modifier.padding(top = Paddings.extra3)) {
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Paddings.extra3),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             dayName.forEach {
                 Text(
                     text = it,
-                    modifier = Modifier.width(Paddings.xxextra),
+                    modifier = Modifier.width(dayNameWidth),
                     style = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
                     textAlign = TextAlign.Center
                 )
             }
         }
 
-        CustomCalendarView()
+        CustomCalendarView(
+            handleClickCalendarColumn
+        )
 
     }
 }
 
 @Composable
-fun CustomCalendarView() {
+fun CustomCalendarView(handleClickCalendarColumn: () -> Unit) {
     val daysInMonth = getDaysInCurrentMonth()
     val blankCount = getBlankCountOfMonth()
 
@@ -78,15 +98,13 @@ fun CustomCalendarView() {
                     if (dayIndex in 0 until daysInMonth) {
                         DayBlock(
                             day = currentDay++
-                        ){
-
+                        ) {
+                            handleClickCalendarColumn()
                         }
                     } else {
                         DayBlock(
                             day = 0
-                        ){
-
-                        }
+                        ) {}
                     }
                 }
             }

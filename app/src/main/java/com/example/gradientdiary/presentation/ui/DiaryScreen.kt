@@ -17,8 +17,8 @@ import com.example.gradientdiary.presentation.theme.Paddings
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen(
-    handleClickAddDiaryButton : () -> Unit,
-    handleClickCalendarColumn : () -> Unit
+    handleClickAddDiaryButton: () -> Unit,
+    handleClickCalendarColumn: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -33,18 +33,18 @@ fun DiaryScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {handleClickCalendarColumn }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),
                             contentDescription = " "
                         )
                     }
-                    IconButton(onClick = { handleClickCalendarColumn}) {
+                    IconButton(onClick = { }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),
                             contentDescription = " "
                         )
-                        handleClickCalendarColumn  }
+                    }
                     IconButton(onClick = { }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_view_day_24),
@@ -59,12 +59,12 @@ fun DiaryScreen(
     ) { innerPadding ->
         val paddingValues = PaddingValues(
             start = Paddings.extra,
-            top = innerPadding.calculateTopPadding()+Paddings.extra,
+            top = innerPadding.calculateTopPadding() + Paddings.extra,
             end = Paddings.extra,
             bottom = innerPadding.calculateBottomPadding()
         )
 
-        CalendarScreen(paddingValues)
+        CalendarScreen(paddingValues, handleClickAddDiaryButton, handleClickCalendarColumn)
 
     }
 }
@@ -73,6 +73,6 @@ fun DiaryScreen(
 @Composable
 fun PreviewGradationDiary() {
     GradientDiaryTheme {
-        DiaryScreen({},{})
+        DiaryScreen({}, {})
     }
 }
