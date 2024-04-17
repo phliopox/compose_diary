@@ -136,72 +136,29 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> U
     Column {
         val totalWeeks =
             (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
-        repeat(totalWeeks) { rowIndex ->
+        repeat(totalWeeks) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                repeat(7) { columnIndex ->
-                    if (blankCount >= 0) {
-                        repeat(blankCount) {
-                            DayBlock(
-                                day = 0
-                            ) {}
-                        }
+                var count = 0
+                repeat(7) {
+                    if (blankCount > 0) {
+                        // 1일이 일요일이 아닐 경우 그 수만큼 빈 블록을 추가
+                        DayBlock(day = 0) {}
                         blankCount--
-                    } else {
-                        DayBlock(
-                            day = if (currentDay <= daysInMonth) currentDay++ else 0
-                        ) {
+                        count++
+                    } else if (currentDay <= daysInMonth) {
+                        // 실제 날짜를 추가
+                        DayBlock(day = currentDay++) {
                             handleClickCalendarColumn()
                         }
-
-                        /*   val dayIndex = rowIndex * 7 + columnIndex - firstDayOfWeek // 첫째날 이전의 빈 칸을 0으로 채움
-                    if (dayIndex in 0 until daysInMonth) {
-                        DayBlock(
-                            day = currentDay++
-                        ) {
-                            handleClickCalendarColumn()
-                        }
-                    } else {
-                        DayBlock(
-                            day = 0
-                        ) {}
-                    }*/
+                        count++
                     }
+                }
+                // 남은 요일이 있을 경우 빈 블록을 추가
+                repeat(7 - count) {
+                    DayBlock(day = 0) {}
                 }
             }
         }
     }
 }
-/*
-@Composable
-fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> Unit) {
-    val daysInMonth = getDaysInMonth(year, month)
-    val blankCount = getBlankCountOfMonth(year, month)
 
-    var currentDay = 1
-
-
-    Column {
-        val totalWeeks =
-            (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
-        repeat(totalWeeks) { rowIndex ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                repeat(7) { columnIndex ->
-                    val dayIndex = rowIndex * 7 + columnIndex - blankCount
-                    if (dayIndex in 0 until daysInMonth) {
-                        DayBlock(
-                            day = currentDay++
-                        ) {
-                            handleClickCalendarColumn()
-                        }
-                    } else {
-                        DayBlock(
-                            day = 0
-                        ) {}
-                    }
-                }
-            }
-        }
-    }
-
-
-}*/
