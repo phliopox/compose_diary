@@ -3,14 +3,21 @@ package com.example.gradientdiary.presentation.ui.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,11 +35,13 @@ import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getBlankCountOfMonth
 import com.example.gradientdiary.presentation.getDaysInMonth
+import com.example.gradientdiary.presentation.getFirstDayOfWeek
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getYear
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
+import timber.log.Timber
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -65,8 +74,6 @@ fun CalendarScreen(
                 contentDescription = null
             )
         }
-
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,25 +90,88 @@ fun CalendarScreen(
             }
         }
         // Display 10 items
-        val pagerState = rememberPagerState(getMonth()-1)
-        VerticalPager(
-            modifier = Modifier.fillMaxSize(),
-            pageCount = 12,
-            state = pagerState
-        ) { page ->
-            val currentMonth = pagerState.currentPage+1
-            CustomCalendarView(
-                year,
-                currentMonth,
-                handleClickCalendarColumn
-            )
-            if (pagerState.currentPage != page) {
-                month = currentMonth
+        val pagerState = rememberPagerState(getMonth() - 1)
+        Column(
+            modifier = Modifier.weight(0.6f),
+            verticalArrangement = Arrangement.Top
+        ) {
+            VerticalPager(
+                pageCount = 12,
+                contentPadding = PaddingValues(bottom = 50.dp),
+                //   pageSize = PageSize.Fixed(100.dp),
+                state = pagerState
+            ) { page ->
+                val currentMonth = pagerState.currentPage + 1
+                CustomCalendarView(
+                    year,
+                    currentMonth,
+                    handleClickCalendarColumn
+                )
+                if (pagerState.currentPage != page) {
+                    month = currentMonth
+                }
             }
+        }
+        //다이어리 작성 btn
+        Column(
+            modifier = Modifier
+                .weight(0.2f)
+                .fillMaxWidth()
+                .padding(bottom = Paddings.extra3),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("dddddd")
         }
     }
 }
 
+@Composable
+fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> Unit) {
+    val daysInMonth = getDaysInMonth(year, month)
+    val firstDayOfWeek = getFirstDayOfWeek(year, month) // 해당 월의 첫째날의 요일을 가져옴
+    var blankCount = if (firstDayOfWeek == 7) 0 else firstDayOfWeek
+    var currentDay = 1
+    Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
+    Column {
+        val totalWeeks =
+            (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
+        repeat(totalWeeks) { rowIndex ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                repeat(7) { columnIndex ->
+                    if (blankCount >= 0) {
+                        repeat(blankCount) {
+                            DayBlock(
+                                day = 0
+                            ) {}
+                        }
+                        blankCount--
+                    } else {
+                        DayBlock(
+                            day = if (currentDay <= daysInMonth) currentDay++ else 0
+                        ) {
+                            handleClickCalendarColumn()
+                        }
+
+                        /*   val dayIndex = rowIndex * 7 + columnIndex - firstDayOfWeek // 첫째날 이전의 빈 칸을 0으로 채움
+                    if (dayIndex in 0 until daysInMonth) {
+                        DayBlock(
+                            day = currentDay++
+                        ) {
+                            handleClickCalendarColumn()
+                        }
+                    } else {
+                        DayBlock(
+                            day = 0
+                        ) {}
+                    }*/
+                    }
+                }
+            }
+        }
+    }
+}
+/*
 @Composable
 fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> Unit) {
     val daysInMonth = getDaysInMonth(year, month)
@@ -134,4 +204,4 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> U
     }
 
 
-}
+}*/

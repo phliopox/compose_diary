@@ -26,8 +26,8 @@ fun DayBlock(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
     val dayNameWidth = availableWidth / 7
-
-    val dayText = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
+//day != 0 &&
+    val dayText = if ( day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
         modifier = Modifier
             .size(dayNameWidth, Paddings.xxextra7)
