@@ -97,18 +97,19 @@ fun CalendarScreen(
         ) {
             VerticalPager(
                 pageCount = 12,
-                contentPadding = PaddingValues(bottom = 50.dp),
-                //   pageSize = PageSize.Fixed(100.dp),
                 state = pagerState
             ) { page ->
-                val currentMonth = pagerState.currentPage + 1
-                CustomCalendarView(
-                    year,
-                    currentMonth,
-                    handleClickCalendarColumn
-                )
-                if (pagerState.currentPage != page) {
-                    month = currentMonth
+                Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxSize()) {
+                    val currentMonth = pagerState.currentPage + 1
+
+                    CustomCalendarView(
+                        year,
+                        currentMonth,
+                        handleClickCalendarColumn
+                    )
+                    if (pagerState.currentPage != page) {
+                        month = currentMonth
+                    }
                 }
             }
         }
@@ -132,10 +133,11 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> U
     val firstDayOfWeek = getFirstDayOfWeek(year, month) // 해당 월의 첫째날의 요일을 가져옴
     var blankCount = if (firstDayOfWeek == 7) 0 else firstDayOfWeek
     var currentDay = 1
-    Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
-    Column {
+    Column() {
         val totalWeeks =
             (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
+        Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
+        Timber.e("totalWeeks : $totalWeeks")
         repeat(totalWeeks) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 var count = 0

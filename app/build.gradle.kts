@@ -31,13 +31,24 @@ android {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        create("release") {
+            // 서명 구성 정보를 입력합니다.
+            storeFile = file("D:\\jeong\\gradientDiary\\appkey.jks")
+            storePassword = "Wwjdgus11!"
+            keyAlias = "key0"
+            keyPassword = "Wwjdgus11!"
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -59,9 +70,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
+
 }
 
 dependencies {
