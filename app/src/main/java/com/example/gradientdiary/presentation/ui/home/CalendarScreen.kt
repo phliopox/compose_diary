@@ -89,7 +89,6 @@ fun CalendarScreen(
                 )
             }
         }
-        // Display 10 items
         val pagerState = rememberPagerState(getMonth() - 1)
         Column(
             modifier = Modifier.weight(0.6f),
