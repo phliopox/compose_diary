@@ -14,7 +14,10 @@ fun DiaryApp() {
     val navController = rememberNavController()
     GradientDiaryTheme {
         Scaffold() {
-            DiaryAppNavHost(navController = navController)
+            DiaryAppNavHost(
+                navController = navController
+
+            )
         }
     }
 }

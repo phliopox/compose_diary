@@ -9,6 +9,7 @@ buildscript{
         //set("lifecycle_version", "2.6.1")
         set("retrofit_version", "2.9.0")
         set("gson_version", "2.10.1")
+        set("room_version" , "2.6.0")
        // set("compose_ui_version", "1.3.2")
        // set("activity_compose_version", "1.6.1")
        // set("compose_material_version", "1.0.1")

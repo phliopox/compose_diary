@@ -82,7 +82,19 @@ fun WriteScreen() {
                  modifier = Modifier.fillMaxSize(),
                  textStyle = MaterialTheme.typography.titleMedium.copy(DefaultText),
                  onValueChange = { newText -> text = newText })*/
-               BasicTextField(
+            /* decorationBox = { innerTextField ->
+                 Box(
+                     modifier = Modifier
+                         .background(Color.White)
+                 ) {
+                 뒤로가기 종료 , finish 호출 시 허ㅏ면 회저===허내싨 @@@
+
+
+
+v\;yfkdif yjpkforgo ryif ofgklf;flekfle;                     innerTextField()
+                 }
+             }*/
+            BasicTextField(
                    value = text,
                    onValueChange = { newText ->
                        text = newText
@@ -94,14 +106,6 @@ fun WriteScreen() {
                            horizontal = Paddings.extra,
                            vertical = Paddings.large
                        ),
-                  /* decorationBox = { innerTextField ->
-                       Box(
-                           modifier = Modifier
-                               .background(Color.White)
-                       ) {
-                           innerTextField()
-                       }
-                   }*/
                )
         }
 

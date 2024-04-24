@@ -7,6 +7,7 @@ plugins {
     id("kotlin-kapt")
     id ("androidx.navigation.safeargs.kotlin")
     id("androidx.room")
+    id ("kotlin-parcelize")
 
    // id("com.google.gms.google-services")
 }
@@ -83,6 +84,7 @@ dependencies {
     val timber_version = rootProject.extra["timber_version"]
     val retrofit_version = rootProject.extra["retrofit_version"]
     val gson_version = rootProject.extra["gson_version"]
+    val room_version = rootProject.extra["room_version"]
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -113,6 +115,12 @@ dependencies {
     //datastore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.datastore:datastore-core:1.0.0")
+
+    //room
+    implementation ("androidx.room:room-runtime:$room_version")
+    kapt ("androidx.room:room-compiler:$room_version")
+    implementation ("androidx.room:room-rxjava3:$room_version")
+
 
     // Timber
     implementation("com.jakewharton.timber:timber:$timber_version")
