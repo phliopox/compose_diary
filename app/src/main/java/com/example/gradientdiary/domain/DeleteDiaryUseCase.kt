@@ -6,5 +6,5 @@ import com.example.gradientdiary.data.repository.DiaryAppRepository
 class DeleteDiaryUseCase(
     private val appRepository: DiaryAppRepository
 ) {
-    operator fun invoke(diaryEntity: DiaryEntity) = appRepository.deleteDairy(diaryEntity)
+    operator fun invoke(diaryEntity: DiaryEntity) = appRepository.deleteDiary(diaryEntity)
 }

@@ -6,5 +6,5 @@ import com.example.gradientdiary.data.repository.DiaryAppRepository
 class SaveDiaryUseCase(
     private val appRepository: DiaryAppRepository
 ) {
-    operator fun invoke(diaryEntity: DiaryEntity) = appRepository.insertDairy(diaryEntity)
+    operator fun invoke(diaryEntity: DiaryEntity) = appRepository.insertDiary(diaryEntity)
 }

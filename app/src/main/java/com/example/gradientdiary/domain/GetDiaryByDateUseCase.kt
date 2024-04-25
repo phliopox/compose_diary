@@ -1,9 +1,10 @@
 package com.example.gradientdiary.domain
 
 import com.example.gradientdiary.data.repository.DiaryAppRepository
+import java.time.LocalDate
 
-class GetDiaryUseCase(
+class GetDiaryByDateUseCase(
     private val appRepository: DiaryAppRepository
 ) {
-    operator fun invoke() = appRepository.getAllDiary()
+    operator fun invoke(date : LocalDate) = appRepository.getDiaryByDate(date)
 }

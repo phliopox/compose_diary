@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import com.example.gradientdiary.data.database.entity.CategoryEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 @Dao
@@ -14,8 +15,9 @@ abstract class CategoryDao {
     abstract fun insertCategoryEntity(category: CategoryEntity)
 
     @Query("select * from CategoryEntity")
-    abstract fun getAllCategory(): StateFlow<List<CategoryEntity>>
+    abstract fun getAllCategory(): Flow<List<CategoryEntity>>
 
     @Delete
     abstract fun deleteCategory(categoryEntity: CategoryEntity)
+
 }
