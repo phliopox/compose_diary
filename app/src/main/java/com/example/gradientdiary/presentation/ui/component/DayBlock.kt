@@ -21,7 +21,7 @@ import com.example.gradientdiary.presentation.ui.home.CustomCalendarView
 @Composable
 fun DayBlock(
     day: Int,
-    dayClick: (Int) -> Unit
+    dayClick: (String) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
@@ -32,7 +32,8 @@ fun DayBlock(
         modifier = Modifier
             .size(dayNameWidth, Paddings.xxextra7)
             .clickable(day > 0) {
-                dayClick(day)
+                val dayString = if(day<10){ "0$day" }else day.toString()
+                dayClick(dayString)
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

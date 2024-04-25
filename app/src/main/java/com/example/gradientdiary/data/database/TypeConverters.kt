@@ -3,6 +3,7 @@ package com.example.gradientdiary.data.database
 import androidx.room.TypeConverter
 import com.example.gradientdiary.data.database.entity.ContentEntity
 import com.example.gradientdiary.data.database.entity.ContentType
+import com.example.gradientdiary.presentation.dateToLocalDate
 import com.google.gson.Gson
 import java.time.LocalDate
 import java.util.Date
@@ -43,6 +44,6 @@ class TypeConverters {
     }
     @TypeConverter
     fun stringToDate(dateString : String) : LocalDate{
-        return LocalDate.parse(dateString)
+        return dateToLocalDate(dateString)
     }
 }

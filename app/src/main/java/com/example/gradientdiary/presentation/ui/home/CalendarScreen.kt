@@ -50,7 +50,7 @@ val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 fun CalendarScreen(
     paddingValues: PaddingValues,
     handleClickAddDiaryButton: () -> Unit,
-    handleClickCalendarColumn: () -> Unit
+    handleClickCalendarColumn: (String) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
@@ -127,7 +127,7 @@ fun CalendarScreen(
 }
 
 @Composable
-fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> Unit) {
+fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: (String) -> Unit) {
     val daysInMonth = getDaysInMonth(year, month)
     val firstDayOfWeek = getFirstDayOfWeek(year, month) // 해당 월의 첫째날의 요일을 가져옴
     var blankCount = if (firstDayOfWeek == 7) 0 else firstDayOfWeek
@@ -148,8 +148,9 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: () -> U
                         count++
                     } else if (currentDay <= daysInMonth) {
                         // 실제 날짜를 추가
-                        DayBlock(day = currentDay++) {
-                            handleClickCalendarColumn()
+                        DayBlock(day = currentDay++) {clickedDay->
+                            val monthString = if(month<10) "0$month" else month
+                            handleClickCalendarColumn("$year$monthString$clickedDay")
                         }
                         count++
                     }

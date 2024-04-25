@@ -4,6 +4,7 @@ import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -59,3 +60,7 @@ fun getYear() : Int = getNow().year
 fun getDay() : Int = getNow().dayOfMonth
 
 
+fun dateToLocalDate(dateString : String):LocalDate{
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    return LocalDate.parse(dateString,dateFormatter)
+}

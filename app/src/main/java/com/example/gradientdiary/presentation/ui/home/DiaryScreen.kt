@@ -18,7 +18,7 @@ import com.example.gradientdiary.presentation.theme.Paddings
 @Composable
 fun DiaryScreen(
     handleClickAddDiaryButton: () -> Unit,
-    handleClickCalendarColumn: () -> Unit
+    handleClickCalendarColumn: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -64,7 +64,9 @@ fun DiaryScreen(
             bottom = innerPadding.calculateBottomPadding()
         )
 
-        CalendarScreen(paddingValues, handleClickAddDiaryButton, handleClickCalendarColumn)
+        CalendarScreen(paddingValues,
+            handleClickAddDiaryButton,
+            handleClickCalendarColumn)
 
     }
 }

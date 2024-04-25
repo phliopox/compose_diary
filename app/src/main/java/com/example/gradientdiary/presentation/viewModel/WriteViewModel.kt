@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -25,28 +26,21 @@ class WriteViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _diary = MutableStateFlow<DiaryEntity?>(null)
-    var diary : StateFlow<DiaryEntity?> = _diary
+    var diary: StateFlow<DiaryEntity?> = _diary
 
-   // var content = emptyList<ContentEntity>()
-
-    init {
-        fun getDiaryByDate(date: LocalDate) {
-            viewModelScope.launch {
-                getDiaryByDateUseCase.invoke(date).collectLatest {
-                    _diary.value = it
-                }
+    // var content = emptyList<ContentEntity>()
+    fun getDiaryByDate(date: LocalDate) {
+        Timber.e("viewModel getDiaryByDate 호출")
+        viewModelScope.launch {
+            getDiaryByDateUseCase.invoke(date).collectLatest {
+                _diary.value = it
+                Timber.e("getDiaryByDate 호출 : $it")
             }
-            /*viewModelScope.launch {
-                _diary.collectLatest {
-                    it?.let {
-                        content = it.contents
-                    }
-                }
-            }*/
         }
     }
 
-    fun saveDiary(diaryEntity: DiaryEntity){
+
+    fun saveDiary(diaryEntity: DiaryEntity) {
         saveDiaryUseCase.invoke(diaryEntity)
     }
 
