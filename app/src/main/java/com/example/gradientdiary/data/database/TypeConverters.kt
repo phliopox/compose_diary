@@ -1,7 +1,7 @@
 package com.example.gradientdiary.data.database
 
 import androidx.room.TypeConverter
-import com.example.gradientdiary.data.database.entity.ContentEntity
+import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
 import com.example.gradientdiary.presentation.dateToLocalDate
 import com.google.gson.Gson
@@ -23,10 +23,10 @@ class TypeConverters {
     }
 
     @TypeConverter
-    fun contentListToContentJson(value: List<ContentEntity>?) = value?.let { Gson().toJson(it) }
+    fun contentListToContentJson(value: List<ContentBlockEntity>?) = value?.let { Gson().toJson(it) }
     @TypeConverter
     fun contentJsonToContentList(value: String?) = value?.let {
-        Gson().fromJson(value, Array<ContentEntity>::class.java).toList()
+        Gson().fromJson(value, Array<ContentBlockEntity>::class.java).toList()
     }
 
     @TypeConverter

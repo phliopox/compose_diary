@@ -85,6 +85,7 @@ dependencies {
     val retrofit_version = rootProject.extra["retrofit_version"]
     val gson_version = rootProject.extra["gson_version"]
     val room_version = rootProject.extra["room_version"]
+    val coil_version = rootProject.extra["coil_version"]
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -101,6 +102,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("io.coil-kt:coil-compose:$coil_version")
+
+
     // navigation - compose
     implementation ("androidx.navigation:navigation-compose:2.4.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-alpha03")

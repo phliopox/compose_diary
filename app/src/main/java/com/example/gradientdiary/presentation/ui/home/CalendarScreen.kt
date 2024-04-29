@@ -3,21 +3,14 @@ package com.example.gradientdiary.presentation.ui.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,11 +22,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
-import com.example.gradientdiary.presentation.getBlankCountOfMonth
+import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getFirstDayOfWeek
 import com.example.gradientdiary.presentation.getMonth
@@ -58,6 +52,10 @@ fun CalendarScreen(
     var year by remember { mutableStateOf(getYear()) }
     var month by remember { mutableStateOf(getMonth()) }
 
+    val context = LocalContext.current
+    val pref = SharedPrefsStorageProvider(context)
+    val category = pref.get() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -66,7 +64,7 @@ fun CalendarScreen(
                 modifier = Modifier.padding(end = Paddings.large)
             )
             Text(
-                "일기", style = MaterialTheme.typography.displayMedium,
+                category, style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(end = Paddings.large)
             )
             Icon(
@@ -89,13 +87,12 @@ fun CalendarScreen(
                 )
             }
         }
-        val pagerState = rememberPagerState(getMonth() - 1)
+        val pagerState = rememberPagerState(getMonth() - 1,0f) { 12 }
         Column(
             modifier = Modifier.weight(0.6f),
             verticalArrangement = Arrangement.Top
         ) {
             VerticalPager(
-                pageCount = 12,
                 state = pagerState
             ) { page ->
                 Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxSize()) {

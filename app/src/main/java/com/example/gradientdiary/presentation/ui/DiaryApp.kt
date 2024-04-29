@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
-import com.example.gradientdiary.presentation.viewModel.ContentViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

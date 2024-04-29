@@ -6,6 +6,7 @@ buildscript{
         set("nav_version", "2.5.3")
         set("hilt_version", "2.45")
         set("timber_version", "5.0.1")
+        set("coil_version", "2.5.0")
         //set("lifecycle_version", "2.6.1")
         set("retrofit_version", "2.9.0")
         set("gson_version", "2.10.1")
