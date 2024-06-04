@@ -1,22 +1,19 @@
 package com.example.gradientdiary.presentation.ui.component
 
 import android.os.Parcelable
-import android.util.Log
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
+import com.example.gradientdiary.presentation.theme.DefaultText
+import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
@@ -31,7 +28,7 @@ data class TextBlock(
     var textInputState: MutableState<String> = mutableStateOf(content)
 
     override fun isEmpty(): Boolean {
-        Timber.e("TextBlock", textInputState.value)
+        Timber.e("TextBlock isEmpty() :${textInputState.value}")
         return textInputState.value.isBlank()
     }
 
@@ -48,16 +45,13 @@ data class TextBlock(
                 textInputState.value = new
                 content = new
             },
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
             modifier = modifier
-                .fillMaxWidth(),
-           // singleLine = true,
-           /* keyBoardActions = KeyboardActions(
-                onNext = {
-                    addNextBlock(viewModel = viewModel)
-                    focusManager.moveFocus(FocusDirection.Down)
-                }
-            ),*/
-         //   keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                .fillMaxSize()
+                .padding(
+                    horizontal = Paddings.extra,
+                    vertical = Paddings.large
+                ),
         )
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
+import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.domain.DeleteDiaryUseCase
 import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
@@ -23,13 +24,18 @@ class WriteViewModel @Inject constructor(
     private val getDiaryUseCase: GetDiaryUseCase,
     private val getDiaryByDateUseCase: GetDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
+    private val storage : SharedPrefsStorageProvider
 ) : ViewModel() {
 
     private val _diary = MutableStateFlow<DiaryEntity?>(null)
     var diary: StateFlow<DiaryEntity?> = _diary
 
-    // var content = emptyList<ContentEntity>()
-    fun getDiaryByDate(date: LocalDate){
+    fun getCategory() :String {
+        // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+        return storage.get()
+    }
+
+    fun getDiaryByDate(date: LocalDate) {
         Timber.e("viewModel getDiaryByDate 호출")
         viewModelScope.launch {
             getDiaryByDateUseCase.invoke(date).collectLatest {

@@ -1,12 +1,12 @@
 package com.example.gradientdiary.presentation.theme
 
+import com.example.gradientdiary.R
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.gradientdiary.R
+import androidx.compose.ui.text.TextStyle
 
 // Set of Material typography styles to start with
 private val regular = FontFamily(Font(R.font.restart, FontWeight.Normal))/*

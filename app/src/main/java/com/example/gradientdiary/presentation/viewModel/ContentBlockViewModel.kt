@@ -6,9 +6,9 @@ import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.ImageBlock
 import com.example.gradientdiary.presentation.ui.component.TextBlock
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 
 class ContentBlockViewModel(
     initialContentBlock: List<ContentBlockEntity>
@@ -29,6 +29,7 @@ class ContentBlockViewModel(
     }
 
     fun insertTextBlock(s: String? = null) {
+        Timber.e("insertTextBlock !")
         contentBlockList.add(TextBlock(content = s ?: ""))
         focusedIndex = contentBlockList.size - 1
         _contentBlocksSource.value = contentBlockList.toList()
