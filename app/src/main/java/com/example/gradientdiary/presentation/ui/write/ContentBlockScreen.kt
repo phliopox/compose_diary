@@ -1,6 +1,8 @@
 package com.example.gradientdiary.presentation.ui.write
 
 import android.net.Uri
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -76,11 +81,20 @@ fun ContentBlocks(
 
     val scrollState = rememberScrollState()
     Timber.e("ContentBlocks : ${contents[0]}")
+    val focusRequester = remember { FocusRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
             .verticalScroll(scrollState)
+            .clickable (
+                interactionSource = interactionSource,
+                indication = null) // 클릭 효과 제거
+            {
+                focusRequester.requestFocus()// 컬럼 클릭시 textBlock 으로 focus 이동
+            }
     ) {
 
         val focusManager = LocalFocusManager.current
@@ -105,6 +119,7 @@ fun ContentBlocks(
                     }
                     true
                 }
+                .focusRequester(focusRequester)
 
               content.DrawEditableContent(modifier = modifier, viewModel = contentBlockViewModel)
         }

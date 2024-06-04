@@ -23,7 +23,7 @@ import timber.log.Timber
 data class TextBlock(
     override var seq: Long = 0,
     override var content: String
-): ContentBlock<String>() ,Parcelable{
+) : ContentBlock<String>(), Parcelable {
     @IgnoredOnParcel
     var textInputState: MutableState<String> = mutableStateOf(content)
 
@@ -39,20 +39,18 @@ data class TextBlock(
     @Composable
     override fun DrawEditableContent(modifier: Modifier, viewModel: ContentBlockViewModel) {
         val focusManager = LocalFocusManager.current
-        BasicTextField(
+        EditableText(
             value = textInputState.value,
-            onValueChange = { new ->
-                textInputState.value = new
-                content = new
-            },
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
             modifier = modifier
                 .fillMaxSize()
                 .padding(
                     horizontal = Paddings.extra,
                     vertical = Paddings.large
-                ),
-        )
+                )
+        ) { new ->
+            textInputState.value = new
+            content = new
+        }
     }
 
 
@@ -61,7 +59,6 @@ data class TextBlock(
         seq = seq,
         content = textInputState.value
     )
-
 
 
 }
