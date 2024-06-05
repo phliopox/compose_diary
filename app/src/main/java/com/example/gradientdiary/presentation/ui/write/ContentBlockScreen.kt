@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -78,7 +82,18 @@ fun ContentBlocks(
 
     val scrollState = rememberScrollState()
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
+    var isFocused by remember { mutableStateOf(false) }
+
+    // 텍스트 필드 포커스 상태에 따라 focus in/out
+    LaunchedEffect(isFocused) {
+        if (isFocused) {
+            focusRequester.requestFocus()
+        } else {
+            focusManager.clearFocus()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -90,7 +105,7 @@ fun ContentBlocks(
                 indication = null
             ) // 클릭 효과 제거
             {
-                focusRequester.requestFocus()// 컬럼 클릭시 textBlock 으로 focus 이동
+                isFocused = !isFocused
             }
     ) {
 

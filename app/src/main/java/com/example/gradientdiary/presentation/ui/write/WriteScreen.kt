@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -106,6 +107,7 @@ private fun WriteScreenContent(
     ) {
     val hint = "제목"
     var diaryTitle by rememberSaveable { mutableStateOf(hint) }
+
     //top 에 삭제버튼 추가 필요
     LaunchedEffect(key1 = diaryTitle ){
         contentBlockViewModel.title = diaryTitle

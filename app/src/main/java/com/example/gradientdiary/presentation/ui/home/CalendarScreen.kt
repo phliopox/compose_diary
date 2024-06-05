@@ -130,6 +130,7 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: (String
     var blankCount = if (firstDayOfWeek == 7) 0 else firstDayOfWeek
     var currentDay = 1
     Column() {
+        // todo 최근 조회한 월 pref 에 넣어두기
         val totalWeeks =
             (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
         Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
