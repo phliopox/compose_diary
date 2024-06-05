@@ -54,6 +54,9 @@ fun DiaryAppNavHost(
                 popUpTo(DiaryAppScreen.Home.name)
             }
         }
+        val handleBackButtonClick = {
+            navController.navigateUp()
+        }
 
         composable(DiaryAppScreen.Home.name) {
             DiaryScreen(
@@ -80,7 +83,8 @@ fun DiaryAppNavHost(
                 date,
                 content,
                 writeViewModel,
-                contentBlockViewModel.value
+                contentBlockViewModel.value,
+                handleBackButtonClick = { handleBackButtonClick() }
             )
         }
     }

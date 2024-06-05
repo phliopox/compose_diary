@@ -7,6 +7,7 @@ import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 
 abstract class ContentBlock<T> {
     open val seq : Long by lazy { seq }
+    open val title : String by lazy { title }
     open val content : T by lazy { content }
 
 /*

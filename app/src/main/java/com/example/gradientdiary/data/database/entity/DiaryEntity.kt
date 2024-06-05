@@ -9,12 +9,14 @@ data class DiaryEntity(
     @PrimaryKey(autoGenerate = true) val id :Long? = null,
     val updateDate : String,
     val contents : List<ContentBlockEntity>,
+    val title : String,
     val category : String
 ){
     fun convertToDiaryModel() = DiaryModel(
         id = id,
         updateDate = updateDate,
         contents = contents.map{it.convertToContentBlockModel()},
+        title = title,
         category = category
     )
 }

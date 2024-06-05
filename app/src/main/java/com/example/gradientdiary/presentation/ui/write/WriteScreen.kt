@@ -2,6 +2,7 @@ package com.example.gradientdiary.presentation.ui.write
 
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +41,8 @@ fun WriteScreen(
     date: String,
     content: DiaryEntity? = null,
     writeViewModel: WriteViewModel,
-    contentBlockViewModel: ContentBlockViewModel
+    contentBlockViewModel: ContentBlockViewModel,
+    handleBackButtonClick : () -> Unit
 ) {
     //var contentBlockEntityList = mutableListOf<ContentBlockEntity>()
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
@@ -51,25 +55,33 @@ fun WriteScreen(
     val outputFormat = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
     val formatDate: LocalDate = LocalDate.parse(date, inputFormat)!!
     val outputDateString: String = outputFormat.format(formatDate)
+
     val handleSaveDiary = {
+        Timber.e("save 탐 ")
+
         val newMemoModel = content?.let {
             it.copy().convertToDiaryModel().apply {
+                title = contentBlockViewModel.title
                 contents = contentsState.value
             }
         } ?: DiaryModel(
             contents = contentsState.value,
             category = writeViewModel.getCategory(),
+            title = contentBlockViewModel.title,
             updateDate = date
         )
 
         val contentsCount = contentsState.value.count {
             it.content.toString().isNotBlank() or it.content.toString().isNotEmpty()
         }
+        Timber.e("save 예정$newMemoModel")
+
         if (contentsCount > 0) {
-            writeViewModel.saveDiary(diaryModel = newMemoModel)
+        //     writeViewModel.saveDiary(diaryModel = newMemoModel)
         }
 
     }
+
     val handleAddImage = {
 
     }
@@ -80,7 +92,7 @@ fun WriteScreen(
         contentValue.value,
         contentBlockViewModel,
         handleSaveDiary,
-        //handleAddImage
+        handleBackButtonClick
     )
 }
 
@@ -89,12 +101,24 @@ private fun WriteScreenContent(
     outputDateString: String,
     contents: List<ContentBlock<*>>,
     contentBlockViewModel: ContentBlockViewModel,
-    //handleDeleteMemo: () -> Unit,
     handleSaveDiary: () -> Unit,
-) {
+    handleBackButtonClick : () ->Unit
+    ) {
     val hint = "제목"
-    var diaryTitle by remember { mutableStateOf(hint) }
+    var diaryTitle by rememberSaveable { mutableStateOf(hint) }
     //top 에 삭제버튼 추가 필요
+    LaunchedEffect(key1 = diaryTitle ){
+        contentBlockViewModel.title = diaryTitle
+    }
+    val handleBackClickSave = {
+        handleSaveDiary()
+        handleBackButtonClick()
+    }
+
+    BackHandler {
+        Timber.e("backClicked")
+        handleBackClickSave()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -112,7 +136,7 @@ private fun WriteScreenContent(
 
             EditableText(
                 value = diaryTitle,
-                hint =   hint,
+                hint = hint,
                 style = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center)
             ) {
                 diaryTitle = it
@@ -126,7 +150,6 @@ private fun WriteScreenContent(
         ) {
             ContentBlockScreen(
                 contentBlockViewModel = contentBlockViewModel,
-                handleSaveDiary,
                 contents = contents
             )
         }

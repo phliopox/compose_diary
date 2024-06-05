@@ -59,6 +59,7 @@ class WriteViewModel @Inject constructor(
             id = diaryModel.id,
             category =  diaryModel.category,
             contents = converted,
+            title = diaryModel.title,
             updateDate = diaryModel.updateDate
         )
 

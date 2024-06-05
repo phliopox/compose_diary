@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -24,7 +25,7 @@ fun EditableText(
     style: TextStyle? = null,
     onChange: (String) -> Unit
 ) {
-    var textValue by remember { mutableStateOf(value) }
+    var textValue by   rememberSaveable{ mutableStateOf(value) }
     val textStyle = style ?: MaterialTheme.typography.titleMedium.copy(color = DefaultText)
     val fieldModifier = modifier ?: Modifier
     var isFocused by remember { mutableStateOf(false) }

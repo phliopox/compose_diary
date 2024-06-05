@@ -24,6 +24,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import timber.log.Timber
@@ -31,7 +32,6 @@ import timber.log.Timber
 @Composable
 fun ColumnScope.ContentBlockScreen(
     contentBlockViewModel: ContentBlockViewModel,
-    handleSaveDiary: () -> Unit,
     contents: List<ContentBlock<*>>,
 ) {
     val handleAddImageBlock = { uri: Uri? ->
@@ -50,25 +50,22 @@ fun ColumnScope.ContentBlockScreen(
     val handleFocusedIndex = { index: Int ->
         contentBlockViewModel.focusedBlock(index = index)
     }
-    //Column(modifier = Modifier.fillMaxSize()) {
-        Column(Modifier.weight(1f)) {
-            ContentBlocks(
-                contents = contents,
-                handleDeleteBlock = handleDeleteBlock,
-                handleFocusedIndex = handleFocusedIndex,
-                contentBlockViewModel = contentBlockViewModel,
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            WriteScreenBottomBar(
-                handleAddImage = handleAddImageBlock,
-                handleSaveDiary = handleSaveDiary
-            )
-        }
-    //}
+    Column(Modifier.weight(1f)) {
+        ContentBlocks(
+            contents = contents,
+            handleDeleteBlock = handleDeleteBlock,
+            handleFocusedIndex = handleFocusedIndex,
+            contentBlockViewModel = contentBlockViewModel,
+        )
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        WriteScreenBottomBar(
+            handleAddImage = handleAddImageBlock,
+        )
+    }
 }
 
 @Composable
@@ -80,7 +77,6 @@ fun ContentBlocks(
 ) {
 
     val scrollState = rememberScrollState()
-    Timber.e("ContentBlocks : ${contents[0]}")
     val focusRequester = remember { FocusRequester() }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -89,9 +85,10 @@ fun ContentBlocks(
             .padding(16.dp)
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .clickable (
+            .clickable(
                 interactionSource = interactionSource,
-                indication = null) // 클릭 효과 제거
+                indication = null
+            ) // 클릭 효과 제거
             {
                 focusRequester.requestFocus()// 컬럼 클릭시 textBlock 으로 focus 이동
             }
@@ -121,7 +118,7 @@ fun ContentBlocks(
                 }
                 .focusRequester(focusRequester)
 
-              content.DrawEditableContent(modifier = modifier, viewModel = contentBlockViewModel)
+            content.DrawEditableContent(modifier = modifier, viewModel = contentBlockViewModel)
         }
     }
 }
@@ -129,26 +126,25 @@ fun ContentBlocks(
 @Preview(showBackground = true)
 @Composable
 fun PreviewWriteScreen2() {
-    //  GradientDiaryTheme {
-    Column(modifier = Modifier.fillMaxSize()) {
-        val sampleContents = emptyList<ContentBlock<*>>()
-        Column(Modifier.weight(1f)) {
-            ContentBlocks(
-                contents = sampleContents,
-                handleDeleteBlock = {},
-                handleFocusedIndex = {},
-                contentBlockViewModel = ContentBlockViewModel(emptyList()),
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            WriteScreenBottomBar(
-                handleAddImage = {},
-                handleSaveDiary = {}
-            )
+    GradientDiaryTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            val sampleContents = emptyList<ContentBlock<*>>()
+            Column(Modifier.weight(1f)) {
+                ContentBlocks(
+                    contents = sampleContents,
+                    handleDeleteBlock = {},
+                    handleFocusedIndex = {},
+                    contentBlockViewModel = ContentBlockViewModel(emptyList()),
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                WriteScreenBottomBar(
+                    handleAddImage = {},
+                )
+            }
         }
     }
-    //}
 }

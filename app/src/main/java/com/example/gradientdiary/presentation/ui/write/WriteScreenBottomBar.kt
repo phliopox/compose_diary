@@ -26,7 +26,6 @@ import com.example.gradientdiary.presentation.theme.Grey70
 @Composable
 fun WriteScreenBottomBar(
     handleAddImage: (Uri?) -> Unit,
-    handleSaveDiary: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Divider(
@@ -59,7 +58,7 @@ fun WriteScreenBottomBar(
         Icon(
             painterResource(id = R.drawable.baseline_check_24),
             modifier = iconModifier.clickable {
-                handleSaveDiary()
+
             },
             contentDescription = null
         )
@@ -70,6 +69,6 @@ fun WriteScreenBottomBar(
 @Composable
 fun PreviewBottomBar(){
     GradientDiaryTheme {
-        WriteScreenBottomBar({},{})
+        WriteScreenBottomBar({})
     }
 }

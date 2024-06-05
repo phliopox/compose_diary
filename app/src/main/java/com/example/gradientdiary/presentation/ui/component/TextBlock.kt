@@ -50,6 +50,8 @@ data class TextBlock(
         ) { new ->
             textInputState.value = new
             content = new
+           // viewModel.saveTextBlockContents(new)
+
         }
     }
 

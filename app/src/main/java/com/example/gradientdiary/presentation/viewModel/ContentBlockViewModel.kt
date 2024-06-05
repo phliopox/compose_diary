@@ -19,6 +19,7 @@ class ContentBlockViewModel(
     private var contentBlockList: MutableList<ContentBlock<*>> = mutableListOf()
     private var focusedIndex: Int = 0
 
+    var title = "제목"
     init {
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
@@ -33,6 +34,16 @@ class ContentBlockViewModel(
         contentBlockList.add(TextBlock(content = s ?: ""))
         focusedIndex = contentBlockList.size - 1
         _contentBlocksSource.value = contentBlockList.toList()
+    }
+
+    fun saveTextBlockContents(s : String){
+        if (focusedIndex != -1 && focusedIndex < contentBlockList.size) {
+            val block = contentBlockList[focusedIndex]
+            if (block is TextBlock) {
+                block.content = s
+                _contentBlocksSource.value = contentBlockList.toList()
+            }
+        }
     }
 
     fun changeToImageBlock(uri: Uri) {

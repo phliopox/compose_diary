@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 
 @ExperimentalAnimationApi
@@ -32,9 +34,9 @@ fun AddImageButton(
     handleAddImage: (Uri?) -> Unit
 ) {
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var showImageSelectDialog by remember { mutableStateOf(false) }
-
+    Timber.e("imageUri remember ${imageUri}")
     val snackState = remember { SnackbarHostState() }
     val snackScope = rememberCoroutineScope()
 
