@@ -32,7 +32,7 @@ class WriteViewModel @Inject constructor(
 
     fun getCategory() :String {
         // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
-        return storage.get()
+        return storage.getCategory()
     }
 
     fun getDiaryByDate(date: LocalDate) {

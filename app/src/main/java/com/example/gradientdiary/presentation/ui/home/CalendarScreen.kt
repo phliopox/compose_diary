@@ -16,7 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,7 +31,6 @@ import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getFirstDayOfWeek
 import com.example.gradientdiary.presentation.getMonth
-import com.example.gradientdiary.presentation.getYear
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
@@ -49,12 +48,17 @@ fun CalendarScreen(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
     val dayNameWidth = availableWidth / 7
-    var year by remember { mutableStateOf(getYear()) }
-    var month by remember { mutableStateOf(getMonth()) }
 
     val context = LocalContext.current
     val pref = SharedPrefsStorageProvider(context)
-    val category = pref.get() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+    val category = pref.getCategory() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+    val currentMonth = pref.getCurrentMonth()
+    val currentYear = pref.getCurrentYear()
+
+    var year by remember { mutableIntStateOf(currentYear) }
+    var month by remember { mutableIntStateOf(currentMonth) }
+
+
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -96,15 +100,17 @@ fun CalendarScreen(
                 state = pagerState
             ) { page ->
                 Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxSize()) {
-                    val currentMonth = pagerState.currentPage + 1
+                    val currentPageMonth = pagerState.currentPage + 1
+                    pref.saveCurrentMonth(currentPageMonth)
+                    pref.saveCurrentYear(year)
 
                     CustomCalendarView(
                         year,
-                        currentMonth,
+                        currentPageMonth,
                         handleClickCalendarColumn
                     )
                     if (pagerState.currentPage != page) {
-                        month = currentMonth
+                        month = currentPageMonth
                     }
                 }
             }

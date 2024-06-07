@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.gradientdiary.presentation.getMonth
+import com.example.gradientdiary.presentation.getYear
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -13,31 +15,57 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext context
 
     companion object {
         private const val PREF_CATEGORY = "category"
+        private const val PREF_CURRENT_MONTH = "currentMonth"
+        private const val PREF_CURRENT_YEAR = "currentYear"
     }
 
-    private val prefs = context.getSharedPreferences(
+    private val category = context.getSharedPreferences(
         PREF_CATEGORY, Context.MODE_PRIVATE
     )
+    private val currentMonth = context.getSharedPreferences(
+        PREF_CURRENT_MONTH,Context.MODE_PRIVATE
+    )
 
+    private val currentYear = context.getSharedPreferences(
+        PREF_CURRENT_YEAR,Context.MODE_PRIVATE
+    )
 
-    fun save(value: String): Boolean {
-        return prefs.edit().putString(PREF_CATEGORY, value).commit()
+    fun saveCategory(value: String): Boolean {
+        return category.edit().putString(PREF_CATEGORY, value).commit()
     }
 
 
-    fun get(): String {
+    fun getCategory(): String {
         val default = "일기"
-        return  prefs.getString(PREF_CATEGORY, default)?:default
+        return  category.getString(PREF_CATEGORY, default)?:default
     }
 
 
-    fun remove(): Boolean {
-        prefs.edit().remove(PREF_CATEGORY).apply()
+    fun removeCategory(): Boolean {
+        category.edit().remove(PREF_CATEGORY).apply()
         return true
     }
 
+    fun getCurrentMonth(): Int {
+        return  currentMonth.getInt(PREF_CURRENT_MONTH, getMonth())
+    }
+    fun getCurrentYear(): Int {
+        return  currentYear.getInt(PREF_CURRENT_YEAR, getYear())
+    }
 
-    fun clear() {
-        prefs.edit().clear().apply()
+    fun saveCurrentMonth(value: Int): Boolean {
+        return currentMonth.edit().putInt(PREF_CURRENT_MONTH, value).commit()
+    }
+    fun saveCurrentYear(value: Int): Boolean {
+        return currentYear.edit().putInt(PREF_CURRENT_YEAR, value).commit()
+    }
+    fun clearCurrentYearAndMonth(){
+        currentMonth.edit().clear().apply()
+        currentYear.edit().clear().apply()
+    }
+
+    fun clearAll() {
+        category.edit().clear().apply()
+        currentMonth.edit().clear().apply()
     }
 }
