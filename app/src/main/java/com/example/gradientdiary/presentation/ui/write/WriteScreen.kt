@@ -5,25 +5,31 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
@@ -45,10 +51,8 @@ fun WriteScreen(
     contentBlockViewModel: ContentBlockViewModel,
     handleBackButtonClick : () -> Unit
 ) {
-    //var contentBlockEntityList = mutableListOf<ContentBlockEntity>()
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
     val memo = writeViewModel.diary.collectAsState()
-    // var text by rememberSaveable { mutableStateOf("") }
     Timber.e("WriteScreen contentBlocks: ${contentsState.value} ")
 
 
@@ -96,7 +100,11 @@ fun WriteScreen(
         handleBackButtonClick
     )
 }
-
+@Composable
+fun keyboardAsState(): State<Boolean> {
+    val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    return rememberUpdatedState(isImeVisible)
+}
 @Composable
 private fun WriteScreenContent(
     outputDateString: String,
@@ -107,20 +115,28 @@ private fun WriteScreenContent(
     ) {
     val hint = "제목"
     var diaryTitle by rememberSaveable { mutableStateOf(hint) }
+    val isKeyboardOpen by keyboardAsState()
+    val focusManager = LocalFocusManager.current
 
     //top 에 삭제버튼 추가 필요
     LaunchedEffect(key1 = diaryTitle ){
         contentBlockViewModel.title = diaryTitle
     }
+
     val handleBackClickSave = {
         handleSaveDiary()
         handleBackButtonClick()
     }
 
+    if(!isKeyboardOpen){
+        //사용자가 키보드를 직접 내릴경우 , focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
+        focusManager.clearFocus()
+    }
     BackHandler {
-        Timber.e("backClicked")
         handleBackClickSave()
     }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
