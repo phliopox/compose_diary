@@ -35,9 +35,7 @@ fun WriteScreenBottomBar(
             .fillMaxWidth()
     )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         val iconModifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)

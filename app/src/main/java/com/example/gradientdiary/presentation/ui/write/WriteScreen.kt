@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,7 +50,7 @@ fun WriteScreen(
     content: DiaryEntity? = null,
     writeViewModel: WriteViewModel,
     contentBlockViewModel: ContentBlockViewModel,
-    handleBackButtonClick : () -> Unit
+    handleBackButtonClick: () -> Unit
 ) {
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
     val memo = writeViewModel.diary.collectAsState()
@@ -82,7 +83,8 @@ fun WriteScreen(
         Timber.e("save 예정$newMemoModel")
 
         if (contentsCount > 0) {
-        //     writeViewModel.saveDiary(diaryModel = newMemoModel)
+            //todo
+            //     writeViewModel.saveDiary(diaryModel = newMemoModel)
         }
 
     }
@@ -100,26 +102,28 @@ fun WriteScreen(
         handleBackButtonClick
     )
 }
+
 @Composable
 fun keyboardAsState(): State<Boolean> {
     val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     return rememberUpdatedState(isImeVisible)
 }
+
 @Composable
 private fun WriteScreenContent(
     outputDateString: String,
     contents: List<ContentBlock<*>>,
     contentBlockViewModel: ContentBlockViewModel,
     handleSaveDiary: () -> Unit,
-    handleBackButtonClick : () ->Unit
-    ) {
+    handleBackButtonClick: () -> Unit
+) {
     val hint = "제목"
     var diaryTitle by rememberSaveable { mutableStateOf(hint) }
     val isKeyboardOpen by keyboardAsState()
     val focusManager = LocalFocusManager.current
 
     //top 에 삭제버튼 추가 필요
-    LaunchedEffect(key1 = diaryTitle ){
+    LaunchedEffect(key1 = diaryTitle) {
         contentBlockViewModel.title = diaryTitle
     }
 
@@ -128,7 +132,7 @@ private fun WriteScreenContent(
         handleBackButtonClick()
     }
 
-    if(!isKeyboardOpen){
+    if (!isKeyboardOpen) {
         //사용자가 키보드를 직접 내릴경우 , focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
         focusManager.clearFocus()
     }
@@ -139,7 +143,7 @@ private fun WriteScreenContent(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -160,25 +164,24 @@ private fun WriteScreenContent(
                 diaryTitle = it
             }
         }
-
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(top = 10.dp)
-        ) {
-            ContentBlockScreen(
-                contentBlockViewModel = contentBlockViewModel,
-                contents = contents
-            )
-        }
+        ContentBlockScreen(
+            contentBlockViewModel = contentBlockViewModel,
+            contents = contents
+        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewWriteScreen() {
     GradientDiaryTheme {
-        //WriteScreen(WriteViewModel())
+        val date = "20220202"
+
+     /*   WriteScreen(
+            date = date,
+            contentBlockViewModel = ContentBlockViewModel(emptyList()),
+            content = null ,
+            writeViewModel = null
+        ){}*/
     }
 }
