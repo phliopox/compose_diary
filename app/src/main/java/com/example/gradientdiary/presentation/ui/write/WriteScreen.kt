@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -27,10 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
@@ -53,7 +57,6 @@ fun WriteScreen(
     handleBackButtonClick: () -> Unit
 ) {
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
-    val memo = writeViewModel.diary.collectAsState()
     Timber.e("WriteScreen contentBlocks: ${contentsState.value} ")
 
 
@@ -63,8 +66,6 @@ fun WriteScreen(
     val outputDateString: String = outputFormat.format(formatDate)
 
     val handleSaveDiary = {
-        Timber.e("save 탐 ")
-
         val newMemoModel = content?.let {
             it.copy().convertToDiaryModel().apply {
                 title = contentBlockViewModel.title
@@ -121,6 +122,8 @@ private fun WriteScreenContent(
     var diaryTitle by rememberSaveable { mutableStateOf(hint) }
     val isKeyboardOpen by keyboardAsState()
     val focusManager = LocalFocusManager.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val contentsState by contentBlockViewModel.contentBlocks.collectAsState()
 
     //top 에 삭제버튼 추가 필요
     LaunchedEffect(key1 = diaryTitle) {
@@ -137,6 +140,7 @@ private fun WriteScreenContent(
         focusManager.clearFocus()
     }
     BackHandler {
+        // back 버튼 클릭시 save
         handleBackClickSave()
     }
 
@@ -166,7 +170,7 @@ private fun WriteScreenContent(
         }
         ContentBlockScreen(
             contentBlockViewModel = contentBlockViewModel,
-            contents = contents
+            contents = contentsState
         )
     }
 }

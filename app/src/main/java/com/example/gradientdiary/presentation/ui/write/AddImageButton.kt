@@ -36,7 +36,6 @@ fun AddImageButton(
 
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var showImageSelectDialog by remember { mutableStateOf(false) }
-    Timber.e("imageUri remember ${imageUri}")
     val snackState = remember { SnackbarHostState() }
     val snackScope = rememberCoroutineScope()
 

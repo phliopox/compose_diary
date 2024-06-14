@@ -140,8 +140,8 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: (String
         val totalWeeks =
             (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
 
-        Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
-        Timber.e("totalWeeks : $totalWeeks")
+        //Timber.e("month : $month \n dayInMonth : $daysInMonth \n firstDayof : $firstDayOfWeek , blankCount : $blankCount")
+        //Timber.e("totalWeeks : $totalWeeks")
 
         repeat(totalWeeks) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
