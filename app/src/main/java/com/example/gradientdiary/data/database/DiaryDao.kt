@@ -23,6 +23,6 @@ abstract class DiaryDao {
 
 
     @Query("select * from DiaryEntity where updateDate = :updateDate")
-    abstract fun getDairyByDate(updateDate : LocalDate) : Flow<DiaryEntity>
+    abstract fun getDairyByDate(updateDate : String) : Flow<DiaryEntity>
 
 }

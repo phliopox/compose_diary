@@ -6,7 +6,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
@@ -32,7 +31,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.gradientdiary.data.DiaryModel
@@ -42,6 +40,10 @@ import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.EditableText
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -57,7 +59,6 @@ fun WriteScreen(
     handleBackButtonClick: () -> Unit
 ) {
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
-    Timber.e("WriteScreen contentBlocks: ${contentsState.value} ")
 
 
     val inputFormat = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
@@ -66,28 +67,29 @@ fun WriteScreen(
     val outputDateString: String = outputFormat.format(formatDate)
 
     val handleSaveDiary = {
-        val newMemoModel = content?.let {
-            it.copy().convertToDiaryModel().apply {
-                title = contentBlockViewModel.title
-                contents = contentsState.value
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val newMemoModel = content?.let {
+                it.copy().convertToDiaryModel().apply {
+                    title = contentBlockViewModel.title
+                    contents = contentsState.value
+                }
+            } ?: DiaryModel(
+                contents = contentsState.value,
+                category = writeViewModel.getCategory(),
+                title = contentBlockViewModel.title,
+                updateDate = date
+            )
+
+            val contentsCount = contentsState.value.count {
+                it.content.toString().isNotBlank() or it.content.toString().isNotEmpty()
             }
-        } ?: DiaryModel(
-            contents = contentsState.value,
-            category = writeViewModel.getCategory(),
-            title = contentBlockViewModel.title,
-            updateDate = date
-        )
 
-        val contentsCount = contentsState.value.count {
-            it.content.toString().isNotBlank() or it.content.toString().isNotEmpty()
+            if (contentsCount > 0) {
+                Timber.e("save 예정$newMemoModel")
+                writeViewModel.saveDiary(diaryModel = newMemoModel)
+            }
         }
-        Timber.e("save 예정$newMemoModel")
-
-        if (contentsCount > 0) {
-            //todo
-            //     writeViewModel.saveDiary(diaryModel = newMemoModel)
-        }
-
     }
 
     val handleAddImage = {
@@ -115,7 +117,7 @@ private fun WriteScreenContent(
     outputDateString: String,
     contents: List<ContentBlock<*>>,
     contentBlockViewModel: ContentBlockViewModel,
-    handleSaveDiary: () -> Unit,
+    handleSaveDiary: () -> Job,
     handleBackButtonClick: () -> Unit
 ) {
     val hint = "제목"
@@ -123,11 +125,27 @@ private fun WriteScreenContent(
     val isKeyboardOpen by keyboardAsState()
     val focusManager = LocalFocusManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycle = lifecycleOwner.lifecycle
     val contentsState by contentBlockViewModel.contentBlocks.collectAsState()
 
     //top 에 삭제버튼 추가 필요
     LaunchedEffect(key1 = diaryTitle) {
         contentBlockViewModel.title = diaryTitle
+    }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {}
+                Lifecycle.Event.ON_STOP -> {
+                        handleSaveDiary()  // 앱 백그라운드 전환시에도 save
+                    }
+                else -> {}
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
     }
 
     val handleBackClickSave = {

@@ -21,6 +21,7 @@ class ContentBlockViewModel(
 
     var title = "제목"
     init {
+        Timber.e("contentBlockViewModel init $initialContentBlock")
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
         } else {

@@ -13,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -27,21 +29,21 @@ class WriteViewModel @Inject constructor(
     private val storage : SharedPrefsStorageProvider
 ) : ViewModel() {
 
-    private val _diary = MutableStateFlow<DiaryEntity?>(null)
-    var diary: StateFlow<DiaryEntity?> = _diary
+    //private val _diary = MutableStateFlow<DiaryEntity?>(null)
+    //var diary: StateFlow<DiaryEntity?> = _diary
 
     fun getCategory() :String {
         // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
         return storage.getCategory()
     }
 
-    fun getDiaryByDate(date: LocalDate) {
-        Timber.e("viewModel getDiaryByDate 호출")
-        viewModelScope.launch {
-            getDiaryByDateUseCase.invoke(date).collectLatest {
-                _diary.value = it
-                Timber.e("getDiaryByDate 호출 : $it")
-            }
+    suspend fun getDiaryByDate(date: String): DiaryEntity? {
+        return try {
+            getDiaryByDateUseCase.invoke(date)
+                .firstOrNull()
+         } catch (e: Exception) {
+            Timber.e("데이터 로딩 중 오류 발생 : $e")
+            null
         }
     }
 

@@ -1,9 +1,13 @@
 package com.example.gradientdiary.presentation.ui
 
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -11,16 +15,22 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.gradientdiary.data.Resource
+import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.dateToLocalDate
 import com.example.gradientdiary.presentation.ui.Key.DIARY_ARGS_KEY
+import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
 import com.example.gradientdiary.presentation.ui.write.WriteScreen
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -72,20 +82,44 @@ fun DiaryAppNavHost(
             })
         ) { entry ->
             val date = entry.arguments?.getString(DIARY_ARGS_KEY) ?: ""
-            Timber.e("host getDiaryByDate $date")
-            writeViewModel.getDiaryByDate(dateToLocalDate(date))
-            val content = writeViewModel.diary.collectAsState().value
-            val contentBlockViewModel = remember {
-                mutableStateOf(ContentBlockViewModel(content?.let { it.contents } ?: emptyList()))
+            var content by remember { mutableStateOf<DiaryEntity?>(null) }
+            var isLoading by remember { mutableStateOf(true) }
+
+            LaunchedEffect(date) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val task: Deferred<DiaryEntity?> =
+                            async { writeViewModel.getDiaryByDate(date) }
+                        content = task.await()
+                    } finally {
+                        isLoading = false
+                    }
+                }
             }
 
-            WriteScreen(
-                date,
-                content,
-                writeViewModel,
-                contentBlockViewModel.value,
-                handleBackButtonClick = { handleBackButtonClick() }
-            )
+            if (isLoading) {
+                LoadingScreen()
+            } else {
+                Timber.e("contents ${content?.contents} , ")
+                val contentBlockViewModel = remember {
+                    mutableStateOf(ContentBlockViewModel(content?.contents ?: emptyList()))
+                }
+
+                WriteScreen(
+                    date = date,
+                    content = content,
+                    writeViewModel = writeViewModel,
+                    contentBlockViewModel = contentBlockViewModel.value,
+                    handleBackButtonClick = { handleBackButtonClick() }
+                )
+            }
+            /*   WriteScreen(
+                   date,
+                   content,
+                   writeViewModel,
+                   contentBlockViewModel.value,
+                   handleBackButtonClick = { handleBackButtonClick() }
+               )*/
         }
     }
 }

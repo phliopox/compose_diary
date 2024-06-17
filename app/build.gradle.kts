@@ -140,4 +140,8 @@ dependencies {
     // Gson
     implementation("com.google.code.gson:gson:$gson_version")
 
+    //백그라운드 감지
+    implementation ("androidx.lifecycle:lifecycle-process:2.5.1")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.0.0") // Use the appropriate version
+
 }
