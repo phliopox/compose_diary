@@ -86,6 +86,7 @@ fun DiaryAppNavHost(
             var isLoading by remember { mutableStateOf(true) }
 
             LaunchedEffect(date) {
+                // room db 에서 데이터 get 완료될 때까지 대기 process
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val task: Deferred<DiaryEntity?> =
@@ -100,7 +101,7 @@ fun DiaryAppNavHost(
             if (isLoading) {
                 LoadingScreen()
             } else {
-                Timber.e("contents ${content?.contents} , ")
+                Timber.e("navhost get content : ${content?.contents}")
                 val contentBlockViewModel = remember {
                     mutableStateOf(ContentBlockViewModel(content?.contents ?: emptyList()))
                 }
@@ -113,13 +114,6 @@ fun DiaryAppNavHost(
                     handleBackButtonClick = { handleBackButtonClick() }
                 )
             }
-            /*   WriteScreen(
-                   date,
-                   content,
-                   writeViewModel,
-                   contentBlockViewModel.value,
-                   handleBackButtonClick = { handleBackButtonClick() }
-               )*/
         }
     }
 }

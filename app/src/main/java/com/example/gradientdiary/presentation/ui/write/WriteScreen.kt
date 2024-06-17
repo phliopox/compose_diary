@@ -135,7 +135,6 @@ private fun WriteScreenContent(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_START -> {}
                 Lifecycle.Event.ON_STOP -> {
                         handleSaveDiary()  // 앱 백그라운드 전환시에도 save
                     }
@@ -154,9 +153,11 @@ private fun WriteScreenContent(
     }
 
     if (!isKeyboardOpen) {
-        //사용자가 키보드를 직접 내릴경우 , focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
+        //사용자가 키보드를 직접 내릴경우 ,
+        // focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
         focusManager.clearFocus()
     }
+
     BackHandler {
         // back 버튼 클릭시 save
         handleBackClickSave()
