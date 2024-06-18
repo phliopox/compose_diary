@@ -144,4 +144,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-process:2.5.1")
     implementation ("androidx.compose.runtime:runtime-livedata:1.0.0") // Use the appropriate version
 
+    //permission
+    implementation ("com.google.accompanist:accompanist-permissions:0.25.0")
+
 }

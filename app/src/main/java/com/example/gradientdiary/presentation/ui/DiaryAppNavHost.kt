@@ -103,7 +103,7 @@ fun DiaryAppNavHost(
             } else {
                 Timber.e("navhost get content : ${content?.contents}")
                 val contentBlockViewModel = remember {
-                    mutableStateOf(ContentBlockViewModel(content?.contents ?: emptyList()))
+                    mutableStateOf(ContentBlockViewModel(content))
                 }
 
                 WriteScreen(

@@ -22,6 +22,7 @@ import com.example.gradientdiary.data.database.entity.ContentType
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import timber.log.Timber
 
 @Parcelize
 data class ImageBlock(
@@ -40,6 +41,7 @@ data class ImageBlock(
 
     @Composable
     override fun DrawEditableContent(modifier: Modifier, viewModel: ContentBlockViewModel) {
+        Timber.e("imageDraw : $content")
         Box(modifier = Modifier.padding(16.dp)) {
             Image(
                 painter = rememberAsyncImagePainter(

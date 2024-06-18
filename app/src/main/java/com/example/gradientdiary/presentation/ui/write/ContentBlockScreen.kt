@@ -151,7 +151,7 @@ fun PreviewWriteScreen2() {
         Column {
             val sampleContents = emptyList<ContentBlock<*>>()
             ContentBlockScreen(
-                ContentBlockViewModel(emptyList()),
+                ContentBlockViewModel(null),
                 sampleContents
             )
         }

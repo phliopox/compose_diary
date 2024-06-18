@@ -68,7 +68,6 @@ fun WriteScreen(
 
     val handleSaveDiary = {
         CoroutineScope(Dispatchers.IO).launch {
-
             val newMemoModel = content?.let {
                 it.copy().convertToDiaryModel().apply {
                     title = contentBlockViewModel.title
@@ -121,7 +120,7 @@ private fun WriteScreenContent(
     handleBackButtonClick: () -> Unit
 ) {
     val hint = "제목"
-    var diaryTitle by rememberSaveable { mutableStateOf(hint) }
+    var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
     val isKeyboardOpen by keyboardAsState()
     val focusManager = LocalFocusManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -129,6 +128,7 @@ private fun WriteScreenContent(
     val contentsState by contentBlockViewModel.contentBlocks.collectAsState()
 
     //top 에 삭제버튼 추가 필요
+
     LaunchedEffect(key1 = diaryTitle) {
         contentBlockViewModel.title = diaryTitle
     }

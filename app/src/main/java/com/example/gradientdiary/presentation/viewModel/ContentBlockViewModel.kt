@@ -3,6 +3,7 @@ package com.example.gradientdiary.presentation.viewModel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
+import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.ImageBlock
 import com.example.gradientdiary.presentation.ui.component.TextBlock
@@ -11,17 +12,18 @@ import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 
 class ContentBlockViewModel(
-    initialContentBlock: List<ContentBlockEntity>
+    diary: DiaryEntity?
 ) :ViewModel(){
     private val _contentBlocksSource = MutableStateFlow<List<ContentBlock<*>>>(emptyList())
     val contentBlocks: StateFlow<List<ContentBlock<*>>> = _contentBlocksSource
 
     private var contentBlockList: MutableList<ContentBlock<*>> = mutableListOf()
     private var focusedIndex: Int = 0
+    private val initialContentBlock = diary?.contents ?: emptyList()
+    var title = diary?.title?:"제목"
 
-    var title = "제목"
     init {
-        Timber.e("contentBlockViewModel init $initialContentBlock")
+        Timber.e("contentBlockViewModel init $diary")
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
         } else {
