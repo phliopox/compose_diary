@@ -2,7 +2,6 @@ package com.example.gradientdiary.presentation.viewModel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.ImageBlock
@@ -13,36 +12,34 @@ import timber.log.Timber
 
 class ContentBlockViewModel(
     diary: DiaryEntity?
-) :ViewModel(){
+) : ViewModel() {
     private val _contentBlocksSource = MutableStateFlow<List<ContentBlock<*>>>(emptyList())
     val contentBlocks: StateFlow<List<ContentBlock<*>>> = _contentBlocksSource
 
     private var contentBlockList: MutableList<ContentBlock<*>> = mutableListOf()
+    private var toBeDeleteBlockList: MutableList<ContentBlock<*>> = mutableListOf()
     private var focusedIndex: Int = 0
     private val initialContentBlock = diary?.contents ?: emptyList()
-    var title = diary?.title?:"제목"
+    var title = diary?.title ?: "제목"
 
     init {
-        Timber.e("contentBlockViewModel init $diary ")
         Timber.e("initialContentBlock : ${initialContentBlock.isEmpty()}")
-        Timber.e("contentBlockList : ${contentBlockList.isEmpty()}")
-
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
         } else {
-            contentBlockList = initialContentBlock.map { it.convertToContentBlockModel() }.toMutableList()
+            contentBlockList =
+                initialContentBlock.map { it.convertToContentBlockModel() }.toMutableList()
             _contentBlocksSource.value = contentBlockList
         }
     }
 
     fun insertTextBlock(s: String? = null) {
-        Timber.e("insertTextBlock ! $focusedIndex")
         contentBlockList.add(TextBlock(content = s ?: ""))
         focusedIndex = contentBlockList.size - 1
         _contentBlocksSource.value = contentBlockList.toList()
     }
 
-    fun saveTextBlockContents(s : String){
+    fun saveTextBlockContents(s: String) {
         if (focusedIndex != -1 && focusedIndex < contentBlockList.size) {
             val block = contentBlockList[focusedIndex]
             if (block is TextBlock) {
@@ -53,7 +50,6 @@ class ContentBlockViewModel(
     }
 
     fun changeToImageBlock(uri: Uri) {
-        Timber.e("changeToImageBlock")
         contentBlockList.add(focusedIndex + 1, ImageBlock(content = uri))
         insertTextBlock()
     }
@@ -65,8 +61,23 @@ class ContentBlockViewModel(
         _contentBlocksSource.value = contentBlockList.toList()
     }
 
+    fun tobeDeletedBlockByUri(uri: Uri){
+        val errorBlock = contentBlockList.find { it.content == uri }
+        //파일을 찾을 수 없는 이미지 블럭을 save 시 한번에 삭제할 수 있도록 viewModel 에서 관리
+        if (errorBlock != null) {
+            toBeDeleteBlockList.add(errorBlock)
+        }
+    }
+    fun removeNotFoundBlocks(): List<ContentBlock<*>> {
+        contentBlockList = contentBlockList.filterNot { block ->
+            toBeDeleteBlockList.any { it.content == block.content }
+        }.toMutableList()
+        val result = contentBlockList.toList()
+        toBeDeleteBlockList.clear()
+        return result
+    }
+
     fun focusedBlock(index: Int) {
-        Timber.e("focusedBlock $focusedIndex")
         focusedIndex = index
     }
 

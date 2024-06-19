@@ -68,19 +68,20 @@ fun WriteScreen(
 
     val handleSaveDiary = {
         CoroutineScope(Dispatchers.IO).launch {
+            val finalBlockList = contentBlockViewModel.removeNotFoundBlocks() // 파일을 찾을 수 없는 이미지 블럭 삭제한 list
             val newMemoModel = content?.let {
                 it.copy().convertToDiaryModel().apply {
                     title = contentBlockViewModel.title
-                    contents = contentsState.value
+                    contents = finalBlockList
                 }
             } ?: DiaryModel(
-                contents = contentsState.value,
+                contents = finalBlockList,
                 category = writeViewModel.getCategory(),
                 title = contentBlockViewModel.title,
                 updateDate = date
             )
 
-            val contentsCount = contentsState.value.count {
+            val contentsCount = finalBlockList.count {
                 it.content.toString().isNotBlank() or it.content.toString().isNotEmpty()
             }
 
@@ -125,7 +126,6 @@ private fun WriteScreenContent(
     val focusManager = LocalFocusManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycle = lifecycleOwner.lifecycle
-    val contentsState by contentBlockViewModel.contentBlocks.collectAsState()
     var previousKeyboardState by remember { mutableStateOf(false) }
 
     //top 에 삭제버튼 추가 필요
@@ -157,7 +157,6 @@ private fun WriteScreenContent(
     // focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
     LaunchedEffect(isKeyboardOpen) {
         if (previousKeyboardState && !isKeyboardOpen) {
-            Timber.e("keyboard clear")
             focusManager.clearFocus()
         }
         previousKeyboardState = isKeyboardOpen
@@ -194,7 +193,7 @@ private fun WriteScreenContent(
         }
         ContentBlockScreen(
             contentBlockViewModel = contentBlockViewModel,
-            contents = contentsState
+            contents = contents
         )
     }
 }

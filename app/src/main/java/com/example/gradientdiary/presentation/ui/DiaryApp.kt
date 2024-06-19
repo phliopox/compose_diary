@@ -4,18 +4,23 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
-
+val localSnackBarManager = compositionLocalOf<SnackBarManager> {
+    error("No SnackbarManager provided")
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -23,16 +28,24 @@ fun DiaryApp(
     writeViewModel: WriteViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
+
+    val snackBarManager = remember { SnackBarManager() }
+
     GradientDiaryTheme {
+        CompositionLocalProvider(localSnackBarManager provides snackBarManager) {
+
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(WindowInsets.systemBars.asPaddingValues())
+                .padding(WindowInsets.systemBars.asPaddingValues()),
+            topBar = {
+                SnackbarHost(hostState = snackBarManager.snackbarHostState)
+            }
         ) {
             DiaryAppNavHost(
                 writeViewModel = writeViewModel,
                 navController = navController
             )
         }
-    }
+    }}
 }

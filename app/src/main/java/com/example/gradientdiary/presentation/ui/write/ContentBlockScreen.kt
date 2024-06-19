@@ -3,7 +3,6 @@ package com.example.gradientdiary.presentation.ui.write
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -97,7 +95,6 @@ fun ContentBlocks(
         if (isFocused) {
             focusRequester.requestFocus()
         } else {
-            Timber.e("clear")
             focusManager.clearFocus()
         }
     }
@@ -116,14 +113,12 @@ fun ContentBlocks(
             }
     ) {
 
-        for (i in contents.indices) {
-
-            val content = contents[i]
+        contents.forEachIndexed { index, content ->
             val modifier = Modifier
                 .onFocusChanged {
                     if (it.isFocused) {
                         Timber.e("Focused block content: ${content.toString()}")
-                        handleFocusedIndex(i)
+                        handleFocusedIndex(index)
                     } else {
                         Timber.e("Focus lost from block content: ${content.toString()}")
                     }
@@ -141,8 +136,8 @@ fun ContentBlocks(
                 }
                 .focusRequester(focusRequester)
 
-            LaunchedEffect(isFocused, i) { // 최초 로딩시 , 마지막 block 에 포커스주기
-                if (isFocused && i == contents.lastIndex) {
+            LaunchedEffect(isFocused, index) { // 최초 로딩시 , 마지막 block 에 포커스주기
+                if (isFocused && index == contents.lastIndex) {
                     focusRequester.requestFocus()
                 }
             }

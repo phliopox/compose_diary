@@ -1,24 +1,18 @@
 package com.example.gradientdiary.presentation.ui
 
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.gradientdiary.data.Resource
 import com.example.gradientdiary.data.database.entity.DiaryEntity
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
-import com.example.gradientdiary.presentation.dateToLocalDate
 import com.example.gradientdiary.presentation.ui.Key.DIARY_ARGS_KEY
 import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
@@ -28,20 +22,10 @@ import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun DiaryAppNavHost(
     writeViewModel: WriteViewModel,
