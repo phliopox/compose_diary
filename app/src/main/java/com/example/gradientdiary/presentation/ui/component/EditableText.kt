@@ -49,7 +49,7 @@ fun EditableText(
             },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }
+              onDone = { focusManager.clearFocus() }
         )
     )
 }

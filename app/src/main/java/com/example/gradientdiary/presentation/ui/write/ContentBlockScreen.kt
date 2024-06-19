@@ -90,13 +90,14 @@ fun ContentBlocks(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
-    var isFocused by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(true) }
 
-    // 텍스트 필드 포커스 상태에 따라 focus in/out
+    // 컬럼 클릭시 focus in/out
     LaunchedEffect(isFocused) {
         if (isFocused) {
             focusRequester.requestFocus()
         } else {
+            Timber.e("clear")
             focusManager.clearFocus()
         }
     }
@@ -109,13 +110,11 @@ fun ContentBlocks(
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
-            ) // 클릭 효과 제거
+            ) // 기본 클릭 효과 제거
             {
                 isFocused = !isFocused
             }
     ) {
-
-        val focusManager = LocalFocusManager.current
 
         for (i in contents.indices) {
 
@@ -123,7 +122,10 @@ fun ContentBlocks(
             val modifier = Modifier
                 .onFocusChanged {
                     if (it.isFocused) {
+                        Timber.e("Focused block content: ${content.toString()}")
                         handleFocusedIndex(i)
+                    } else {
+                        Timber.e("Focus lost from block content: ${content.toString()}")
                     }
                 }
                 .onPreviewKeyEvent {
@@ -139,6 +141,11 @@ fun ContentBlocks(
                 }
                 .focusRequester(focusRequester)
 
+            LaunchedEffect(isFocused, i) { // 최초 로딩시 , 마지막 block 에 포커스주기
+                if (isFocused && i == contents.lastIndex) {
+                    focusRequester.requestFocus()
+                }
+            }
             content.DrawEditableContent(modifier = modifier, viewModel = contentBlockViewModel)
         }
     }

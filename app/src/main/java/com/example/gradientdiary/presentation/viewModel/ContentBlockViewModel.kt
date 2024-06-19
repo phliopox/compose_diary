@@ -23,7 +23,10 @@ class ContentBlockViewModel(
     var title = diary?.title?:"제목"
 
     init {
-        Timber.e("contentBlockViewModel init $diary")
+        Timber.e("contentBlockViewModel init $diary ")
+        Timber.e("initialContentBlock : ${initialContentBlock.isEmpty()}")
+        Timber.e("contentBlockList : ${contentBlockList.isEmpty()}")
+
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
         } else {
@@ -33,7 +36,7 @@ class ContentBlockViewModel(
     }
 
     fun insertTextBlock(s: String? = null) {
-        Timber.e("insertTextBlock !")
+        Timber.e("insertTextBlock ! $focusedIndex")
         contentBlockList.add(TextBlock(content = s ?: ""))
         focusedIndex = contentBlockList.size - 1
         _contentBlocksSource.value = contentBlockList.toList()
@@ -50,6 +53,7 @@ class ContentBlockViewModel(
     }
 
     fun changeToImageBlock(uri: Uri) {
+        Timber.e("changeToImageBlock")
         contentBlockList.add(focusedIndex + 1, ImageBlock(content = uri))
         insertTextBlock()
     }
@@ -62,6 +66,7 @@ class ContentBlockViewModel(
     }
 
     fun focusedBlock(index: Int) {
+        Timber.e("focusedBlock $focusedIndex")
         focusedIndex = index
     }
 

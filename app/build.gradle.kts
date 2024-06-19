@@ -147,4 +147,7 @@ dependencies {
     //permission
     implementation ("com.google.accompanist:accompanist-permissions:0.25.0")
 
+    //glide
+    implementation ("com.github.skydoves:landscapist-glide:1.4.7")
+
 }

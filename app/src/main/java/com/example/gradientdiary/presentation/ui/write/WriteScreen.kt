@@ -90,10 +90,10 @@ fun WriteScreen(
             }
         }
     }
-
+/*
     val handleAddImage = {
 
-    }
+    }*/
 
     val contentValue = contentsState.collectAsState()
     WriteScreenContent(
@@ -126,6 +126,7 @@ private fun WriteScreenContent(
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycle = lifecycleOwner.lifecycle
     val contentsState by contentBlockViewModel.contentBlocks.collectAsState()
+    var previousKeyboardState by remember { mutableStateOf(false) }
 
     //top 에 삭제버튼 추가 필요
 
@@ -152,10 +153,14 @@ private fun WriteScreenContent(
         handleBackButtonClick()
     }
 
-    if (!isKeyboardOpen) {
-        //사용자가 키보드를 직접 내릴경우 ,
-        // focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
-        focusManager.clearFocus()
+    //사용자가 키보드를 직접 내릴경우 ,
+    // focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
+    LaunchedEffect(isKeyboardOpen) {
+        if (previousKeyboardState && !isKeyboardOpen) {
+            Timber.e("keyboard clear")
+            focusManager.clearFocus()
+        }
+        previousKeyboardState = isKeyboardOpen
     }
 
     BackHandler {
