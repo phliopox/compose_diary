@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -39,6 +39,7 @@ data class ImageBlock(
 
 
     override fun addNextBlock(viewModel: ContentBlockViewModel) {
+        Timber.e("add next Block")
         viewModel.insertBlock(TextBlock(content = ""))
     }
 
@@ -51,17 +52,16 @@ data class ImageBlock(
         var hasShownSnackbar by remember { mutableStateOf(false) }
         val snackBarManager = localSnackBarManager.current
 
-        Timber.d("Persisted URI Permissions on load: $persistedPermissions")
         // URI가 persistedPermissions에 포함되어 있는지 확인
         if (persistedPermissions.any { it.uri == content }) {
             // 이미지 로드
-            Box(modifier = Modifier.padding(16.dp)) {
+            Box(modifier = modifier.padding(16.dp)) {
                 GlideImage(
                     imageModel = content,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .aspectRatio(0.8f),
-                    contentScale = ContentScale.FillHeight,
+                        .heightIn(50.dp, 500.dp),
+                    contentScale = ContentScale.Crop,
                     contentDescription = null
                 )
             }

@@ -58,12 +58,13 @@ class ContentBlockViewModel(
     }
 
     fun deleteBlock(block: ContentBlock<*>) {
+        Timber.e("delete 호출 $contentBlockList")
+        Timber.e("seleted block : $block")
         if (contentBlockList.size <= 1) return
 
-        contentBlockList.remove(block)
+       contentBlockList.remove(block)
         _contentBlocksSource.value = contentBlockList.toList()
     }
-
     fun tobeDeletedBlockByUri(uri: Uri) {
         val errorBlock = contentBlockList.find { it.content == uri }
         //파일을 찾을 수 없는 이미지 블럭을 save 시 한번에 삭제할 수 있도록 viewModel 에서 관리
