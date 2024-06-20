@@ -9,6 +9,7 @@ import com.example.gradientdiary.presentation.ui.component.TextBlock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
+import kotlin.properties.Delegates
 
 class ContentBlockViewModel(
     diary: DiaryEntity?
@@ -18,7 +19,7 @@ class ContentBlockViewModel(
 
     private var contentBlockList: MutableList<ContentBlock<*>> = mutableListOf()
     private var toBeDeleteBlockList: MutableList<ContentBlock<*>> = mutableListOf()
-    private var focusedIndex: Int = 0
+    private var focusedIndex by Delegates.notNull<Int>()
     private val initialContentBlock = diary?.contents ?: emptyList()
     var title = diary?.title ?: "제목"
 
@@ -26,10 +27,12 @@ class ContentBlockViewModel(
         Timber.e("initialContentBlock : ${initialContentBlock.isEmpty()}")
         if (initialContentBlock.isEmpty()) {
             insertTextBlock()
+            focusedIndex = 0
         } else {
             contentBlockList =
                 initialContentBlock.map { it.convertToContentBlockModel() }.toMutableList()
             _contentBlocksSource.value = contentBlockList
+            focusedIndex = contentBlockList.size - 1
         }
     }
 
@@ -61,13 +64,14 @@ class ContentBlockViewModel(
         _contentBlocksSource.value = contentBlockList.toList()
     }
 
-    fun tobeDeletedBlockByUri(uri: Uri){
+    fun tobeDeletedBlockByUri(uri: Uri) {
         val errorBlock = contentBlockList.find { it.content == uri }
         //파일을 찾을 수 없는 이미지 블럭을 save 시 한번에 삭제할 수 있도록 viewModel 에서 관리
         if (errorBlock != null) {
             toBeDeleteBlockList.add(errorBlock)
         }
     }
+
     fun removeNotFoundBlocks(): List<ContentBlock<*>> {
         contentBlockList = contentBlockList.filterNot { block ->
             toBeDeleteBlockList.any { it.content == block.content }

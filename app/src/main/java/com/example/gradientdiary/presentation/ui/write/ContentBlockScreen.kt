@@ -117,10 +117,10 @@ fun ContentBlocks(
             val modifier = Modifier
                 .onFocusChanged {
                     if (it.isFocused) {
-                        Timber.e("Focused block content: ${content.toString()}")
+                        //Timber.e("Focused block content: ${content.toString()}")
                         handleFocusedIndex(index)
                     } else {
-                        Timber.e("Focus lost from block content: ${content.toString()}")
+                       // Timber.e("Focus lost from block content: ${content.toString()}")
                     }
                 }
                 .onPreviewKeyEvent {
@@ -136,7 +136,7 @@ fun ContentBlocks(
                 }
                 .focusRequester(focusRequester)
 
-            LaunchedEffect(isFocused, index) { // 최초 로딩시 , 마지막 block 에 포커스주기
+            LaunchedEffect(isFocused, index) { // 최초 로딩시 , 마지막 block 에 포커스 주기
                 if (isFocused && index == contents.lastIndex) {
                     focusRequester.requestFocus()
                 }
