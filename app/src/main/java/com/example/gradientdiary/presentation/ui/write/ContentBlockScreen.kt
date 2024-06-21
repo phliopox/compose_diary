@@ -1,7 +1,6 @@
 package com.example.gradientdiary.presentation.ui.write
 
 import android.net.Uri
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -23,7 +22,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.nativeKeyCode
@@ -92,7 +90,7 @@ fun ContentBlocks(
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     var isFocused by remember { mutableStateOf(true) }
-    //val focusRequesters =
+
     // 컬럼 클릭시 focus in/out
     LaunchedEffect(isFocused) {
         if (isFocused) {
@@ -127,7 +125,6 @@ fun ContentBlocks(
                     if (it.isFocused) {
                         //Timber.e("Focused block content: ${content.toString()}")
                         handleFocusedIndex(index)
-
                     } else {
                         // Timber.e("Focus lost from block content: ${content.toString()}")
                     }
@@ -151,7 +148,6 @@ fun ContentBlocks(
                     }
                 }
                 .focusRequester(focusRequester)
-                .then(if (imageFocused) Modifier.border(2.dp, Color.Black) else Modifier)
 
             LaunchedEffect(isFocused, index) { // 최초 로딩시 , 마지막 block 에 포커스 주기
                 if (isFocused && index == contents.lastIndex) {

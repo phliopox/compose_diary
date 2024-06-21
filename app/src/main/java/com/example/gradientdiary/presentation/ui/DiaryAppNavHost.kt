@@ -43,8 +43,8 @@ fun DiaryAppNavHost(
                 popUpTo(DiaryAppScreen.Home.name)
             }
         }
-        val handleClickAddDiaryButton = {
-            navController.navigate(DiaryAppScreen.Write.name) {
+        val handleClickAddDiaryButton = { date: String ->
+            navController.navigate("${DiaryAppScreen.Write.name}/${date}") {
                 popUpTo(DiaryAppScreen.Home.name)
             }
         }
@@ -65,6 +65,7 @@ fun DiaryAppNavHost(
                 type = NavType.StringType
             })
         ) { entry ->
+            Timber.e("ARGUMENT : ${entry.arguments?.getString(DIARY_ARGS_KEY)}")
             val date = entry.arguments?.getString(DIARY_ARGS_KEY) ?: ""
             var content by remember { mutableStateOf<DiaryEntity?>(null) }
             var isLoading by remember { mutableStateOf(true) }

@@ -1,6 +1,9 @@
 package com.example.gradientdiary.presentation.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,10 +37,11 @@ import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getFirstDayOfWeek
 import com.example.gradientdiary.presentation.getMonth
+import com.example.gradientdiary.presentation.getNow
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
-import timber.log.Timber
+import java.time.format.DateTimeFormatter
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -42,7 +49,7 @@ val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 @Composable
 fun CalendarScreen(
     paddingValues: PaddingValues,
-    handleClickAddDiaryButton: () -> Unit,
+    handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -57,24 +64,35 @@ fun CalendarScreen(
 
     var year by remember { mutableIntStateOf(currentYear) }
     var month by remember { mutableIntStateOf(currentMonth) }
+    val interactionSource = remember { MutableInteractionSource() }
 
 
 
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                "${month}월",
+                "${month}월  ",
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(end = Paddings.large)
             )
-            Text(
-                category, style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(end = Paddings.large)
-            )
-            Icon(
-                painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
-                contentDescription = null
-            )
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable(
+                    //기본 클릭 효과 제거
+                    interactionSource = interactionSource,
+                    indication = null
+                ) {
+                    //todo 카테고리 선택 다이얼로그
+
+                }) {
+                Text(
+                    category, style = MaterialTheme.typography.displayMedium,
+                    modifier = Modifier.padding(end = Paddings.large)
+                )
+                Icon(
+                    painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                    contentDescription = null
+                )
+            }
         }
         Row(
             modifier = Modifier
@@ -91,7 +109,7 @@ fun CalendarScreen(
                 )
             }
         }
-        val pagerState = rememberPagerState(getMonth() - 1,0f) { 12 }
+        val pagerState = rememberPagerState(getMonth() - 1, 0f) { 12 }
         Column(
             modifier = Modifier.weight(0.6f),
             verticalArrangement = Arrangement.Top
@@ -122,10 +140,24 @@ fun CalendarScreen(
                 .weight(0.2f)
                 .fillMaxWidth()
                 .padding(bottom = Paddings.extra3),
-            verticalArrangement = Arrangement.Bottom,
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("dddddd")
+            IconButton(
+                onClick = {
+                    val now = getNow()
+                    val strNow = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                    handleClickAddDiaryButton(strNow)
+                },
+                modifier = Modifier.background(Color.Black, shape = RoundedCornerShape(45.dp)),
+
+                ) {
+                Icon(
+                    painter = painterResource(R.drawable.plus_svgrepo_com),
+                    "Floating action button.",
+                    tint = Color.White
+                )
+            }
         }
     }
 }
@@ -154,8 +186,8 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: (String
                         count++
                     } else if (currentDay <= daysInMonth) {
                         // 실제 날짜를 추가
-                        DayBlock(day = currentDay++) {clickedDay->
-                            val monthString = if(month<10) "0$month" else month
+                        DayBlock(day = currentDay++) { clickedDay ->
+                            val monthString = if (month < 10) "0$month" else month
                             handleClickCalendarColumn("$year$monthString$clickedDay")
                         }
                         count++
