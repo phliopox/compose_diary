@@ -15,11 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Paddings
+import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen(
+    categoryViewModel: CategoryViewModel,
     handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit
 ) {
@@ -64,9 +66,12 @@ fun DiaryScreen(
             bottom = innerPadding.calculateBottomPadding()
         )
 
-        CalendarScreen(paddingValues,
+        CalendarScreen(
+            categoryViewModel,
+            paddingValues,
             handleClickAddDiaryButton,
-            handleClickCalendarColumn)
+            handleClickCalendarColumn
+        )
 
     }
 }
@@ -75,6 +80,6 @@ fun DiaryScreen(
 @Composable
 fun PreviewGradationDiary() {
     GradientDiaryTheme {
-        DiaryScreen({}, {})
+        //DiaryScreen(,{}, {})
     }
 }

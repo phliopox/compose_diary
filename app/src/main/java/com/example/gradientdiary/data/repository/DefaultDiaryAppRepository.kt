@@ -5,8 +5,6 @@ import com.example.gradientdiary.data.database.DiaryDao
 import com.example.gradientdiary.data.database.entity.CategoryEntity
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import java.time.LocalDate
 import javax.inject.Inject
 
 class DefaultDiaryAppRepository @Inject constructor(
@@ -23,6 +21,10 @@ class DefaultDiaryAppRepository @Inject constructor(
 
     override fun insertCategory(categoryEntity: CategoryEntity) =
         categoryDao.insertCategoryEntity(categoryEntity)
+
+    override fun updateCategory(id: Long, newName: String) {
+        categoryDao.updateCategoryName(id , newName)
+    }
 
 
 }

@@ -17,6 +17,7 @@ import com.example.gradientdiary.presentation.ui.Key.DIARY_ARGS_KEY
 import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
 import com.example.gradientdiary.presentation.ui.write.WriteScreen
+import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +30,7 @@ import timber.log.Timber
 @Composable
 fun DiaryAppNavHost(
     writeViewModel: WriteViewModel,
+    categoryViewModel: CategoryViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -55,6 +57,7 @@ fun DiaryAppNavHost(
         composable(DiaryAppScreen.Home.name) {
             DiaryScreen(
                 // memoViewModel = memoViewModel,
+                categoryViewModel = categoryViewModel,
                 handleClickAddDiaryButton = handleClickAddDiaryButton,
                 handleClickCalendarColumn = handleClickCalendarColumn,
             )

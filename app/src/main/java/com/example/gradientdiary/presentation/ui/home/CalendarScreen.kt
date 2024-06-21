@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,13 +43,18 @@ import com.example.gradientdiary.presentation.getNow
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
+import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import java.time.format.DateTimeFormatter
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
+/* category pref list 형태로 저장해두고
+* 꺼낼수있게 해두기,!
+* */
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarScreen(
+    categoryViewModel : CategoryViewModel,
     paddingValues: PaddingValues,
     handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit
@@ -58,105 +65,113 @@ fun CalendarScreen(
 
     val context = LocalContext.current
     val pref = SharedPrefsStorageProvider(context)
-    val category = pref.getCategory() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+    val category = pref.getCurrentCategory() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
     val currentMonth = pref.getCurrentMonth()
     val currentYear = pref.getCurrentYear()
 
-    var year by remember { mutableIntStateOf(currentYear) }
+    val year by remember { mutableIntStateOf(currentYear) }
     var month by remember { mutableIntStateOf(currentMonth) }
     val interactionSource = remember { MutableInteractionSource() }
 
+    var dialogOpenClick by remember { mutableStateOf(false) }
 
-
-    Column(modifier = Modifier.padding(paddingValues)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                "${month}월  ",
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(end = Paddings.large)
-            )
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable(
-                    //기본 클릭 효과 제거
-                    interactionSource = interactionSource,
-                    indication = null
-                ) {
-                    //todo 카테고리 선택 다이얼로그
-
-                }) {
+    Box (contentAlignment = Alignment.Center){
+        if(dialogOpenClick){
+            EditCategoryDialog (categoryViewModel){
+                dialogOpenClick = false
+            }
+        }
+        Column(modifier = Modifier.padding(paddingValues)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    category, style = MaterialTheme.typography.displayMedium,
+                    "${month}월  ",
+                    style = MaterialTheme.typography.displayMedium,
                     modifier = Modifier.padding(end = Paddings.large)
                 )
-                Icon(
-                    painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
-                    contentDescription = null
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Paddings.extra3),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            dayName.forEach {
-                Text(
-                    text = it,
-                    modifier = Modifier.width(dayNameWidth),
-                    style = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        val pagerState = rememberPagerState(getMonth() - 1, 0f) { 12 }
-        Column(
-            modifier = Modifier.weight(0.6f),
-            verticalArrangement = Arrangement.Top
-        ) {
-            VerticalPager(
-                state = pagerState
-            ) { page ->
-                Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxSize()) {
-                    val currentPageMonth = pagerState.currentPage + 1
-                    pref.saveCurrentMonth(currentPageMonth)
-                    pref.saveCurrentYear(year)
-                    // 최근 조회한 월 pref 에 넣어두기
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable(
+                        //기본 클릭 효과 제거
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
+                        //todo 카테고리 선택 다이얼로그
+                        dialogOpenClick = !dialogOpenClick
 
-                    CustomCalendarView(
-                        year,
-                        currentPageMonth,
-                        handleClickCalendarColumn
+                    }) {
+                    Text(
+                        category, style = MaterialTheme.typography.displayMedium,
+                        modifier = Modifier.padding(end = Paddings.large)
                     )
-                    if (pagerState.currentPage != page) {
-                        month = currentPageMonth
+                    Icon(
+                        painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                        contentDescription = null
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Paddings.extra3),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                dayName.forEach {
+                    Text(
+                        text = it,
+                        modifier = Modifier.width(dayNameWidth),
+                        style = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            val pagerState = rememberPagerState(getMonth() - 1, 0f) { 12 }
+            Column(
+                modifier = Modifier.weight(0.6f),
+                verticalArrangement = Arrangement.Top
+            ) {
+                VerticalPager(
+                    state = pagerState
+                ) { page ->
+                    Row(verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxSize()) {
+                        val currentPageMonth = pagerState.currentPage + 1
+                        pref.saveCurrentMonth(currentPageMonth)
+                        pref.saveCurrentYear(year)
+                        // 최근 조회한 월 pref 에 넣어두기
+
+                        CustomCalendarView(
+                            year,
+                            currentPageMonth,
+                            handleClickCalendarColumn
+                        )
+                        if (pagerState.currentPage != page) {
+                            month = currentPageMonth
+                        }
                     }
                 }
             }
-        }
-        //다이어리 작성 btn
-        Column(
-            modifier = Modifier
-                .weight(0.2f)
-                .fillMaxWidth()
-                .padding(bottom = Paddings.extra3),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            IconButton(
-                onClick = {
-                    val now = getNow()
-                    val strNow = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-                    handleClickAddDiaryButton(strNow)
-                },
-                modifier = Modifier.background(Color.Black, shape = RoundedCornerShape(45.dp)),
+            //다이어리 작성 btn
+            Column(
+                modifier = Modifier
+                    .weight(0.2f)
+                    .fillMaxWidth()
+                    .padding(bottom = Paddings.extra3),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                IconButton(
+                    onClick = {
+                        val now = getNow()
+                        val strNow = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                        handleClickAddDiaryButton(strNow)
+                    },
+                    modifier = Modifier.background(Color.Black, shape = RoundedCornerShape(45.dp)),
 
-                ) {
-                Icon(
-                    painter = painterResource(R.drawable.plus_svgrepo_com),
-                    "Floating action button.",
-                    tint = Color.White
-                )
+                    ) {
+                    Icon(
+                        painter = painterResource(R.drawable.plus_svgrepo_com),
+                        "Floating action button.",
+                        tint = Color.White
+                    )
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
 import com.example.gradientdiary.domain.SaveDiaryUseCase
+import com.example.gradientdiary.domain.UpdateCategoryNameUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,4 +45,7 @@ class UseCaseModule {
     fun providesGetAllCategoryUseCase(appRepository: DiaryAppRepository) =
         GetAllCategoryUseCase(appRepository)
 
+    @Provides
+    fun providesUpdateCategoryName(appRepository: DiaryAppRepository) =
+        UpdateCategoryNameUseCase(appRepository)
 }

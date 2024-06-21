@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import com.example.gradientdiary.data.database.entity.CategoryEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 abstract class CategoryDao {
@@ -20,4 +19,6 @@ abstract class CategoryDao {
     @Delete
     abstract fun deleteCategory(categoryEntity: CategoryEntity)
 
+    @Query("UPDATE CategoryEntity SET categoryName = :newName WHERE id = :id")
+    abstract fun updateCategoryName(id: Long, newName: String)
 }

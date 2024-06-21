@@ -1,7 +1,6 @@
 package com.example.gradientdiary.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
@@ -10,14 +9,8 @@ import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveDiaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +27,7 @@ class WriteViewModel @Inject constructor(
 
     fun getCategory() :String {
         // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
-        return storage.getCategory()
+        return storage.getCurrentCategory()
     }
 
     suspend fun getDiaryByDate(date: String): DiaryEntity? {

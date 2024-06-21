@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         //LifeCycleChecker().onCreate()
+        //deleteDatabaseFile(this,"diary_app.db")
         setContent {
             DiaryApp()
         }

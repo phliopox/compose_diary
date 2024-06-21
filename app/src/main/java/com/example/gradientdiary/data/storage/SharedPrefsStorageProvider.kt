@@ -30,18 +30,18 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext context
         PREF_CURRENT_YEAR,Context.MODE_PRIVATE
     )
 
-    fun saveCategory(value: String): Boolean {
+    fun saveSelectedCategory(value: String): Boolean {
         return category.edit().putString(PREF_CATEGORY, value).commit()
     }
 
 
-    fun getCategory(): String {
+    fun getCurrentCategory(): String {
         val default = "일기"
         return  category.getString(PREF_CATEGORY, default)?:default
     }
 
 
-    fun removeCategory(): Boolean {
+    fun removeCurrentCategory(): Boolean {
         category.edit().remove(PREF_CATEGORY).apply()
         return true
     }
