@@ -28,7 +28,7 @@ class CategoryViewModel @Inject constructor(
     private var _allCategory = MutableStateFlow<List<CategoryEntity>?>(emptyList())
     val allCategory: StateFlow<List<CategoryEntity>?> = _allCategory
 
-    var allCategoryStr: MutableList<String> = mutableListOf()
+    private var allCategoryStr: MutableList<String> = mutableListOf()
 
     var selectedCategory = storage.getCurrentCategory()
 

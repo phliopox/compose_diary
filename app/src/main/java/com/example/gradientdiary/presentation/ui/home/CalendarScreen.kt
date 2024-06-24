@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.gradientdiary.R
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.getDaysInMonth
@@ -54,7 +56,7 @@ val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarScreen(
-    categoryViewModel : CategoryViewModel,
+    categoryViewModel: CategoryViewModel,
     paddingValues: PaddingValues,
     handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit
@@ -75,9 +77,9 @@ fun CalendarScreen(
 
     var dialogOpenClick by remember { mutableStateOf(false) }
 
-    Box (contentAlignment = Alignment.Center){
-        if(dialogOpenClick){
-            EditCategoryDialog (categoryViewModel){
+    Box(contentAlignment = Alignment.Center) {
+        if (dialogOpenClick) {
+            EditCategoryDialog(categoryViewModel) {
                 dialogOpenClick = false
             }
         }
@@ -95,7 +97,7 @@ fun CalendarScreen(
                         indication = null
                     ) {
                         //todo 카테고리 선택 다이얼로그
-                        dialogOpenClick = !dialogOpenClick
+                        // dialogOpenClick = !dialogOpenClick
 
                     }) {
                     Text(
@@ -103,7 +105,10 @@ fun CalendarScreen(
                         modifier = Modifier.padding(end = Paddings.large)
                     )
                     Icon(
-                        painterResource(id = R.drawable.baseline_keyboard_arrow_right_24),
+                        modifier = Modifier
+                            .size(30.dp)
+                            .padding(8.dp),
+                        painter = painterResource(id = R.drawable.chevron_down_svgrepo_com),
                         contentDescription = null
                     )
                 }
