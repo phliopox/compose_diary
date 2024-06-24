@@ -3,6 +3,7 @@ package com.example.gradientdiary.presentation.ui.write
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -91,19 +92,35 @@ fun WriteScreen(
             }
         }
     }
-/*
-    val handleAddImage = {
+    var deleteCheckShow by remember { mutableStateOf(false) }
 
-    }*/
+    val handleDeleteDiary = {
+        //재차 다이어리 삭제를 확인하는 다이얼로그를 띄운다
+        deleteCheckShow = !deleteCheckShow
+    }
 
     val contentValue = contentsState.collectAsState()
-    WriteScreenContent(
-        outputDateString,
-        contentValue.value,
-        contentBlockViewModel,
-        handleSaveDiary,
-        handleBackButtonClick
-    )
+    Box(contentAlignment = Alignment.Center) {
+        WriteScreenContent(
+            outputDateString,
+            contentValue.value,
+            contentBlockViewModel,
+            handleSaveDiary,
+            handleBackButtonClick,
+            handleDeleteDiary
+        )
+        if(deleteCheckShow) {
+            DeleteCheckDialog({
+                deleteCheckShow = false
+            }) {//삭제 버튼 클릭
+                CoroutineScope(Dispatchers.IO).launch {
+                    writeViewModel.deleteDiary()
+                }
+                deleteCheckShow = false
+                handleBackButtonClick()
+            }
+        }
+    }
 }
 
 @Composable
@@ -118,7 +135,8 @@ private fun WriteScreenContent(
     contents: List<ContentBlock<*>>,
     contentBlockViewModel: ContentBlockViewModel,
     handleSaveDiary: () -> Job,
-    handleBackButtonClick: () -> Unit
+    handleBackButtonClick: () -> Unit,
+    handleDeleteDiary : () -> Unit
 ) {
     val hint = "제목"
     var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
@@ -192,6 +210,7 @@ private fun WriteScreenContent(
             }
         }
         ContentBlockScreen(
+            handleDeleteDiary,
             contentBlockViewModel = contentBlockViewModel,
             contents = contents
         )

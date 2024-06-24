@@ -9,6 +9,7 @@ import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveDiaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,22 +20,24 @@ class WriteViewModel @Inject constructor(
     private val getDiaryUseCase: GetDiaryUseCase,
     private val getDiaryByDateUseCase: GetDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
-    private val storage : SharedPrefsStorageProvider
+    private val storage: SharedPrefsStorageProvider
 ) : ViewModel() {
 
-    //private val _diary = MutableStateFlow<DiaryEntity?>(null)
+    private val _diary = MutableStateFlow<DiaryEntity?>(null)
     //var diary: StateFlow<DiaryEntity?> = _diary
 
-    fun getCategory() :String {
+    fun getCategory(): String {
         // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
         return storage.getCurrentCategory()
     }
 
     suspend fun getDiaryByDate(date: String): DiaryEntity? {
         return try {
-            getDiaryByDateUseCase.invoke(date)
+            val result =  getDiaryByDateUseCase.invoke(date)
                 .firstOrNull()
-         } catch (e: Exception) {
+            _diary.value = result
+            result
+        } catch (e: Exception) {
             Timber.e("데이터 로딩 중 오류 발생 : $e")
             null
         }
@@ -51,8 +54,8 @@ class WriteViewModel @Inject constructor(
             }.toList()
 
         val diaryEntity = DiaryEntity(
-            id = diaryModel.id,
-            category =  diaryModel.category,
+           // id = diaryModel.id,
+            category = diaryModel.category,
             contents = converted,
             title = diaryModel.title,
             updateDate = diaryModel.updateDate
@@ -61,5 +64,10 @@ class WriteViewModel @Inject constructor(
         saveDiaryUseCase.invoke(diaryEntity)
     }
 
-
+    fun deleteDiary() {
+        Timber.e("deleteDiary 호출 : ${_diary.value}")
+        _diary.value?.let {
+            deleteDiaryUseCase.invoke(it)
+        }
+    }
 }

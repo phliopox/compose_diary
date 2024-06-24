@@ -36,6 +36,7 @@ import timber.log.Timber
 
 @Composable
 fun ColumnScope.ContentBlockScreen(
+    handleDeleteDiary: () -> Unit,
     contentBlockViewModel: ContentBlockViewModel,
     contents: List<ContentBlock<*>>,
 ) {
@@ -70,6 +71,7 @@ fun ColumnScope.ContentBlockScreen(
     ) {
         WriteScreenBottomBar(
             handleAddImage = handleAddImageBlock,
+            handleDeleteDiary,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 8.dp)
@@ -170,6 +172,7 @@ fun PreviewWriteScreen2() {
         Column {
             val sampleContents = emptyList<ContentBlock<*>>()
             ContentBlockScreen(
+                {},
                 ContentBlockViewModel(null),
                 sampleContents
             )

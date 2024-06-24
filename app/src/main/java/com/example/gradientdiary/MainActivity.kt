@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
         //LifeCycleChecker().onCreate()
         //deleteDatabaseFile(this,"diary_app.db")
         setContent {

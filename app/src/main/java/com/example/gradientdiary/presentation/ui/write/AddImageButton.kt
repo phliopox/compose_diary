@@ -94,7 +94,7 @@ fun AddImageButton(
     }
 
     Icon(
-        painterResource(id = R.drawable.ic_gallery),
+        painterResource(id = R.drawable.album_svgrepo_com),
         modifier = iconModifier.clickable {
             handlePickFromGalleryIconButton()
         },
