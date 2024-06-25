@@ -2,6 +2,7 @@ package com.example.gradientdiary.presentation.ui.write
 
 
 import android.annotation.SuppressLint
+import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,9 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.gradientdiary.data.DiaryModel
@@ -66,10 +71,23 @@ fun WriteScreen(
     val outputFormat = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
     val formatDate: LocalDate = LocalDate.parse(date, inputFormat)!!
     val outputDateString: String = outputFormat.format(formatDate)
+    val contentValue = contentsState.collectAsState()
+
+    val isKeyboardOpen by keyboardAsState()
+    val focusManager = LocalFocusManager.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycle = lifecycleOwner.lifecycle
+    var previousKeyboardState by remember { mutableStateOf(false) }
+
+    var deleteCheckShow by remember { mutableStateOf(false) }
+    var isDeleteInProgress by remember { mutableStateOf(false) }
+
+
 
     val handleSaveDiary = {
         CoroutineScope(Dispatchers.IO).launch {
-            val finalBlockList = contentBlockViewModel.removeNotFoundBlocks() // 파일을 찾을 수 없는 이미지 블럭 삭제한 list
+            val finalBlockList =
+                contentBlockViewModel.removeNotFoundBlocks() // 파일을 찾을 수 없는 이미지 블럭 삭제한 list
             val newMemoModel = content?.let {
                 it.copy().convertToDiaryModel().apply {
                     title = contentBlockViewModel.title
@@ -92,71 +110,17 @@ fun WriteScreen(
             }
         }
     }
-    var deleteCheckShow by remember { mutableStateOf(false) }
 
-    val handleDeleteDiary = {
-        //재차 다이어리 삭제를 확인하는 다이얼로그를 띄운다
-        deleteCheckShow = !deleteCheckShow
-    }
-
-    val contentValue = contentsState.collectAsState()
-    Box(contentAlignment = Alignment.Center) {
-        WriteScreenContent(
-            outputDateString,
-            contentValue.value,
-            contentBlockViewModel,
-            handleSaveDiary,
-            handleBackButtonClick,
-            handleDeleteDiary
-        )
-        if(deleteCheckShow) {
-            DeleteCheckDialog({
-                deleteCheckShow = false
-            }) {//삭제 버튼 클릭
-                CoroutineScope(Dispatchers.IO).launch {
-                    writeViewModel.deleteDiary()
-                }
-                deleteCheckShow = false
-                handleBackButtonClick()
-            }
-        }
-    }
-}
-
-@Composable
-fun keyboardAsState(): State<Boolean> {
-    val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-    return rememberUpdatedState(isImeVisible)
-}
-
-@Composable
-private fun WriteScreenContent(
-    outputDateString: String,
-    contents: List<ContentBlock<*>>,
-    contentBlockViewModel: ContentBlockViewModel,
-    handleSaveDiary: () -> Job,
-    handleBackButtonClick: () -> Unit,
-    handleDeleteDiary : () -> Unit
-) {
-    val hint = "제목"
-    var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
-    val isKeyboardOpen by keyboardAsState()
-    val focusManager = LocalFocusManager.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val lifecycle = lifecycleOwner.lifecycle
-    var previousKeyboardState by remember { mutableStateOf(false) }
-
-    //top 에 삭제버튼 추가 필요
-
-    LaunchedEffect(key1 = diaryTitle) {
-        contentBlockViewModel.title = diaryTitle
-    }
+    // 앱 백그라운드 전환시에도 save (이미지 첨부를 위한 백그라운드 전환시 데이터 사라짐 방지)
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> {
-                        handleSaveDiary()  // 앱 백그라운드 전환시에도 save
+                    if (!isDeleteInProgress) {
+                        handleSaveDiary()
                     }
+                }
+
                 else -> {}
             }
         }
@@ -171,6 +135,18 @@ private fun WriteScreenContent(
         handleBackButtonClick()
     }
 
+    BackHandler {
+        // back 버튼 클릭시 save
+        if (!isDeleteInProgress) {
+            handleBackClickSave()
+        }
+    }
+
+    val handleDeleteDiary = {
+        //재차 다이어리 삭제를 확인하는 다이얼로그를 띄운다
+        deleteCheckShow = !deleteCheckShow
+    }
+
     //사용자가 키보드를 직접 내릴경우 ,
     // focus clear 를 해줘야 정상적인 backHandler 가 동작하기 때문에 clear 해준다.
     LaunchedEffect(isKeyboardOpen) {
@@ -180,11 +156,62 @@ private fun WriteScreenContent(
         previousKeyboardState = isKeyboardOpen
     }
 
-    BackHandler {
-        // back 버튼 클릭시 save
-        handleBackClickSave()
+    Box(contentAlignment = Alignment.Center) {
+        WriteScreenContent(
+            outputDateString,
+            contentValue.value,
+            contentBlockViewModel,
+            handleDeleteDiary
+        )
+        //삭제 아이콘 클릭시 여기까지 타고올라와서 handling
+        // dialog 띄우고 재차 확인하는 과정
+        if (deleteCheckShow) {
+            DeleteCheckDialog({
+                deleteCheckShow = false
+            }) {//삭제 버튼 클릭
+                isDeleteInProgress = true // backHandler 를 통한 save 방지
+                CoroutineScope(Dispatchers.IO).launch {
+                    writeViewModel.deleteDiary()
+                }
+                deleteCheckShow = false // dialog 숨기기
+                handleBackButtonClick() // navigation.Up
+            }
+        }
     }
+}
 
+@Composable
+fun keyboardAsState(): State<Boolean> {
+    val view = LocalView.current
+    var isImeVisible by remember { mutableStateOf(false) }
+
+    DisposableEffect(LocalWindowInfo.current) {
+        val listener = ViewTreeObserver.OnPreDrawListener {
+            isImeVisible = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            true
+        }
+        view.viewTreeObserver.addOnPreDrawListener(listener)
+        onDispose {
+            view.viewTreeObserver.removeOnPreDrawListener(listener)
+        }
+    }
+    return rememberUpdatedState(isImeVisible)
+}
+@Composable
+private fun WriteScreenContent(
+    outputDateString: String,
+    contents: List<ContentBlock<*>>,
+    contentBlockViewModel: ContentBlockViewModel,
+    handleDeleteDiary: () -> Unit
+) {
+    val hint = "제목"
+    var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
+
+
+    LaunchedEffect(key1 = diaryTitle) {
+        contentBlockViewModel.title = diaryTitle
+    }
 
     Column(
         modifier = Modifier
@@ -223,11 +250,11 @@ fun PreviewWriteScreen() {
     GradientDiaryTheme {
         val date = "20220202"
 
-     /*   WriteScreen(
-            date = date,
-            contentBlockViewModel = ContentBlockViewModel(emptyList()),
-            content = null ,
-            writeViewModel = null
-        ){}*/
+        /*   WriteScreen(
+               date = date,
+               contentBlockViewModel = ContentBlockViewModel(emptyList()),
+               content = null ,
+               writeViewModel = null
+           ){}*/
     }
 }
