@@ -11,6 +11,7 @@ import com.example.gradientdiary.data.database.entity.CategoryEntity
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
+import java.io.File
 import java.util.concurrent.Executors
 
 
@@ -55,9 +56,8 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
-/*
 fun deleteDatabaseFile(context : Context ,databaseName: String?) {
     val databases: File = File(context.applicationInfo.dataDir + "/databases")
     val db = File(databases, databaseName)
     if (db.delete()) Timber.e("Database deleted successfully") else Timber.e("Failed to delete database")
-}*/
+}

@@ -1,11 +1,11 @@
 package com.example.gradientdiary.presentation.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,7 @@ private fun EditCategoryDialogContent(
 
     LazyColumn(
         Modifier
+            .background(Color.White)
             .fillMaxWidth()
             .padding(vertical = 15.dp)
             .defaultMinSize(minHeight = 100.dp),
@@ -89,15 +91,14 @@ private fun EditCategoryDialogContent(
         }
         items(allCate ?: emptyList()) {
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth(0.5f),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Text(
                     it.categoryName,
                     style = MaterialTheme.typography.titleLarge,
                 )
-                //Spacer(modifier = Modifier.size(10.dp))
                 Icon(
                     modifier = Modifier.size(18.dp),
                     painter = painterResource(id = R.drawable.edit_pen_2_line_icon),
@@ -151,48 +152,78 @@ fun PreviewDialogContent() {
             shape = RoundedCornerShape(16.dp)
         ) {
             val iconModifier = Modifier
-                .size(24.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
-
+                .size(35.dp)
+                .padding(8.dp)
             LazyColumn(
                 Modifier
+                    .background(Color.White)
                     .fillMaxWidth()
                     .padding(vertical = 15.dp)
-                    .defaultMinSize(minHeight = 80.dp),
+                    .defaultMinSize(minHeight = 100.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    Box(contentAlignment = Alignment.CenterEnd) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                        Column(
-                            Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-
-                            Text(
-                                "카테고리",
-                                style = MaterialTheme.typography.headlineLarge.copy(
-                                    fontSize = 25.sp,
-                                    color = DefaultText
-                                )
+                        Text(
+                            "카테고리",
+                            style = MaterialTheme.typography.headlineLarge.copy(
+                                fontSize = 25.sp,
+                                color = DefaultText
                             )
-                        }
-                        Icon(
-                            modifier = iconModifier,
-                            painter = painterResource(id = R.drawable.edit_pen_2_line_icon),
-                            contentDescription = null
                         )
                     }
-                    Spacer(modifier = Modifier.padding(10.dp))
                 }
                 items(allCate ?: emptyList()) {
-                    Text(
-                        it,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(vertical = 5.dp)
-                    )
+                    Row(
+                        Modifier.fillMaxWidth(0.5f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Text(
+                            it,
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                        //Spacer(modifier = Modifier.size(10.dp))
+                        Icon(
+                            modifier = Modifier.size(18.dp),
+                            painter = painterResource(id = R.drawable.edit_pen_2_line_icon),
+                            contentDescription = null,
+                            tint = DefaultText
+                        )
+                    }
+                }
+                item {
+                    Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.padding(top = 16.dp)) {
+                        Column(
+                            Modifier
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = iconModifier,
+                                painter = painterResource(id = R.drawable.plus_svgrepo_com),
+                                contentDescription = null
+                            )
+                        }
+                        Text(
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .clickable {
+                                },
+                            text = "저장",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                    }
                 }
             }
+
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -25,19 +26,14 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = Color.Black,
     onPrimary = Color.White,
+    secondary = DarkGrey300,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    background = Color.White,
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black
 )
 /*
 https://developer.android.com/codelabs/basic-android-kotlin-compose-material-theming?hl=ko&continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-3-pathway-3%3Fhl%3Dko%26_gl%3D1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-material-theming&_gl=1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..#3

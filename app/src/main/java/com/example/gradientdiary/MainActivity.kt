@@ -3,7 +3,7 @@ package com.example.gradientdiary
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.view.WindowCompat
+import com.example.gradientdiary.data.database.deleteDatabaseFile
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.ui.DiaryApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,9 +14,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //WindowCompat.setDecorFitsSystemWindows(window, false)
         //LifeCycleChecker().onCreate()
-        //deleteDatabaseFile(this,"diary_app.db")
+       // deleteDatabaseFile(this,"diary_app.db")
         setContent {
             DiaryApp()
         }

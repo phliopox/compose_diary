@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +38,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.gradientdiary.R
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.presentation.getDaysInMonth
@@ -75,12 +77,13 @@ fun CalendarScreen(
     var month by remember { mutableIntStateOf(currentMonth) }
     val interactionSource = remember { MutableInteractionSource() }
 
-    var dialogOpenClick by remember { mutableStateOf(false) }
+    var categorySpinnerExpanded by remember { mutableStateOf(false) }
+    var editCategoryDialogOpen by remember { mutableStateOf(false) }
 
     Box(contentAlignment = Alignment.Center) {
-        if (dialogOpenClick) {
-            EditCategoryDialog(categoryViewModel) {
-                dialogOpenClick = false
+        if (editCategoryDialogOpen) {
+            EditCategoryDialog(categoryViewModel = categoryViewModel) {
+                editCategoryDialogOpen = false
             }
         }
         Column(modifier = Modifier.padding(paddingValues)) {
@@ -90,27 +93,35 @@ fun CalendarScreen(
                     style = MaterialTheme.typography.displayMedium,
                     modifier = Modifier.padding(end = Paddings.large)
                 )
-                Row(verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable(
-                        //기본 클릭 효과 제거
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) {
-                        //todo 카테고리 선택 다이얼로그
-                        // dialogOpenClick = !dialogOpenClick
 
-                    }) {
-                    Text(
-                        category, style = MaterialTheme.typography.displayMedium,
-                        modifier = Modifier.padding(end = Paddings.large)
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(8.dp),
-                        painter = painterResource(id = R.drawable.chevron_down_svgrepo_com),
-                        contentDescription = null
-                    )
+                Box {
+                    Row(verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable(
+                            //기본 클릭 효과 제거
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            //todo 카테고리 선택 다이얼로그
+                            categorySpinnerExpanded = !categorySpinnerExpanded
+
+                        }) {
+                        Text(
+                            category, style = MaterialTheme.typography.displayMedium,
+                            modifier = Modifier.padding(end = Paddings.large)
+                        )
+                        Icon(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(8.dp),
+                            painter = painterResource(id = R.drawable.chevron_down_svgrepo_com),
+                            contentDescription = null
+                        )
+                    }
+                    CategorySpinner(categorySpinnerExpanded, categoryViewModel) { dialogOpen ->
+                        //dismiss
+                        categorySpinnerExpanded = false
+                        editCategoryDialogOpen = dialogOpen
+                    }
                 }
             }
             Row(
@@ -179,6 +190,47 @@ fun CalendarScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CategorySpinner(
+    categorySpinnerExpanded: Boolean,
+    categoryViewModel: CategoryViewModel,
+    dismiss: (Boolean) -> Unit
+) {
+    val allCate by categoryViewModel.allCategory.collectAsState()
+    val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
+
+    DropdownMenu(
+        modifier = Modifier.background(Color.White),
+        expanded = categorySpinnerExpanded,
+        onDismissRequest = { dismiss(false) }
+    ) {
+        allCate?.let {
+            it.forEach { category ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            category.categoryName,
+                            style = textStyle,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    onClick = { categoryViewModel.selectedCategory = category.categoryName })
+            }
+        }
+        DropdownMenuItem(
+            text = { Text("설정하기", style = textStyle, textAlign = TextAlign.Center) },
+            trailingIcon = {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(
+                        id = R.drawable.settings_svgrepo_com
+                    ), contentDescription = "category_setting"
+                )
+            },
+            onClick = { dismiss(true) })
     }
 }
 
