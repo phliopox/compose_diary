@@ -22,7 +22,7 @@ abstract class DiaryDao {
     abstract fun deleteDairy(diaryEntity: DiaryEntity)
 
 
-    @Query("select * from DiaryEntity where updateDate = :updateDate")
-    abstract fun getDairyByDate(updateDate : String) : Flow<DiaryEntity>
+    @Query("select * from DiaryEntity where updateDate = :updateDate AND categoryId = :categoryId")
+    abstract fun getDairyByDate(categoryId: Long, updateDate: String): Flow<DiaryEntity>
 
 }

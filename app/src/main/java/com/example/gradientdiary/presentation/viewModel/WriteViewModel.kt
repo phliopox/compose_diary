@@ -24,9 +24,9 @@ class WriteViewModel @Inject constructor(
 
     private val _diary = MutableStateFlow<DiaryEntity?>(null)
 
-    suspend fun getDiaryByDate(date: String): DiaryEntity? {
+    suspend fun getDiaryByDateAndCategory(categoryId: Long, date: String): DiaryEntity? {
         return try {
-            val result =  getDiaryByDateUseCase.invoke(date)
+            val result = getDiaryByDateUseCase.invoke(categoryId, date)
                 .firstOrNull()
             _diary.value = result
             result
@@ -47,7 +47,7 @@ class WriteViewModel @Inject constructor(
             }.toList()
 
         val diaryEntity = DiaryEntity(
-           // id = diaryModel.id,
+            // id = diaryModel.id,
             categoryId = diaryModel.categoryId,
             contents = converted,
             title = diaryModel.title,

@@ -36,7 +36,7 @@ class CategoryViewModel @Inject constructor(
     private val _allCategory = mutableStateListOf<CategoryEntity>()
     val allCategory: List<CategoryEntity> get() = _allCategory
 
-    var selectedCategory = MutableStateFlow<String>("일기")
+    var selectedCategory = MutableStateFlow("일기")
 
     init {
         viewModelScope.launch {

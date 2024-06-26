@@ -7,5 +7,6 @@ import javax.inject.Inject
 class GetDiaryByDateUseCase @Inject constructor(
     private val appRepository: DiaryAppRepository
 ) {
-    operator fun invoke(date : String) = appRepository.getDiaryByDate(date)
+    operator fun invoke(categoryId: Long, date: String) =
+        appRepository.getDiaryByDate(categoryId, date)
 }

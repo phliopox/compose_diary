@@ -77,8 +77,9 @@ fun DiaryAppNavHost(
                 // room db 에서 데이터 get 완료될 때까지 대기 process
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+                        val categoryId = categoryViewModel.getCategoryId()
                         val task: Deferred<DiaryEntity?> =
-                            async { writeViewModel.getDiaryByDate(date) }
+                            async { writeViewModel.getDiaryByDateAndCategory(categoryId,date) }
                         content = task.await()
                     } finally {
                         isLoading = false
