@@ -34,10 +34,11 @@ class CategoryViewModel @Inject constructor(
     private val _allCategory = mutableStateListOf<CategoryEntity>()
     val allCategory: List<CategoryEntity> get() = _allCategory
 
-    var selectedCategory = storage.getCurrentCategory()
+    var selectedCategory = ""
 
     init {
         viewModelScope.launch {
+            selectedCategory = storage.getCurrentCategory()
             refreshAllCategory()
         }
     }
@@ -47,7 +48,7 @@ class CategoryViewModel @Inject constructor(
         //Timber.e("addAllcate allcategory : ${allCategory.joinToString(",") { it.toString() }}")
     }
 
-    fun selectedCategoryChange(category: String) {
+    suspend fun selectedCategoryChange(category: String) {
         storage.saveSelectedCategory(category)
         selectedCategory = category
     }
@@ -57,6 +58,7 @@ class CategoryViewModel @Inject constructor(
         _savedCategory.value = categories.map { it.copy() } // Deep copy
         _allCategory.clear()
         _allCategory.addAll(categories.map { it.copy() }) // Deep copy
+
         //Timber.e("allCategory ${_allCategory.joinToString(separator = ", ") { it.toString() }}")
     }
 
@@ -82,6 +84,7 @@ class CategoryViewModel @Inject constructor(
                         saveCategoryUseCase.invoke(CategoryEntity(categoryName = it.categoryName))
                     }
                 }
+                storage.saveSelectedCategory(categories[0].categoryName)
                 refreshAllCategory() // Refresh
             }
         }

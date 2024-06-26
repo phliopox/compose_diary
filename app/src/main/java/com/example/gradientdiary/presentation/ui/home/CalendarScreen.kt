@@ -48,12 +48,12 @@ import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
-/* category pref list 형태로 저장해두고
-* 꺼낼수있게 해두기,!
-* */
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -69,7 +69,7 @@ fun CalendarScreen(
 
     val context = LocalContext.current
     val pref = SharedPrefsStorageProvider(context)
-    val category = pref.getCurrentCategory() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+    val category by pref.category.collectAsState(initial = "일기") // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
     val currentMonth = pref.getCurrentMonth()
     val currentYear = pref.getCurrentYear()
 
@@ -79,6 +79,7 @@ fun CalendarScreen(
 
     var categorySpinnerExpanded by remember { mutableStateOf(false) }
     var editCategoryDialogOpen by remember { mutableStateOf(false) }
+
 
     Box(contentAlignment = Alignment.Center) {
         if (editCategoryDialogOpen) {
@@ -217,7 +218,11 @@ fun CategorySpinner(
                             textAlign = TextAlign.Center
                         )
                     },
-                    onClick = { categoryViewModel.selectedCategoryChange(category.categoryName) })
+                    onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            categoryViewModel.selectedCategoryChange(category.categoryName)
+                        }
+                    })
             }
         }
         DropdownMenuItem(

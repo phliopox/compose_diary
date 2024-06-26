@@ -26,7 +26,7 @@ class WriteViewModel @Inject constructor(
     private val _diary = MutableStateFlow<DiaryEntity?>(null)
     //var diary: StateFlow<DiaryEntity?> = _diary
 
-    fun getCategory(): String {
+    suspend fun getCategory(): String {
         // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
         return storage.getCurrentCategory()
     }
