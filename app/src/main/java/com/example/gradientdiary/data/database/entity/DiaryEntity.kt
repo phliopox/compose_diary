@@ -10,13 +10,13 @@ data class DiaryEntity(
     @PrimaryKey val updateDate : String,
     val contents : List<ContentBlockEntity>,
     val title : String,
-    val category : String
+    val categoryId : Long
 ){
     fun convertToDiaryModel() = DiaryModel(
         //id = id,
         updateDate = updateDate,
         contents = contents.map{it.convertToContentBlockModel()},
         title = title,
-        category = category
+        categoryId = categoryId
     )
 }

@@ -98,6 +98,7 @@ fun DiaryAppNavHost(
                     date = date,
                     content = content,
                     writeViewModel = writeViewModel,
+                    categoryViewModel = categoryViewModel,
                     contentBlockViewModel = contentBlockViewModel.value,
                     handleBackButtonClick = { handleBackButtonClick() }
                 )

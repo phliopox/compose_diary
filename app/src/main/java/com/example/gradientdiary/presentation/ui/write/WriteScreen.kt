@@ -44,6 +44,7 @@ import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.EditableText
+import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +62,7 @@ fun WriteScreen(
     date: String,
     content: DiaryEntity? = null,
     writeViewModel: WriteViewModel,
+    categoryViewModel: CategoryViewModel,
     contentBlockViewModel: ContentBlockViewModel,
     handleBackButtonClick: () -> Unit
 ) {
@@ -86,6 +88,7 @@ fun WriteScreen(
 
     val handleSaveDiary = {
         CoroutineScope(Dispatchers.IO).launch {
+            val categoryId = categoryViewModel.getCategoryId()
             val finalBlockList =
                 contentBlockViewModel.removeNotFoundBlocks() // 파일을 찾을 수 없는 이미지 블럭 삭제한 list
             val newMemoModel = content?.let {
@@ -95,7 +98,7 @@ fun WriteScreen(
                 }
             } ?: DiaryModel(
                 contents = finalBlockList,
-                category = writeViewModel.getCategory(),
+                categoryId = categoryId,
                 title = contentBlockViewModel.title,
                 updateDate = date
             )

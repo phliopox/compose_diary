@@ -7,5 +7,5 @@ data class DiaryModel(
     val updateDate: String,
     var contents: List<ContentBlock<*>>,
     var title : String,
-    val category: String
+    val categoryId: Long
     )

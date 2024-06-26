@@ -13,4 +13,6 @@ interface DiaryAppRepository {
     fun deleteCategory(categoryEntity: CategoryEntity)
     fun insertCategory(categoryEntity: CategoryEntity)
     fun updateCategory(id : Long , newName : String)
+
+    fun getCategoryIdByName(name: String) : Long
 }

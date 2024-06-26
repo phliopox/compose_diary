@@ -4,6 +4,7 @@ import com.example.gradientdiary.data.repository.DiaryAppRepository
 import com.example.gradientdiary.domain.DeleteCategoryUseCase
 import com.example.gradientdiary.domain.DeleteDiaryUseCase
 import com.example.gradientdiary.domain.GetAllCategoryUseCase
+import com.example.gradientdiary.domain.GetCategoryIdUseCase
 import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
@@ -48,4 +49,8 @@ class UseCaseModule {
     @Provides
     fun providesUpdateCategoryName(appRepository: DiaryAppRepository) =
         UpdateCategoryNameUseCase(appRepository)
+
+    @Provides
+    fun providesGetCategoryIdByName(appRepository: DiaryAppRepository) =
+        GetCategoryIdUseCase(appRepository)
 }

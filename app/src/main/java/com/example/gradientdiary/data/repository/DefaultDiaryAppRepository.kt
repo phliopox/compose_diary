@@ -23,8 +23,10 @@ class DefaultDiaryAppRepository @Inject constructor(
         categoryDao.insertCategoryEntity(categoryEntity)
 
     override fun updateCategory(id: Long, newName: String) {
-        categoryDao.updateCategoryName(id , newName)
+        categoryDao.updateCategoryName(id, newName)
     }
+
+    override fun getCategoryIdByName(name: String): Long = categoryDao.getCategoryIdByName(name)
 
 
 }

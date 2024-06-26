@@ -69,7 +69,7 @@ fun CalendarScreen(
 
     val context = LocalContext.current
     val pref = SharedPrefsStorageProvider(context)
-    val category by pref.category.collectAsState(initial = "일기") // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
+    val category by categoryViewModel.selectedCategory.collectAsState() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
     val currentMonth = pref.getCurrentMonth()
     val currentYear = pref.getCurrentYear()
 

@@ -22,4 +22,7 @@ abstract class CategoryDao {
 
     @Query("UPDATE CategoryEntity SET categoryName = :newName WHERE id = :id")
     abstract fun updateCategoryName(id: Long, newName: String)
+
+    @Query("select id from CategoryEntity WHERE categoryName = :name")
+    abstract fun getCategoryIdByName(name : String) :Long
 }

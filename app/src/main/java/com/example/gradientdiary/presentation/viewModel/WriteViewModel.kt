@@ -19,17 +19,10 @@ class WriteViewModel @Inject constructor(
     private val saveDiaryUseCase: SaveDiaryUseCase,
     private val getDiaryUseCase: GetDiaryUseCase,
     private val getDiaryByDateUseCase: GetDiaryByDateUseCase,
-    private val deleteDiaryUseCase: DeleteDiaryUseCase,
-    private val storage: SharedPrefsStorageProvider
+    private val deleteDiaryUseCase: DeleteDiaryUseCase
 ) : ViewModel() {
 
     private val _diary = MutableStateFlow<DiaryEntity?>(null)
-    //var diary: StateFlow<DiaryEntity?> = _diary
-
-    suspend fun getCategory(): String {
-        // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
-        return storage.getCurrentCategory()
-    }
 
     suspend fun getDiaryByDate(date: String): DiaryEntity? {
         return try {
@@ -55,7 +48,7 @@ class WriteViewModel @Inject constructor(
 
         val diaryEntity = DiaryEntity(
            // id = diaryModel.id,
-            category = diaryModel.category,
+            categoryId = diaryModel.categoryId,
             contents = converted,
             title = diaryModel.title,
             updateDate = diaryModel.updateDate
