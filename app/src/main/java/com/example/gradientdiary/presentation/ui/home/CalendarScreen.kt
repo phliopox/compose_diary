@@ -199,7 +199,7 @@ fun CategorySpinner(
     categoryViewModel: CategoryViewModel,
     dismiss: (Boolean) -> Unit
 ) {
-    val allCate by categoryViewModel.allCategory.collectAsState()
+    val allCate by categoryViewModel.savedCategory.collectAsState()
     val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
 
     DropdownMenu(
@@ -217,7 +217,7 @@ fun CategorySpinner(
                             textAlign = TextAlign.Center
                         )
                     },
-                    onClick = { categoryViewModel.selectedCategory = category.categoryName })
+                    onClick = { categoryViewModel.selectedCategoryChange(category.categoryName) })
             }
         }
         DropdownMenuItem(

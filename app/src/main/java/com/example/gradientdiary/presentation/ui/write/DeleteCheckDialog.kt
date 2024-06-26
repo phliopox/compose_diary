@@ -38,7 +38,7 @@ fun DeleteCheckDialog(
         ) {
             Column(
                 Modifier
-                    .defaultMinSize(minWidth = 100.dp, minHeight = 140.dp)
+                    .defaultMinSize(minWidth = 250.dp, minHeight = 140.dp)
                     .background(Color.White)
                     .fillMaxWidth(0.5f)
                     .padding(16.dp),

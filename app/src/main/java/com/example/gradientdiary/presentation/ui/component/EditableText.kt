@@ -19,19 +19,21 @@ import com.example.gradientdiary.presentation.theme.DefaultText
 
 @Composable
 fun EditableText(
+    readOnly: Boolean? = null,
     value: String,
-    hint: String ?= null,
+    hint: String? = null,
     modifier: Modifier? = Modifier,
     style: TextStyle? = null,
     onChange: (String) -> Unit
 ) {
-    var textValue by   rememberSaveable{ mutableStateOf(value) }
+    var textValue by rememberSaveable { mutableStateOf(value) }
     val textStyle = style ?: MaterialTheme.typography.titleMedium.copy(color = DefaultText)
     val fieldModifier = modifier ?: Modifier
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     BasicTextField(
+        readOnly = readOnly == true,
         value = textValue,
         onValueChange = { new ->
             textValue = new
@@ -49,7 +51,7 @@ fun EditableText(
             },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
-              onDone = { focusManager.clearFocus() }
+            onDone = { focusManager.clearFocus() }
         )
     )
 }

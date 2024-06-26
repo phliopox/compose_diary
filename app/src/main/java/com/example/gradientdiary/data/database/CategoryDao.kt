@@ -3,6 +3,7 @@ package com.example.gradientdiary.data.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import com.example.gradientdiary.data.database.entity.CategoryEntity
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class CategoryDao {
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCategoryEntity(category: CategoryEntity)
 
     @Query("select * from CategoryEntity")

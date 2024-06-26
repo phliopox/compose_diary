@@ -1,5 +1,6 @@
 package com.example.gradientdiary.presentation.viewModel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.CategoryEntity
@@ -9,10 +10,12 @@ import com.example.gradientdiary.domain.GetAllCategoryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
 import com.example.gradientdiary.domain.UpdateCategoryNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,10 +28,11 @@ class CategoryViewModel @Inject constructor(
     private val storage: SharedPrefsStorageProvider
 ) : ViewModel() {
 
-    private var _allCategory = MutableStateFlow<List<CategoryEntity>?>(emptyList())
-    val allCategory: StateFlow<List<CategoryEntity>?> = _allCategory
+    private var _savedCategory = MutableStateFlow<List<CategoryEntity>?>(emptyList())
+    val savedCategory: StateFlow<List<CategoryEntity>?> = _savedCategory
 
-    private var allCategoryStr: MutableList<String> = mutableListOf()
+    private val _allCategory = mutableStateListOf<CategoryEntity>()
+    val allCategory: List<CategoryEntity> get() = _allCategory
 
     var selectedCategory = storage.getCurrentCategory()
 
@@ -38,49 +42,47 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
+    fun addAllCateStrList() {
+        _allCategory.add(CategoryEntity(null, ""))
+        //Timber.e("addAllcate allcategory : ${allCategory.joinToString(",") { it.toString() }}")
+    }
+
     fun selectedCategoryChange(category: String) {
         storage.saveSelectedCategory(category)
         selectedCategory = category
     }
 
     private suspend fun refreshAllCategory() {
-        _allCategory.value = getAllCategoryUseCase.invoke().firstOrNull()
-        _allCategory.value?.let { categories ->
-            val categoryNames = categories.map { it.categoryName }
-            allCategoryStr = categoryNames.toMutableList()
-        }
-        Timber.e("allCategory : $allCategoryStr")
+        val categories = getAllCategoryUseCase.invoke().firstOrNull() ?: emptyList()
+        _savedCategory.value = categories.map { it.copy() } // Deep copy
+        _allCategory.clear()
+        _allCategory.addAll(categories.map { it.copy() }) // Deep copy
+        //Timber.e("allCategory ${_allCategory.joinToString(separator = ", ") { it.toString() }}")
     }
 
     fun deleteCategory(categoryName: String) {
         viewModelScope.launch {
-            _allCategory.value?.let { categories ->
-                val selectedCategory = categories.filter { it.categoryName == categoryName }
-                if (selectedCategory.isEmpty()) {
-                    deleteCategoryUseCase.invoke(selectedCategory.first())
-                }
-                refreshAllCategory()
+            val categories = _savedCategory.value ?: return@launch
+            val selectedCategory = categories.filter { it.categoryName == categoryName }
+            if (selectedCategory.isEmpty()) {
+                deleteCategoryUseCase.invoke(selectedCategory.first())
             }
+            refreshAllCategory()
         }
     }
 
-    fun addNewCategory(categoryName: String) {
+    fun updateCategory(categories: List<CategoryEntity>) {
         viewModelScope.launch {
-            if (allCategoryStr.contains(categoryName).not()) {
-                viewModelScope.launch {
-                    saveCategoryUseCase.invoke(CategoryEntity(categoryName = categoryName))
-                    refreshAllCategory() // Refresh
+            withContext(Dispatchers.IO) {
+                categories.forEach {
+                   // Timber.e("UPDATE CATEGORY ${categories.joinToString(separator = ", ") { it.toString() }}")
+                    if (it.id != null) {
+                        updateCategoryNameUseCase.invoke(it.id, it.categoryName)
+                    } else {
+                        saveCategoryUseCase.invoke(CategoryEntity(categoryName = it.categoryName))
+                    }
                 }
-            }
-        }
-    }
-
-    fun updateCategoryName(categoryName: String, newName: String) {
-        viewModelScope.launch {
-            _allCategory.value?.let { categories ->
-                val selected = categories.first { it.categoryName == categoryName }
-                updateCategoryNameUseCase.invoke(selected.id!!, newName)
-                refreshAllCategory()
+                refreshAllCategory() // Refresh
             }
         }
     }

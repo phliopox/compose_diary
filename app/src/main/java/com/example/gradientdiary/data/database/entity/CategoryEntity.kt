@@ -7,5 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(indices = [Index(value = ["categoryName"], unique = true)])
 data class CategoryEntity (
     @PrimaryKey(autoGenerate = true) val id :Long? =null,
-    val categoryName : String
+    var categoryName : String
 )
+fun List<CategoryEntity>.deepCopy(): List<CategoryEntity> {
+    return this.map { it.copy() }
+}
