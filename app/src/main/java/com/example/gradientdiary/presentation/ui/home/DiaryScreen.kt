@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
-import com.example.gradientdiary.presentation.theme.Paddings
+import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 
 
@@ -23,7 +23,8 @@ import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 fun DiaryScreen(
     categoryViewModel: CategoryViewModel,
     handleClickAddDiaryButton: (String) -> Unit,
-    handleClickCalendarColumn: (String) -> Unit
+    handleClickCalendarColumn: (String) -> Unit,
+    handleSearchIconClick : () -> Unit
 ) {
     val iconSize = Modifier.size(24.dp)
     Scaffold(
@@ -40,7 +41,9 @@ fun DiaryScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        handleSearchIconClick()
+                    }) {
                         Icon(
                             modifier = iconSize,
                             painter = painterResource(R.drawable.search_svgrepo_com),
@@ -60,9 +63,9 @@ fun DiaryScreen(
         }
     ) { innerPadding ->
         val paddingValues = PaddingValues(
-            start = Paddings.extra,
-            top = innerPadding.calculateTopPadding() + Paddings.extra,
-            end = Paddings.extra,
+            start = Dimens.dp20,
+            top = innerPadding.calculateTopPadding() + Dimens.dp20,
+            end = Dimens.dp20,
             bottom = innerPadding.calculateBottomPadding()
         )
 

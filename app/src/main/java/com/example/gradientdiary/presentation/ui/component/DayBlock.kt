@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
-import com.example.gradientdiary.presentation.theme.Paddings
+import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.ui.home.CustomCalendarView
 
 @Composable
@@ -29,7 +29,7 @@ fun DayBlock(
     val dayText = if (day != 0 && day < 10) " $day" else if (day >= 10) "$day" else "  "
     Column(
         modifier = Modifier
-            .size(dayNameWidth, Paddings.xxextra7)
+            .size(dayNameWidth, Dimens.dp70)
             .clickable(day > 0) {
                 val dayString = if(day<10){ "0$day" }else day.toString()
                 dayClick(dayString)

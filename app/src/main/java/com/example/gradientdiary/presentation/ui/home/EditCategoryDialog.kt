@@ -42,12 +42,12 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
+import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.ui.component.EditableText
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @Composable
@@ -73,14 +73,14 @@ fun EditCategoryDialog(categoryViewModel: CategoryViewModel, onDismiss: () -> Un
                     .background(Color.White)
                     .width(halfScreenWidth)
                     .defaultMinSize(minWidth = 250.dp, minHeight = 140.dp)
-                    .padding(vertical = 15.dp),
+                    .padding(vertical = Dimens.dp16),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 16.dp),
+                            .padding(top = Dimens.dp10, bottom = Dimens.dp16),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
@@ -135,7 +135,7 @@ fun EditCategoryDialog(categoryViewModel: CategoryViewModel, onDismiss: () -> Un
                 item {
                     Box(
                         contentAlignment = Alignment.CenterEnd,
-                        modifier = Modifier.padding(top = 16.dp)
+                        modifier = Modifier.padding(top =Dimens.dp16)
                     ) {
                         Column(
                             Modifier
@@ -153,7 +153,7 @@ fun EditCategoryDialog(categoryViewModel: CategoryViewModel, onDismiss: () -> Un
                         }
                         Text(
                             modifier = Modifier
-                                .padding(end = 16.dp)
+                                .padding(Dimens.dp16)
                                 .clickable {
                                     // 카테고리 변경사항 저장
                                     CoroutineScope(Dispatchers.IO).launch {
@@ -196,8 +196,8 @@ fun PreviewDialogContent() {
             modifier = Modifier
                 //    .fillMaxWidth(0.5f)
                 .wrapContentHeight()
-                .padding(horizontal = 16.dp, vertical = 24.dp),
-            shape = RoundedCornerShape(16.dp)
+                .padding(horizontal = Dimens.dp16, vertical = 24.dp),
+            shape = RoundedCornerShape(Dimens.dp16)
         ) {
             val iconModifier = Modifier
                 .size(35.dp)
@@ -206,7 +206,7 @@ fun PreviewDialogContent() {
                 Modifier
                     .background(Color.White)
                     .fillMaxWidth()
-                    .padding(vertical = 15.dp)
+                    .padding(vertical =Dimens.dp16)
                     .defaultMinSize(minHeight = 100.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -214,7 +214,7 @@ fun PreviewDialogContent() {
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 16.dp),
+                            .padding(top = 10.dp, bottom = Dimens.dp16),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
@@ -239,7 +239,7 @@ fun PreviewDialogContent() {
                         )
                         //Spacer(modifier = Modifier.size(10.dp))
                         Icon(
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(Dimens.dp18),
                             painter = painterResource(id = R.drawable.edit_pen_2_line_icon),
                             contentDescription = null,
                             tint = DefaultText
@@ -249,7 +249,7 @@ fun PreviewDialogContent() {
                 item {
                     Box(
                         contentAlignment = Alignment.CenterEnd,
-                        modifier = Modifier.padding(top = 16.dp)
+                        modifier = Modifier.padding(top = Dimens.dp16)
                     ) {
                         Column(
                             Modifier
@@ -264,7 +264,7 @@ fun PreviewDialogContent() {
                         }
                         Text(
                             modifier = Modifier
-                                .padding(end = 16.dp)
+                                .padding(end =Dimens.dp16)
                                 .clickable {
                                 },
                             text = "저장",

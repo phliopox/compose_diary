@@ -45,7 +45,7 @@ import com.example.gradientdiary.presentation.getFirstDayOfWeek
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getNow
 import com.example.gradientdiary.presentation.theme.DefaultText
-import com.example.gradientdiary.presentation.theme.Paddings
+import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -92,7 +92,7 @@ fun CalendarScreen(
                 Text(
                     "${month}월  ",
                     style = MaterialTheme.typography.displayMedium,
-                    modifier = Modifier.padding(end = Paddings.large)
+                    modifier = Modifier.padding(end = Dimens.dp10)
                 )
 
                 Box {
@@ -108,7 +108,7 @@ fun CalendarScreen(
                         }) {
                         Text(
                             category, style = MaterialTheme.typography.displayMedium,
-                            modifier = Modifier.padding(end = Paddings.large)
+                            modifier = Modifier.padding(end = Dimens.dp10)
                         )
                         Icon(
                             modifier = Modifier
@@ -128,7 +128,7 @@ fun CalendarScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = Paddings.extra3),
+                    .padding(top = Dimens.dp30),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 dayName.forEach {
@@ -170,7 +170,7 @@ fun CalendarScreen(
                 modifier = Modifier
                     .weight(0.2f)
                     .fillMaxWidth()
-                    .padding(bottom = Paddings.extra3),
+                    .padding(bottom = Dimens.dp30),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

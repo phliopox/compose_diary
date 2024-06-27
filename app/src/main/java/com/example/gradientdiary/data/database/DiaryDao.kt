@@ -25,4 +25,6 @@ abstract class DiaryDao {
     @Query("select * from DiaryEntity where updateDate = :updateDate AND categoryId = :categoryId")
     abstract fun getDairyByDate(categoryId: Long, updateDate: String): Flow<DiaryEntity>
 
+    @Query("SELECT * FROM DiaryEntity where title LIKE '%' || :keyword || '%' OR contents LIKE '%' || :keyword || '%'")
+    abstract fun searchDiaryByKeyword(keyword : String) : Flow<List<DiaryEntity>>
 }

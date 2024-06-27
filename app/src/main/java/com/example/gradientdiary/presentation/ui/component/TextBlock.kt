@@ -1,9 +1,7 @@
 package com.example.gradientdiary.presentation.ui.component
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,13 +11,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
 import com.example.gradientdiary.presentation.theme.DefaultText
-import com.example.gradientdiary.presentation.theme.Paddings
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
