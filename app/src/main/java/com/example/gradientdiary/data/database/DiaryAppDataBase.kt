@@ -5,13 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.gradientdiary.data.database.entity.CategoryEntity
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import java.io.File
 import java.util.concurrent.Executors
 
 
@@ -29,37 +27,49 @@ abstract class DiaryAppDataBase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
     companion object {
-        fun getInstance(context: Context): DiaryAppDataBase =
-            Room.databaseBuilder(context, DiaryAppDataBase::class.java, "diary_app.db")
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        Timber.e("db onCreate ")
-
-                        Executors.newSingleThreadExecutor().execute {
-                            runBlocking {
-                                getInstance(context).categoryDao().insertCategoryEntity(
-                                    CategoryEntity(1,"일기"))
-                                Timber.e("SQL 호출됨 ")
+        @Volatile
+        private var INSTANCE: DiaryAppDataBase? = null
+        fun getInstance(context: Context): DiaryAppDataBase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    DiaryAppDataBase::class.java,
+                    "diary_app.db"
+                )
+                    .addCallback(object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            Timber.e("db onCreate")
+                            Executors.newSingleThreadExecutor().execute {
+                                runBlocking {
+                                    getInstance(context).categoryDao().insertCategoryEntity(
+                                        CategoryEntity(1, "일기")
+                                    )
+                                    Timber.e("SQL 호출됨")
+                                }
                             }
                         }
-                    }
 
-                    override fun onOpen(db: SupportSQLiteDatabase) {
-                        super.onOpen(db)
-                        Timber.e("db onOpen")
-                        populateInitialData(context)
-                    }
-                })
-                .fallbackToDestructiveMigration().build()
+                        override fun onOpen(db: SupportSQLiteDatabase) {
+                            super.onOpen(db)
+                            Timber.e("db onOpen")
+                            populateInitialData(context)
+                        }
+                    })
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
 
         private fun populateInitialData(context: Context) {
             Executors.newSingleThreadExecutor().execute {
                 runBlocking {
                     val categoryDao = getInstance(context).categoryDao()
-                    val categoryIdByName = categoryDao.getCategoryIdByName("일기")
-                    val categoryExists = categoryIdByName != 0L ||categoryIdByName ==null
-                    if (!categoryExists) {
+                    val categoryId = categoryDao.getCategoryIdByName("일기")
+                    val categoryNotExists = categoryId == 0L // category 없음
+                    if (categoryNotExists) {
                         categoryDao.insertCategoryEntity(CategoryEntity(1, "일기"))
                         Timber.e("Initial data inserted")
                     }
@@ -69,7 +79,7 @@ abstract class DiaryAppDataBase : RoomDatabase() {
     }
 }
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
+/*val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         // 예: "diary_table"에 "new_column" 추가
         database.execSQL("ALTER TABLE DiaryEntity ADD COLUMN title TEXT")
@@ -80,4 +90,4 @@ fun deleteDatabaseFile(context : Context ,databaseName: String?) {
     val databases: File = File(context.applicationInfo.dataDir + "/databases")
     val db = File(databases, databaseName)
     if (db.delete()) Timber.e("Database deleted successfully") else Timber.e("Failed to delete database")
-}
+}*/

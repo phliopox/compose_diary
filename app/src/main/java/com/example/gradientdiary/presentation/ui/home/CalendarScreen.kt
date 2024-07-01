@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
@@ -50,9 +47,6 @@ import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.ui.component.CategorySpinner
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
@@ -206,7 +200,7 @@ fun CustomCalendarView(year: Int, month: Int, handleClickCalendarColumn: (String
     val firstDayOfWeek = getFirstDayOfWeek(year, month) // 해당 월의 첫째날의 요일을 가져옴
     var blankCount = if (firstDayOfWeek == 7) 0 else firstDayOfWeek
     var currentDay = 1
-    Column() {
+    Column {
         val totalWeeks =
             (daysInMonth + blankCount) / 7 + if ((daysInMonth + blankCount) % 7 != 0) 1 else 0
 

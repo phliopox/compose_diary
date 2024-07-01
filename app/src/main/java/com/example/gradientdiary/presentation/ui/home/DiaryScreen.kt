@@ -123,13 +123,12 @@ fun PreviewGradationDiary() {
 
             }
         ) { innerPadding ->
-            val paddingValues = PaddingValues(
+          PaddingValues(
                 start = Dimens.dp20,
                 top = innerPadding.calculateTopPadding() + Dimens.dp20,
                 end = Dimens.dp20,
                 bottom = innerPadding.calculateBottomPadding()
             )
-
 
         }
     }
