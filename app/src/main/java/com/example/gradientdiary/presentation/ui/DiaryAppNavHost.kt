@@ -72,6 +72,7 @@ fun DiaryAppNavHost(
         composable(DiaryAppScreen.Search.name){
             SearchScreen(
                 searchViewModel,
+                categoryViewModel,
                 handleBackButtonClick = { handleBackButtonClick() },
             )
         }

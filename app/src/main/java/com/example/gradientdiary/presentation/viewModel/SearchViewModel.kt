@@ -3,6 +3,7 @@ package com.example.gradientdiary.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.DiaryEntity
+import com.example.gradientdiary.domain.GetCategoryUseCase
 import com.example.gradientdiary.domain.SearchDiaryByKeywordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,18 +26,28 @@ class SearchViewModel @Inject constructor(
 
     private val _searchResult = MutableStateFlow<List<DiaryEntity>?>(null)
     val searchResult: StateFlow<List<DiaryEntity>?> = _searchResult
+
+    private val filterCategory = MutableStateFlow("")
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    suspend fun searchAction() {
+    suspend fun searchAction(categoryFilter: Long?) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val keyword = _searchText.value
-                searchDiaryByKeywordUseCase.invoke(keyword)?.collectLatest {
-                    _searchResult.value = it
+                if (categoryFilter == null || categoryFilter == 0L) {
+                    searchDiaryByKeywordUseCase.invoke(keyword)?.collectLatest { result ->
+                        _searchResult.value = result
+                    }
+                } else {
+                    searchDiaryByKeywordUseCase.invoke(keyword, categoryFilter)
+                        ?.collectLatest { result ->
+                            _searchResult.value = result
+                        }
                 }
             }
         }
     }
+
 }

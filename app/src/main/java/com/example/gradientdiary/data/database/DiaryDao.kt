@@ -27,4 +27,7 @@ abstract class DiaryDao {
 
     @Query("SELECT * FROM DiaryEntity where title LIKE '%' || :keyword || '%' OR contents LIKE '%' || :keyword || '%'")
     abstract fun searchDiaryByKeyword(keyword : String) : Flow<List<DiaryEntity>>
+
+    @Query("SELECT * FROM DiaryEntity where (title LIKE '%' || :keyword || '%' OR contents LIKE '%' || :keyword || '%') AND categoryId = :categoryId ")
+    abstract fun searchDiaryByKeyword(keyword : String,categoryId: Long?) : Flow<List<DiaryEntity>>
 }

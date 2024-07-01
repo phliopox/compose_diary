@@ -51,16 +51,16 @@ fun CustomSearchBar(
     val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
     var text by remember { mutableStateOf(TextFieldValue()) }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .height(Dimens.dp40)
-            .fillMaxWidth()
+            //.fillMaxWidth()
             .shadow(elevation = Dimens.dp2, shape = cornerShape)
             .background(color = backgroundColor, shape = cornerShape)
             .clickable { onSearchClicked() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicTextField(
-            modifier = modifier
+            modifier = Modifier
                 .weight(5f)
                 .fillMaxWidth()
                 .padding(horizontal = Dimens.dp24),
@@ -88,7 +88,7 @@ fun CustomSearchBar(
             singleLine = true
         )
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f)
                 .size(Dimens.dp40)
                 .background(color = Color.Transparent, shape = CircleShape)
@@ -101,7 +101,7 @@ fun CustomSearchBar(
         ) {
             if (text.text.isNotEmpty()) {
                 Icon(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(Dimens.dp10),
                     painter = painterResource(id = R.drawable.times_svgrepo_com),
@@ -109,7 +109,7 @@ fun CustomSearchBar(
                 )
             } else {
                 Icon(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(Dimens.dp10),
                     painter = painterResource(id = R.drawable.search_svgrepo_com),

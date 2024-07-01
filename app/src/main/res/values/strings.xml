@@ -4,4 +4,6 @@
     <string name="title_hint">제목</string>
     <string name="setting">설정하기</string>
     <string name="result_not_founded">검색 결과가 없습니다.</string>
+    <string name="category">카테고리</string>
+
 </resources>

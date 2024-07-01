@@ -9,7 +9,8 @@ interface DiaryAppRepository {
     fun insertDiary(diaryEntity: DiaryEntity)
     fun deleteDiary(diaryEntity: DiaryEntity)
     fun getDiaryByDate(categoryId: Long, date: String): Flow<DiaryEntity>
-    fun searchDiaryByKeyword(keyword: String): Flow<List<DiaryEntity>>?
+    fun searchDiaryByKeyword(keyword: String ): Flow<List<DiaryEntity>>?
+    fun searchDiaryByKeyword(keyword: String , categoryId: Long): Flow<List<DiaryEntity>>?
     fun getAllCategory(): Flow<List<CategoryEntity>>
     fun deleteCategory(categoryEntity: CategoryEntity)
     fun insertCategory(categoryEntity: CategoryEntity)

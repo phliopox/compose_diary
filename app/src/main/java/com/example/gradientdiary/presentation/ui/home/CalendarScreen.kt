@@ -47,6 +47,7 @@ import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getNow
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Dimens
+import com.example.gradientdiary.presentation.ui.component.CategorySpinner
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -65,7 +66,7 @@ fun CalendarScreen(
     handleClickCalendarColumn: (String) -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val availableWidth = screenWidth - 40.dp // star , end padding 값 빼기
+    val availableWidth = screenWidth - Dimens.dp40 // star , end padding 값 빼기
     val dayNameWidth = availableWidth / 7
 
     val context = LocalContext.current
@@ -103,7 +104,7 @@ fun CalendarScreen(
                             interactionSource = interactionSource,
                             indication = null
                         ) {
-                            //todo 카테고리 선택 다이얼로그
+                            //카테고리 선택 드롭다운 메뉴
                             categorySpinnerExpanded = !categorySpinnerExpanded
 
                         }) {
@@ -113,13 +114,17 @@ fun CalendarScreen(
                         )
                         Icon(
                             modifier = Modifier
-                                .size(30.dp)
-                                .padding(8.dp),
+                                .size(Dimens.dp30)
+                                .padding(Dimens.dp8),
                             painter = painterResource(id = R.drawable.chevron_down_svgrepo_com),
                             contentDescription = null
                         )
                     }
-                    CategorySpinner(categorySpinnerExpanded, categoryViewModel) { dialogOpen ->
+                    CategorySpinner(
+                        categorySpinnerExpanded,
+                        categoryViewModel,
+                        settingMenu = true
+                    ) { dialogOpen ->
                         //dismiss
                         categorySpinnerExpanded = false
                         editCategoryDialogOpen = dialogOpen
@@ -181,7 +186,7 @@ fun CalendarScreen(
                         val strNow = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
                         handleClickAddDiaryButton(strNow)
                     },
-                    modifier = Modifier.background(Color.Black, shape = RoundedCornerShape(45.dp)),
+                    modifier = Modifier.background(Color.Black, shape = RoundedCornerShape(Dimens.dp45)),
 
                     ) {
                     Icon(
@@ -192,51 +197,6 @@ fun CalendarScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CategorySpinner(
-    categorySpinnerExpanded: Boolean,
-    categoryViewModel: CategoryViewModel,
-    dismiss: (Boolean) -> Unit
-) {
-    val allCate by categoryViewModel.savedCategory.collectAsState()
-    val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
-
-    DropdownMenu(
-        modifier = Modifier.background(Color.White),
-        expanded = categorySpinnerExpanded,
-        onDismissRequest = { dismiss(false) }
-    ) {
-        allCate?.let {
-            it.forEach { category ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            category.categoryName,
-                            style = textStyle,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            categoryViewModel.selectedCategoryChange(category.categoryName)
-                        }
-                    })
-            }
-        }
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.setting), style = textStyle, textAlign = TextAlign.Center) },
-            trailingIcon = {
-                Icon(
-                    modifier = Modifier.size(20.dp),
-                    painter = painterResource(
-                        id = R.drawable.settings_svgrepo_com
-                    ), contentDescription = "category_setting"
-                )
-            },
-            onClick = { dismiss(true) })
     }
 }
 

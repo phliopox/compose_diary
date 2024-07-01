@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object Dimens {
     val none = 0.dp
+    val dp1 = 1.dp
     val dp2 = 2.dp
     val dp5 = 5.dp
     val dp8 = 8.dp
@@ -15,6 +16,7 @@ object Dimens {
     val dp24 = 24.dp
     val dp30 = 30.dp
     val dp40 = 40.dp
+    val dp45 = 45.dp
     val dp50 = 50.dp
     val dp70 = 70.dp
     val dp100 = 100.dp
