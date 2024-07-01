@@ -73,8 +73,14 @@ class CategoryViewModel @Inject constructor(
         _savedCategory.value = categories.map { it.copy() } // Deep copy
         _allCategory.clear()
         _allCategory.addAll(categories.map { it.copy() }) // Deep copy
-        selectedCategory.value = _savedCategory.value?.get(0)?.categoryName ?: "일기" //CalendarScreen 에서 참조할 category 업데이트
+       // selectedCategory.value = _savedCategory.value?.get(0)?.categoryName ?: "일기" //CalendarScreen 에서 참조할 category 업데이트
         //Timber.e("allCategory ${_allCategory.joinToString(separator = ", ") { it.toString() }}")
+        val categoryName = if (!_savedCategory.value.isNullOrEmpty()) {
+            _savedCategory.value?.get(0)?.categoryName ?: "일기"
+        } else {
+            "일기"
+        }
+        selectedCategory.value = categoryName
     }
 
     fun deleteCategory(categoryName: String) {

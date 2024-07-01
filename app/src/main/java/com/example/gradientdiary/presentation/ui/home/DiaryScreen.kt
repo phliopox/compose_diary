@@ -24,22 +24,13 @@ fun DiaryScreen(
     categoryViewModel: CategoryViewModel,
     handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit,
-    handleSearchIconClick : () -> Unit
+    handleSearchIconClick: () -> Unit
 ) {
     val iconSize = Modifier.size(24.dp)
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            modifier = iconSize,
-                            painter = painterResource(R.drawable.settings_svgrepo_com),
-                            contentDescription = " "
-                        )
-                    }
-                },
                 actions = {
                     IconButton(onClick = {
                         handleSearchIconClick()
@@ -54,6 +45,15 @@ fun DiaryScreen(
                         Icon(
                             modifier = iconSize,
                             painter = painterResource(R.drawable.list_svgrepo_com),
+                            contentDescription = " "
+                        )
+                    }
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(
+                            modifier = iconSize,
+                            painter = painterResource(R.drawable.settings_svgrepo_com),
                             contentDescription = " "
                         )
                     }
@@ -79,10 +79,58 @@ fun DiaryScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewGradationDiary() {
     GradientDiaryTheme {
-        //DiaryScreen(,{}, {})
+        val iconSize = Modifier.size(24.dp)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { },
+                    navigationIcon = {
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(
+                                modifier = iconSize,
+                                painter = painterResource(R.drawable.settings_svgrepo_com),
+                                contentDescription = " "
+                            )
+                        }
+                    }
+                    ,
+                    actions = {
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(
+                                modifier = iconSize,
+                                painter = painterResource(R.drawable.search_svgrepo_com),
+                                contentDescription = " "
+                            )
+                        }
+                        IconButton(onClick = { }) {
+                            Icon(
+                                modifier = iconSize,
+                                painter = painterResource(R.drawable.list_svgrepo_com),
+                                contentDescription = " "
+                            )
+                        }
+                    }
+                )
+
+            }
+        ) { innerPadding ->
+            val paddingValues = PaddingValues(
+                start = Dimens.dp20,
+                top = innerPadding.calculateTopPadding() + Dimens.dp20,
+                end = Dimens.dp20,
+                bottom = innerPadding.calculateBottomPadding()
+            )
+
+
+        }
     }
 }

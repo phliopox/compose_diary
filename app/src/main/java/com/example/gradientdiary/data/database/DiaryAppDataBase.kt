@@ -44,8 +44,28 @@ abstract class DiaryAppDataBase : RoomDatabase() {
                             }
                         }
                     }
+
+                    override fun onOpen(db: SupportSQLiteDatabase) {
+                        super.onOpen(db)
+                        Timber.e("db onOpen")
+                        populateInitialData(context)
+                    }
                 })
                 .fallbackToDestructiveMigration().build()
+
+        private fun populateInitialData(context: Context) {
+            Executors.newSingleThreadExecutor().execute {
+                runBlocking {
+                    val categoryDao = getInstance(context).categoryDao()
+                    val categoryIdByName = categoryDao.getCategoryIdByName("일기")
+                    val categoryExists = categoryIdByName != 0L ||categoryIdByName ==null
+                    if (!categoryExists) {
+                        categoryDao.insertCategoryEntity(CategoryEntity(1, "일기"))
+                        Timber.e("Initial data inserted")
+                    }
+                }
+            }
+        }
     }
 }
 
