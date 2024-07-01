@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
@@ -226,7 +227,7 @@ fun CategorySpinner(
             }
         }
         DropdownMenuItem(
-            text = { Text("설정하기", style = textStyle, textAlign = TextAlign.Center) },
+            text = { Text(stringResource(id = R.string.setting), style = textStyle, textAlign = TextAlign.Center) },
             trailingIcon = {
                 Icon(
                     modifier = Modifier.size(20.dp),

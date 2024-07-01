@@ -6,10 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.CategoryEntity
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.domain.DeleteCategoryUseCase
-import com.example.gradientdiary.domain.GetAllCategoryUseCase
-import com.example.gradientdiary.domain.GetCategoryIdUseCase
+import com.example.gradientdiary.domain.GetCategoryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
-import com.example.gradientdiary.domain.UpdateCategoryNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,16 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val saveCategoryUseCase: SaveCategoryUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase,
-    private val getAllCategoryUseCase: GetAllCategoryUseCase,
-    private val getCategoryIdUseCase: GetCategoryIdUseCase,
-    private val updateCategoryNameUseCase: UpdateCategoryNameUseCase,
+    private val getCategoryIdUseCase: GetCategoryUseCase,
     private val storage: SharedPrefsStorageProvider
 ) : ViewModel() {
 
@@ -74,7 +69,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     private suspend fun refreshAllCategory() {
-        val categories = getAllCategoryUseCase.invoke().firstOrNull() ?: emptyList()
+        val categories = getCategoryIdUseCase.invoke().firstOrNull() ?: emptyList()
         _savedCategory.value = categories.map { it.copy() } // Deep copy
         _allCategory.clear()
         _allCategory.addAll(categories.map { it.copy() }) // Deep copy
@@ -99,7 +94,7 @@ class CategoryViewModel @Inject constructor(
                 categories.forEach {
                     // Timber.e("UPDATE CATEGORY ${categories.joinToString(separator = ", ") { it.toString() }}")
                     if (it.id != null) {
-                        updateCategoryNameUseCase.invoke(it.id, it.categoryName)
+                        saveCategoryUseCase.invoke(it.id, it.categoryName)
                     } else {
                         saveCategoryUseCase.invoke(CategoryEntity(categoryName = it.categoryName))
                     }

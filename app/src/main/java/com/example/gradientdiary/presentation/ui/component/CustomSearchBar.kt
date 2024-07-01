@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -44,8 +45,8 @@ fun CustomSearchBar(
     isEnabled: (Boolean) = true,
     cornerShape: Shape = RoundedCornerShape(Dimens.dp8),
     backgroundColor: Color = Color.White,
-    onSearchClicked: () -> Unit = {},
-    onTextChange: (String) -> Unit = {},
+    onSearchClicked: () -> Unit,
+    onTextChange: (String) -> Unit,
 ) {
     val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
     var text by remember { mutableStateOf(TextFieldValue()) }
@@ -105,7 +106,6 @@ fun CustomSearchBar(
                         .padding(Dimens.dp10),
                     painter = painterResource(id = R.drawable.times_svgrepo_com),
                     contentDescription = "clear",
-                    //tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
@@ -114,7 +114,6 @@ fun CustomSearchBar(
                         .padding(Dimens.dp10),
                     painter = painterResource(id = R.drawable.search_svgrepo_com),
                     contentDescription = "search",
-                    //tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -125,6 +124,10 @@ fun CustomSearchBar(
 @Composable
 fun PreviewSearchBar() {
     GradientDiaryTheme {
-        CustomSearchBar(hint = "키워드를 입력해주세요")
+        CustomSearchBar(
+            hint = stringResource(id = R.string.search_hint),
+            onSearchClicked = { /*TODO*/ },
+            onTextChange = {}
+        )
     }
 }

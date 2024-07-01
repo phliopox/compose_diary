@@ -25,4 +25,8 @@ abstract class CategoryDao {
 
     @Query("select id from CategoryEntity WHERE categoryName = :name")
     abstract fun getCategoryIdByName(name : String) :Long
+
+    @Query("select categoryName from CategoryEntity WHERE id = :id")
+    abstract fun getCategoryNameById(id : Long):String
+
 }

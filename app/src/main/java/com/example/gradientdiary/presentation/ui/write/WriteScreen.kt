@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,8 +40,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.example.gradientdiary.R
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
+import com.example.gradientdiary.presentation.dateStringFormatter
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.ui.component.EditableText
@@ -67,12 +70,7 @@ fun WriteScreen(
     handleBackButtonClick: () -> Unit
 ) {
     val contentsState by remember { mutableStateOf(contentBlockViewModel.contentBlocks) }
-
-
-    val inputFormat = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.getDefault())
-    val outputFormat = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
-    val formatDate: LocalDate = LocalDate.parse(date, inputFormat)!!
-    val outputDateString: String = outputFormat.format(formatDate)
+    val outputDateString = dateStringFormatter(date)
     val contentValue = contentsState.collectAsState()
 
     val isKeyboardOpen by keyboardAsState()
@@ -208,7 +206,7 @@ private fun WriteScreenContent(
     contentBlockViewModel: ContentBlockViewModel,
     handleDeleteDiary: () -> Unit
 ) {
-    val hint = "제목"
+    val hint = stringResource(R.string.title_hint)
     var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
 
 

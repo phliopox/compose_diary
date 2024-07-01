@@ -3,9 +3,7 @@ package com.example.gradientdiary.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import com.example.gradientdiary.data.DiaryModel
 import com.example.gradientdiary.data.database.entity.DiaryEntity
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
 import com.example.gradientdiary.domain.DeleteDiaryUseCase
-import com.example.gradientdiary.domain.GetDiaryByDateUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveDiaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,6 @@ import javax.inject.Inject
 class WriteViewModel @Inject constructor(
     private val saveDiaryUseCase: SaveDiaryUseCase,
     private val getDiaryUseCase: GetDiaryUseCase,
-    private val getDiaryByDateUseCase: GetDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase
 ) : ViewModel() {
 
@@ -26,7 +23,7 @@ class WriteViewModel @Inject constructor(
 
     suspend fun getDiaryByDateAndCategory(categoryId: Long, date: String): DiaryEntity? {
         return try {
-            val result = getDiaryByDateUseCase.invoke(categoryId, date)
+            val result = getDiaryUseCase.invoke(categoryId, date)
                 .firstOrNull()
             _diary.value = result
             result

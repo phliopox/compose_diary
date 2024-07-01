@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
+import com.example.gradientdiary.presentation.PersistedPermissionsCheck
 import com.example.gradientdiary.presentation.ui.localSnackBarManager
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -47,34 +48,46 @@ data class ImageBlock(
     @Composable
     override fun DrawEditableContent(modifier: Modifier, viewModel: ContentBlockViewModel) {
         // 권한이 이미 부여되었는지 확인
-        val context = LocalContext.current
-        val persistedPermissions = context.contentResolver.persistedUriPermissions
-        var hasShownSnackbar by remember { mutableStateOf(false) }
-        val snackBarManager = localSnackBarManager.current
 
-        // URI가 persistedPermissions에 포함되어 있는지 확인
-        if (persistedPermissions.any { it.uri == content }) {
-            // 이미지 로드
-            Box(modifier = modifier.padding(16.dp)) {
-                GlideImage(
-                    imageModel = content,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .heightIn(50.dp, 500.dp),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-            }
-        } else {
-            if (!hasShownSnackbar) {
-                snackBarManager.showMessage("일부 파일을 앨범에서 찾을 수 없어요.") // 파일을 삭제하여 uri 접근이 불가한 경우
-                content?.let {
-                    viewModel.tobeDeletedBlockByUri(it)
+        PersistedPermissionsCheck(
+            content = content,
+            havePermission = {
+                Box(modifier = modifier.padding(16.dp)) {
+                    GlideImage(
+                        imageModel = content,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .heightIn(50.dp, 500.dp),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
                 }
-                Timber.e("Permission Denial: No persistable permission grants found for URI !! $content")
-                hasShownSnackbar = true
-            }
-        }
+            },
+            notFound = {
+                viewModel.tobeDeletedBlockByUri(it)
+
+            })
+        // URI가 persistedPermissions에 포함되어 있는지 확인
+        /*        if (persistedPermissions.any { it.uri == content }) {
+                    // 이미지 로드
+                    Box(modifier = modifier.padding(16.dp)) {
+                        GlideImage(
+                            imageModel = content,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .heightIn(50.dp, 500.dp),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null
+                        )
+                    }
+                } else {
+                    if (!hasShownSnackbar) {
+                        PersistedPermissionsCheck(content){
+                            viewModel.tobeDeletedBlockByUri(it)
+                        }
+                        hasShownSnackbar = true
+                    }
+                }*/
     }
 
     override fun convertToContentBlockEntity() = ContentBlockEntity(
@@ -82,6 +95,4 @@ data class ImageBlock(
         seq = seq,
         content = content.toString()
     )
-
-
 }

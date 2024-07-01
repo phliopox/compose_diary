@@ -33,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
     background = Color.White,
     onBackground = Color.Black,
     surface = Color.White,
-    onSurface = Color.Black
+    onSurface = Color.White,
 )
 /*
 https://developer.android.com/codelabs/basic-android-kotlin-compose-material-theming?hl=ko&continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-3-pathway-3%3Fhl%3Dko%26_gl%3D1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-material-theming&_gl=1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..#3

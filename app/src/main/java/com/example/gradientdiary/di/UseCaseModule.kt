@@ -3,14 +3,11 @@ package com.example.gradientdiary.di
 import com.example.gradientdiary.data.repository.DiaryAppRepository
 import com.example.gradientdiary.domain.DeleteCategoryUseCase
 import com.example.gradientdiary.domain.DeleteDiaryUseCase
-import com.example.gradientdiary.domain.GetAllCategoryUseCase
-import com.example.gradientdiary.domain.GetCategoryIdUseCase
-import com.example.gradientdiary.domain.GetDiaryByDateUseCase
+import com.example.gradientdiary.domain.GetCategoryUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
 import com.example.gradientdiary.domain.SaveDiaryUseCase
 import com.example.gradientdiary.domain.SearchDiaryByKeywordUseCase
-import com.example.gradientdiary.domain.UpdateCategoryNameUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,9 +19,6 @@ class UseCaseModule {
     @Provides
     fun providesGetDiaryUseCase(appRepository: DiaryAppRepository) = GetDiaryUseCase(appRepository)
 
-    @Provides
-    fun providesGetDiaryByDateUserCase(appRepository: DiaryAppRepository) =
-        GetDiaryByDateUseCase(appRepository)
 
     @Provides
     fun providesSaveDiaryUseCase(appRepository: DiaryAppRepository) =
@@ -44,16 +38,8 @@ class UseCaseModule {
         DeleteDiaryUseCase(appRepository)
 
     @Provides
-    fun providesGetAllCategoryUseCase(appRepository: DiaryAppRepository) =
-        GetAllCategoryUseCase(appRepository)
-
-    @Provides
-    fun providesUpdateCategoryName(appRepository: DiaryAppRepository) =
-        UpdateCategoryNameUseCase(appRepository)
-
-    @Provides
     fun providesGetCategoryIdByName(appRepository: DiaryAppRepository) =
-        GetCategoryIdUseCase(appRepository)
+        GetCategoryUseCase(appRepository)
 
     @Provides
     fun providesSearchDiaryByKeyword(appRepository: DiaryAppRepository) =

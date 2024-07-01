@@ -16,6 +16,7 @@ class DefaultDiaryAppRepository @Inject constructor(
     override fun deleteDiary(diaryEntity: DiaryEntity) = diaryDao.deleteDairy(diaryEntity)
     override fun getDiaryByDate(categoryId: Long, date: String) =
         diaryDao.getDairyByDate(categoryId, date)
+
     override fun searchDiaryByKeyword(keyword: String) = diaryDao.searchDiaryByKeyword(keyword)
     override fun getAllCategory(): Flow<List<CategoryEntity>> = categoryDao.getAllCategory()
     override fun deleteCategory(categoryEntity: CategoryEntity) =
@@ -30,5 +31,6 @@ class DefaultDiaryAppRepository @Inject constructor(
 
     override fun getCategoryIdByName(name: String): Long = categoryDao.getCategoryIdByName(name)
 
+    override fun getCategoryNameById(id: Long): String = categoryDao.getCategoryNameById(id)
 
 }

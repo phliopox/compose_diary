@@ -7,4 +7,7 @@ class GetDiaryUseCase @Inject constructor(
     private val appRepository: DiaryAppRepository
 ) {
     operator fun invoke() = appRepository.getAllDiary()
+
+    operator fun invoke(categoryId: Long, date: String) =
+        appRepository.getDiaryByDate(categoryId, date)
 }

@@ -1,32 +1,42 @@
 package com.example.gradientdiary.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.domain.SearchDiaryByKeywordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchDiaryByKeywordUseCase: SearchDiaryByKeywordUseCase
-): ViewModel() {
-    //first state whether the search is happening or not
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
+) : ViewModel() {
 
-    //second state the text typed by the user
+
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    fun  onSearchTextChange (text: String ) {
+    private val _searchResult = MutableStateFlow<List<DiaryEntity>?>(null)
+    val searchResult: StateFlow<List<DiaryEntity>?> = _searchResult
+    fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    fun  onToogleSearch () {
-        _isSearching.value = !_isSearching.value
-        if (!_isSearching.value) {
-            onSearchTextChange( "" )
+    suspend fun searchAction() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val keyword = _searchText.value
+                searchDiaryByKeywordUseCase.invoke(keyword)?.collectLatest {
+                    _searchResult.value = it
+                }
+            }
         }
     }
 }

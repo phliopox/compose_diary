@@ -17,6 +17,6 @@ object Dimens {
     val dp40 = 40.dp
     val dp50 = 50.dp
     val dp70 = 70.dp
-    val xxxextra = 100.dp
-    val xxxxextra = 150.dp
+    val dp100 = 100.dp
+    val dp150 = 150.dp
 }
