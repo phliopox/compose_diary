@@ -1,4 +1,4 @@
-package com.example.gradientdiary.presentation.ui.search
+package com.example.gradientdiary.presentation.ui.listview
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,17 +9,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,57 +31,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.DefaultText
-import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.theme.Grey100
 import com.example.gradientdiary.presentation.ui.component.CategorySpinner
-import com.example.gradientdiary.presentation.ui.component.CustomSearchBar
 import com.example.gradientdiary.presentation.ui.component.DiaryCardView
+import com.example.gradientdiary.presentation.ui.search.ResultNotFoundedScreen
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
+import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
+import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import timber.log.Timber
+
 
 @Composable
-fun SearchScreen(
-    searchViewModel: SearchViewModel,
-    categoryViewModel: CategoryViewModel,
+fun ListViewScreen(
+    listViewViewModel : ListViewViewModel,
+    categoryViewModel :CategoryViewModel,
     handleBackButtonClick: () -> Unit
 ) {
-    val handleClickSearch = {categoryFilter : Long?->
-        CoroutineScope(Dispatchers.IO).launch {
-            searchViewModel.searchAction(categoryFilter)
-        }
-    }
-    SearchScreenContent(
-        searchViewModel,
-        categoryViewModel,
-        handleClickSearch,
-        handleBackButtonClick
-    )
-
-}
-
-@Composable
-fun SearchScreenContent(
-    searchViewModel: SearchViewModel,
-    categoryViewModel: CategoryViewModel,
-    handleClickSearch: (Long?) -> Job,
-    handleBackButtonClick: () -> Unit
-) {
-    val searchText by searchViewModel.searchText.collectAsState()
-    val result by searchViewModel.searchResult.collectAsState()
-    var searchClicked by remember { mutableStateOf(false) }
     var categorySpinnerExpanded by remember { mutableStateOf(false) }
     val allCategory = stringResource(id = R.string.category)
     var category by remember { mutableStateOf(allCategory) } // 카테고리 필터 선택값
-
+    val result by listViewViewModel.listResult.collectAsState()
+    LaunchedEffect(category){
+        CoroutineScope(Dispatchers.IO).launch {
+            val categoryId = categoryViewModel.getCategoryId(category)
+            listViewViewModel.refreshAction(categoryId)
+        }
+    }
     Column(
         Modifier
             .fillMaxWidth()
@@ -90,7 +73,8 @@ fun SearchScreenContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Dimens.dp16), verticalAlignment = Alignment.CenterVertically
+                .padding(bottom = Dimens.dp16), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
                 modifier = Modifier
@@ -102,25 +86,10 @@ fun SearchScreenContent(
                 painter = painterResource(id = R.drawable.ic_back_left),
                 contentDescription = ""
             )
-            Spacer(Modifier.padding(Dimens.dp5))
-            CustomSearchBar(
-                hint = stringResource(id = R.string.search_hint),
-                modifier = Modifier.weight(1f),
-                onSearchClicked = {
-                    //search 전달
-                    Timber.e("search Term : $searchText")
-                    CoroutineScope(Dispatchers.IO).launch {
-                        searchClicked = true
-                        val categoryFilter = categoryViewModel.getCategoryId(category) // category name 으로 id 추출
-                        handleClickSearch(categoryFilter)
-                    }
-                },
-                onTextChange = searchViewModel::onSearchTextChange
-            )
-            Box(modifier = Modifier.weight(0.3f)) {
+            Box() {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .width(130.dp)
                         .height(Dimens.dp40)
                         .padding(start = Dimens.dp10)
                         .clip(RoundedCornerShape(Dimens.dp5))
@@ -128,7 +97,7 @@ fun SearchScreenContent(
                         .clickable {
                             categorySpinnerExpanded = !categorySpinnerExpanded
                         }
-                        ,
+                    ,
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -161,35 +130,9 @@ fun SearchScreenContent(
                 )
             }
         }
+
         result?.forEach {
             DiaryCardView(it)
-        } ?: if (searchClicked) {
-            ResultNotFoundedScreen()
-        } else {
-            //빈화면
         }
-
-    }
-}
-
-@Composable
-fun ResultNotFoundedScreen() {
-    Column(
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.result_not_founded),
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchContent() {
-    GradientDiaryTheme {
-        //SearchScreenContent() {}
     }
 }

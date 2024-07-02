@@ -16,10 +16,12 @@ import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.ui.Key.DIARY_ARGS_KEY
 import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
+import com.example.gradientdiary.presentation.ui.listview.ListViewScreen
 import com.example.gradientdiary.presentation.ui.search.SearchScreen
 import com.example.gradientdiary.presentation.ui.write.WriteScreen
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
+import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +36,7 @@ fun DiaryAppNavHost(
     writeViewModel: WriteViewModel,
     categoryViewModel: CategoryViewModel,
     searchViewModel: SearchViewModel,
+    listViewViewModel: ListViewViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -59,14 +62,21 @@ fun DiaryAppNavHost(
         val handleSearchIconClick = {
             navController.navigate(DiaryAppScreen.Search.name)
         }
-
+        val handleListViewClick = {
+            navController.navigate(DiaryAppScreen.ListView.name)
+        }
+        val handleSettingClick = {
+            //todo
+        }
         composable(DiaryAppScreen.Home.name) {
             DiaryScreen(
                 // memoViewModel = memoViewModel,
                 categoryViewModel = categoryViewModel,
                 handleClickAddDiaryButton = handleClickAddDiaryButton,
                 handleClickCalendarColumn = handleClickCalendarColumn,
-                handleSearchIconClick = handleSearchIconClick
+                handleSearchIconClick = handleSearchIconClick,
+                handleListViewClick = handleListViewClick,
+                handleSettingClick = handleSettingClick
             )
         }
         composable(DiaryAppScreen.Search.name){
@@ -74,6 +84,13 @@ fun DiaryAppNavHost(
                 searchViewModel,
                 categoryViewModel,
                 handleBackButtonClick = { handleBackButtonClick() },
+            )
+        }
+        composable(DiaryAppScreen.ListView.name){
+            ListViewScreen(
+                listViewViewModel,
+                categoryViewModel,
+                handleBackButtonClick ={}
             )
         }
         composable(

@@ -10,6 +10,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
@@ -24,7 +25,9 @@ fun DiaryScreen(
     categoryViewModel: CategoryViewModel,
     handleClickAddDiaryButton: (String) -> Unit,
     handleClickCalendarColumn: (String) -> Unit,
-    handleSearchIconClick: () -> Unit
+    handleSearchIconClick: () -> Unit,
+    handleListViewClick :()->Unit,
+    handleSettingClick : ()->Unit
 ) {
     val iconSize = Modifier.size(24.dp)
     Scaffold(
@@ -38,23 +41,25 @@ fun DiaryScreen(
                         Icon(
                             modifier = iconSize,
                             painter = painterResource(R.drawable.search_svgrepo_com),
-                            contentDescription = " "
-                        )
-                    }
-                    IconButton(onClick = { }) {
-                        Icon(
-                            modifier = iconSize,
-                            painter = painterResource(R.drawable.list_svgrepo_com),
-                            contentDescription = " "
+                            contentDescription = stringResource(id = R.string.search)
                         )
                     }
                     IconButton(onClick = {
-
+                        handleListViewClick()
+                    }) {
+                        Icon(
+                            modifier = iconSize,
+                            painter = painterResource(R.drawable.list_svgrepo_com),
+                            contentDescription = stringResource(id = R.string.list_view)
+                        )
+                    }
+                    IconButton(onClick = {
+                        handleSettingClick()
                     }) {
                         Icon(
                             modifier = iconSize,
                             painter = painterResource(R.drawable.settings_svgrepo_com),
-                            contentDescription = " "
+                            contentDescription = stringResource(id = R.string.setting_name)
                         )
                     }
                 }

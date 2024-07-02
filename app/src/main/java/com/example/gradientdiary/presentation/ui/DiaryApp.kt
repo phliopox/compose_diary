@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
+import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 val localSnackBarManager = compositionLocalOf<SnackBarManager> {
@@ -29,7 +30,8 @@ val localSnackBarManager = compositionLocalOf<SnackBarManager> {
 fun DiaryApp(
     writeViewModel: WriteViewModel = hiltViewModel(),
     categoryViewModel: CategoryViewModel = hiltViewModel(),
-    searchViewModel : SearchViewModel = hiltViewModel()
+    searchViewModel : SearchViewModel = hiltViewModel(),
+    listViewViewModel: ListViewViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -50,6 +52,7 @@ fun DiaryApp(
                 writeViewModel = writeViewModel,
                 categoryViewModel = categoryViewModel,
                 searchViewModel = searchViewModel,
+                listViewViewModel = listViewViewModel,
                 navController = navController
             )
         }

@@ -50,8 +50,10 @@ class CategoryViewModel @Inject constructor(
             }
         }
     }
-
-    suspend fun getCategoryId(name: String? = null): Long {
+     fun getCategoryName(id : Long) : String{
+       return getCategoryIdUseCase.invoke(id)
+    }
+     fun getCategoryId(name: String? = null): Long {
         val categoryName = name ?: selectedCategory.value
         val id = getCategoryIdUseCase.invoke(categoryName)
         //Timber.e("CATEGORY ID / NAME ${categoryName} , ${id}")

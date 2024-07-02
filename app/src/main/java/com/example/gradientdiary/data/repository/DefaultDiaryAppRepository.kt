@@ -17,6 +17,8 @@ class DefaultDiaryAppRepository @Inject constructor(
     override fun getDiaryByDate(categoryId: Long, date: String) =
         diaryDao.getDairyByDate(categoryId, date)
 
+    override fun getDiaryByCategory(categoryId: Long): Flow<List<DiaryEntity>>? = diaryDao.getDiaryByCategory(categoryId)
+
     override fun searchDiaryByKeyword(keyword: String) = diaryDao.searchDiaryByKeyword(keyword)
     override fun searchDiaryByKeyword(keyword: String, categoryId: Long) =
         diaryDao.searchDiaryByKeyword(keyword, categoryId)
