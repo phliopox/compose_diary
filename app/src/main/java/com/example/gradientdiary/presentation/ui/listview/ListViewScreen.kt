@@ -58,7 +58,9 @@ fun ListViewScreen(
 ) {
 
     val handleDeleteDiary = { id: Long ->
-
+        CoroutineScope(Dispatchers.IO).launch{
+            listViewViewModel.deleteDiary(id)
+        }
     }
     var categorySpinnerExpanded by remember { mutableStateOf(false) }
     val allCategory = stringResource(id = R.string.category)
@@ -69,7 +71,8 @@ fun ListViewScreen(
     LaunchedEffect(category) {
         CoroutineScope(Dispatchers.IO).launch {
             val categoryId = categoryViewModel.getCategoryId(category)
-            listViewViewModel.refreshAction(categoryId)
+            listViewViewModel.currentCategory.value = categoryId
+            listViewViewModel.refreshAction()
         }
     }
     Column(

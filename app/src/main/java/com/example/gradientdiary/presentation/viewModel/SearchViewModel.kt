@@ -3,7 +3,7 @@ package com.example.gradientdiary.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.DiaryEntity
-import com.example.gradientdiary.domain.GetCategoryUseCase
+import com.example.gradientdiary.domain.DeleteDiaryUseCase
 import com.example.gradientdiary.domain.SearchDiaryByKeywordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchDiaryByKeywordUseCase: SearchDiaryByKeywordUseCase
+    private val searchDiaryByKeywordUseCase: SearchDiaryByKeywordUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase
 ) : ViewModel() {
 
 
@@ -27,25 +28,35 @@ class SearchViewModel @Inject constructor(
     private val _searchResult = MutableStateFlow<List<DiaryEntity>?>(null)
     val searchResult: StateFlow<List<DiaryEntity>?> = _searchResult
 
-    private val filterCategory = MutableStateFlow("")
+    val currentCategory =MutableStateFlow<Long?>(null)
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    suspend fun searchAction(categoryFilter: Long?) {
+    //categoryFilter: Long?
+    suspend fun searchAction() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val keyword = _searchText.value
-                if (categoryFilter == null || categoryFilter == 0L) {
+                if (currentCategory.value == null || currentCategory.value == 0L) {
                     searchDiaryByKeywordUseCase.invoke(keyword)?.collectLatest { result ->
                         _searchResult.value = result
                     }
                 } else {
-                    searchDiaryByKeywordUseCase.invoke(keyword, categoryFilter)
+                    searchDiaryByKeywordUseCase.invoke(keyword, currentCategory.value!!)
                         ?.collectLatest { result ->
                             _searchResult.value = result
                         }
                 }
+            }
+        }
+    }
+
+    suspend fun deleteDiary(diaryId : Long){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                deleteDiaryUseCase.invoke(diaryId)
+                searchAction()
             }
         }
     }

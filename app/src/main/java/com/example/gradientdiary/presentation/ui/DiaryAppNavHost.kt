@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -70,7 +69,7 @@ fun DiaryAppNavHost(
         val handleSettingClick = {
             //todo
         }
-        val handleDiaryCardClick = { id : Long ->
+        val handleDiaryCardClick = { id: Long ->
             navController.navigate("${DiaryAppScreen.Write.name}/id/${id}") {
                 //popUpTo(DiaryAppScreen.Home.name)
             }
@@ -100,7 +99,7 @@ fun DiaryAppNavHost(
                 listViewViewModel,
                 categoryViewModel,
                 handleDiaryCardClick,
-                handleBackButtonClick = {}
+                handleBackButtonClick = { handleBackButtonClick() }
             )
         }
         composable(
@@ -176,7 +175,11 @@ fun HandleDiaryRoute(
         val contentBlockViewModel = remember {
             mutableStateOf(ContentBlockViewModel(content))
         }
-        date = if(navType == "id"){ content!!.updateDate }else { argumentValue?:"" }
+        date = if (navType == "id") {
+            content!!.updateDate
+        } else {
+            argumentValue ?: ""
+        }
         WriteScreen(
             date = date,
             content = content,

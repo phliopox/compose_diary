@@ -43,6 +43,7 @@ import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.Job
 import timber.log.Timber
 
 
@@ -50,7 +51,7 @@ import timber.log.Timber
 @Composable
 fun DiaryCardView(
     diary: DiaryEntity,
-    handleDelete: (Long) -> Unit,
+    handleDelete: (Long) -> Job,
     handleCardClick: (Long) -> Unit
 ) {
     val (imageBlocks, textBlocks) = diary.contents.partition { it.content.startsWith("content://") }

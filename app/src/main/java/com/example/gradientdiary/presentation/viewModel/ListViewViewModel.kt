@@ -3,6 +3,7 @@ package com.example.gradientdiary.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.DiaryEntity
+import com.example.gradientdiary.domain.DeleteDiaryUseCase
 import com.example.gradientdiary.domain.GetDiaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,31 +16,42 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ListViewViewModel @Inject constructor(private val getDiaryUseCase: GetDiaryUseCase) :
+class ListViewViewModel @Inject constructor(
+    private val getDiaryUseCase: GetDiaryUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase) :
     ViewModel() {
     private val _listResult = MutableStateFlow<List<DiaryEntity>?>(null)
     val listResult: StateFlow<List<DiaryEntity>?> = _listResult
-    private val filterCategory = MutableStateFlow(0L)
+    val currentCategory =MutableStateFlow<Long?>(null)
 
     init {
         viewModelScope.launch {
-            refreshAction(null)
+            refreshAction()
         }
     }
-    suspend fun refreshAction(categoryFilter: Long?) {
+
+    suspend fun refreshAction() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 Timber.e("list view category")
-                if (categoryFilter == null || categoryFilter == 0L) {
+                if (currentCategory.value == null || currentCategory.value == 0L) {
                     getDiaryUseCase.invoke()?.collectLatest { result ->
                         _listResult.value = result
                     }
-                }else {
-                    getDiaryUseCase.invoke(categoryFilter)?.collectLatest { result ->
+                } else {
+                    getDiaryUseCase.invoke(currentCategory.value!!)?.collectLatest { result ->
                         _listResult.value = result
                     }
                 }
             }
         }
     }
+    suspend fun deleteDiary(diaryId : Long){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                deleteDiaryUseCase.invoke(diaryId)
+                refreshAction()
+            }
+        }
     }
+}

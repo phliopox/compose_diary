@@ -14,6 +14,8 @@ class DefaultDiaryAppRepository @Inject constructor(
     override fun getAllDiary(): Flow<List<DiaryEntity>> = diaryDao.getAllDairy()
     override fun insertDiary(diaryEntity: DiaryEntity) = diaryDao.insertDairyEntity(diaryEntity)
     override fun deleteDiary(diaryEntity: DiaryEntity) = diaryDao.deleteDairy(diaryEntity)
+    override fun deleteDiary(diaryId: Long) =diaryDao.deleteDairy(diaryId)
+
     override fun getDiaryByDate(categoryId: Long, date: String) =
         diaryDao.getDairyByDate(categoryId, date)
 

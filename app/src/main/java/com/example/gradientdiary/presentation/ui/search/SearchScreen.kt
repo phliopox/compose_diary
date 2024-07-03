@@ -57,11 +57,14 @@ fun SearchScreen(
 ) {
     val handleClickSearch = { categoryFilter: Long? ->
         CoroutineScope(Dispatchers.IO).launch {
-            searchViewModel.searchAction(categoryFilter)
+            searchViewModel.currentCategory.value = categoryFilter
+            searchViewModel.searchAction()
         }
     }
     val handleDeleteDiary = { id: Long ->
-
+        CoroutineScope(Dispatchers.IO).launch {
+            searchViewModel.deleteDiary(id)
+        }
     }
     SearchScreenContent(
         searchViewModel,
@@ -81,7 +84,7 @@ fun SearchScreenContent(
     handleClickSearch: (Long?) -> Job,
     handleBackButtonClick: () -> Unit,
     handleDiaryCardClick: (Long) -> Unit,
-    handleDeleteDiary: (Long) -> Unit,
+    handleDeleteDiary: (Long) -> Job,
 ) {
     val searchText by searchViewModel.searchText.collectAsState()
     val result by searchViewModel.searchResult.collectAsState()
@@ -106,10 +109,10 @@ fun SearchScreenContent(
                 modifier = Modifier
                     .size(width = Dimens.dp30, height = Dimens.dp40)
                     .padding(Dimens.dp8)
-                    .clickable (
+                    .clickable(
                         interactionSource = interactionSource,
                         indication = null,
-                    ){
+                    ) {
                         handleBackButtonClick()
                     },
                 painter = painterResource(id = R.drawable.ic_back_left),
