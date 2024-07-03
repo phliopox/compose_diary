@@ -1,6 +1,7 @@
 package com.example.gradientdiary.data.storage
 
 import android.content.Context
+import androidx.compose.ui.text.style.TextAlign
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -27,6 +29,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private const val PREF_CURRENT_MONTH = "currentMonth"
         private const val PREF_CURRENT_YEAR = "currentYear"
         const val default = "일기"
+        private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
 
     }
 
@@ -45,6 +48,26 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         get() = context.userDataStore.data.map { preferences ->
             preferences[PREF_CATEGORY]?:default
         }
+    val textAlign: Flow<String>
+        get() = context.userDataStore.data.map { preferences ->
+            preferences[PREF_TEXT_ALIGN]?:"start"
+        }
+
+    suspend fun saveTextAlignStatus(value: String) {
+        context.userDataStore.edit { pref -> pref[PREF_TEXT_ALIGN] = value }
+    }
+     /*suspend fun getTextAlignStatus() : TextAlign{
+
+        *//*        val align: Deferred<String?> =
+                    CoroutineScope(Dispatchers.IO).async {
+                        textAlign.first()
+                    }*//*
+        return when(textAlign.firstOrNull()){
+            "end" -> TextAlign.End
+            "center" -> TextAlign.Center
+            else -> TextAlign.Start
+        }
+    }*/
 
     suspend fun saveSelectedCategory(value: String) {
         context.userDataStore.edit { pref -> pref[PREF_CATEGORY] = value }

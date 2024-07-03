@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
 import com.example.gradientdiary.presentation.theme.DefaultText
@@ -39,7 +40,7 @@ data class TextBlock(
     }
 
     @Composable
-    override fun DrawEditableContent(modifier: Modifier, viewModel: ContentBlockViewModel) {
+    override fun DrawEditableContent(modifier: Modifier,textAlign: TextAlign?, viewModel: ContentBlockViewModel) {
         val focusManager = LocalFocusManager.current
         BasicTextField(
             value = textInputState.value,
@@ -47,7 +48,7 @@ data class TextBlock(
                 textInputState.value = new
                 content = new
             },
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText),
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText, textAlign = textAlign),
             modifier = modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(

@@ -52,7 +52,7 @@ class WriteViewModel @Inject constructor(
             }.toList()
 
         val diaryEntity = DiaryEntity(
-            // id = diaryModel.id,
+             id = diaryModel.id,
             categoryId = diaryModel.categoryId,
             contents = converted,
             title = diaryModel.title,

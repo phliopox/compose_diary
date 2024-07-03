@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.data.database.entity.ContentBlockEntity
 import com.example.gradientdiary.data.database.entity.ContentType
@@ -46,7 +47,7 @@ data class ImageBlock(
 
     @SuppressLint("CoroutineCreationDuringComposition")
     @Composable
-    override fun DrawEditableContent(modifier: Modifier, viewModel: ContentBlockViewModel) {
+    override fun DrawEditableContent(modifier: Modifier, textAlign: TextAlign?,viewModel: ContentBlockViewModel) {
         // 권한이 이미 부여되었는지 확인
 
         PersistedPermissionsCheck(
