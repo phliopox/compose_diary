@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
         DiaryEntity::class,
         CategoryEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(com.example.gradientdiary.data.database.TypeConverters::class)

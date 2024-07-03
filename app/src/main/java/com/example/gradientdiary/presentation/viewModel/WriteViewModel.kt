@@ -33,7 +33,15 @@ class WriteViewModel @Inject constructor(
         }
     }
 
-
+    suspend fun getDiaryById(id : Long) : DiaryEntity?{
+        return try{
+            val result = getDiaryUseCase.getDiaryByDiaryId(id).firstOrNull()
+            _diary.value = result
+            result
+        }catch (e:Exception){
+            null
+        }
+    }
     fun saveDiary(diaryModel: DiaryModel) {
         val converted = diaryModel.contents
             .asSequence()

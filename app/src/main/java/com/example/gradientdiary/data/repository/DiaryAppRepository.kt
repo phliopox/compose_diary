@@ -15,7 +15,7 @@ interface DiaryAppRepository {
     fun getDiaryByCategory(categoryId: Long) : Flow<List<DiaryEntity>>?
     fun searchDiaryByKeyword(keyword: String ): Flow<List<DiaryEntity>>?
     fun searchDiaryByKeyword(keyword: String , categoryId: Long): Flow<List<DiaryEntity>>?
-
+    fun getDiaryByDiaryId(diaryId : Long) : Flow<DiaryEntity>
 
     //카테고리
     fun getAllCategory(): Flow<List<CategoryEntity>>

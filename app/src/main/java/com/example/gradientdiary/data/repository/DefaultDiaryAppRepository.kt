@@ -23,6 +23,8 @@ class DefaultDiaryAppRepository @Inject constructor(
     override fun searchDiaryByKeyword(keyword: String, categoryId: Long) =
         diaryDao.searchDiaryByKeyword(keyword, categoryId)
 
+    override fun getDiaryByDiaryId(diaryId: Long): Flow<DiaryEntity>  = diaryDao.getDiaryByDiaryId(diaryId)
+
     override fun getAllCategory(): Flow<List<CategoryEntity>> = categoryDao.getAllCategory()
     override fun deleteCategory(categoryEntity: CategoryEntity) =
         categoryDao.deleteCategory(categoryEntity)

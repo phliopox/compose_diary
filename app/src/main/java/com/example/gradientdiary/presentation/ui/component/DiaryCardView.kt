@@ -1,11 +1,15 @@
 package com.example.gradientdiary.presentation.ui.component
 
 import android.net.Uri
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,13 +17,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -40,26 +46,63 @@ import com.skydoves.landscapist.glide.GlideImage
 import timber.log.Timber
 
 
-//contentblock 으로 하지않고 직접 구현하는게 나을것같다 cardview에서는 내용 수정 불가 !
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DiaryCardView(diary: DiaryEntity) {
+fun DiaryCardView(
+    diary: DiaryEntity,
+    handleDelete: (Long) -> Unit,
+    handleCardClick: (Long) -> Unit
+) {
     val (imageBlocks, textBlocks) = diary.contents.partition { it.content.startsWith("content://") }
     val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
     val cornerShape = RoundedCornerShape(Dimens.dp8)
+    var deleteIconShow by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+
     Timber.e("diary textblocks : ${textBlocks.joinToString(",") { it.content }}")
+//todo delete icon 로직 / wrtie screen navigation 연결
+
     Column(
         Modifier
             .padding(horizontal = Dimens.dp10, vertical = Dimens.dp16) //외부패딩
             .shadow(elevation = 2.dp, shape = cornerShape)
             .background(color = Color.White, shape = cornerShape)
             .padding(Dimens.dp10) //내부 패딩
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onLongClick = { // diary 삭제 아이콘 show
+                    deleteIconShow = true
+                },
+                onClick = { // 다이어리 write screen 으로 이동
+                    handleCardClick(diary.id!!)
+                })
     ) {
 
 
         val outputDateString = dateStringFormatter(diary.updateDate)
-
-        Text(text = outputDateString, style = textStyle.copy(fontSize = 20.sp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = outputDateString, style = textStyle.copy(fontSize = 20.sp))
+            if (deleteIconShow) {
+                Icon(
+                    painterResource(id = R.drawable.delete_2_svgrepo_com),
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                        ) {
+                            handleDelete(diary.id!!)
+                        },
+                    contentDescription = "delete"
+                )
+            }
+        }
         Text(diary.title, style = textStyle)
 
         LazyVerticalGrid(
@@ -99,6 +142,10 @@ fun DiaryCardView(diary: DiaryEntity) {
 )
 @Composable
 fun PreviewDairyCardView() {
+    val iconModifier = Modifier
+        .size(40.dp)
+        .padding(horizontal = 8.dp, vertical = 8.dp)
+
     GradientDiaryTheme {
         val textStyle = MaterialTheme.typography.titleMedium.copy(color = DefaultText)
         val cornerShape = RoundedCornerShape(Dimens.dp8)
@@ -111,7 +158,20 @@ fun PreviewDairyCardView() {
         ) {
 
 
-            Text(text = "20200115", style = textStyle)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "20200115", style = textStyle)
+                Icon(
+                    painterResource(id = R.drawable.delete_2_svgrepo_com),
+                    modifier = iconModifier.clickable {
+
+                    },
+                    contentDescription = "delete"
+                )
+            }
             Text("제목자리", style = textStyle)
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = Dimens.dp150),

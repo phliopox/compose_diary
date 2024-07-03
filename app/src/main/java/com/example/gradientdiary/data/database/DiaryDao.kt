@@ -21,7 +21,8 @@ abstract class DiaryDao {
     @Delete
     abstract fun deleteDairy(diaryEntity: DiaryEntity)
 
-
+    @Query("select * from DiaryEntity where id = :diaryId")
+    abstract fun getDiaryByDiaryId(diaryId:Long) : Flow<DiaryEntity>
     @Query("select * from DiaryEntity where updateDate = :updateDate AND categoryId = :categoryId")
     abstract fun getDairyByDate(categoryId: Long, updateDate: String): Flow<DiaryEntity>
 

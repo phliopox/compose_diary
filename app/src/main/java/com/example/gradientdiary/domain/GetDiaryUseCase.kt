@@ -13,4 +13,6 @@ class GetDiaryUseCase @Inject constructor(
 
     operator fun invoke(categoryId: Long) =
         appRepository.getDiaryByCategory(categoryId)
+
+    fun getDiaryByDiaryId(diaryId: Long) = appRepository.getDiaryByDiaryId(diaryId)
 }

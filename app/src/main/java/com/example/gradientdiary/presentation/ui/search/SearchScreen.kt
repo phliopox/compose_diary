@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,18 +52,24 @@ import timber.log.Timber
 fun SearchScreen(
     searchViewModel: SearchViewModel,
     categoryViewModel: CategoryViewModel,
+    handleDiaryCardClick: (Long) -> Unit,
     handleBackButtonClick: () -> Unit
 ) {
-    val handleClickSearch = {categoryFilter : Long?->
+    val handleClickSearch = { categoryFilter: Long? ->
         CoroutineScope(Dispatchers.IO).launch {
             searchViewModel.searchAction(categoryFilter)
         }
+    }
+    val handleDeleteDiary = { id: Long ->
+
     }
     SearchScreenContent(
         searchViewModel,
         categoryViewModel,
         handleClickSearch,
-        handleBackButtonClick
+        handleBackButtonClick,
+        handleDiaryCardClick,
+        handleDeleteDiary
     )
 
 }
@@ -72,7 +79,9 @@ fun SearchScreenContent(
     searchViewModel: SearchViewModel,
     categoryViewModel: CategoryViewModel,
     handleClickSearch: (Long?) -> Job,
-    handleBackButtonClick: () -> Unit
+    handleBackButtonClick: () -> Unit,
+    handleDiaryCardClick: (Long) -> Unit,
+    handleDeleteDiary: (Long) -> Unit,
 ) {
     val searchText by searchViewModel.searchText.collectAsState()
     val result by searchViewModel.searchResult.collectAsState()
@@ -80,6 +89,7 @@ fun SearchScreenContent(
     var categorySpinnerExpanded by remember { mutableStateOf(false) }
     val allCategory = stringResource(id = R.string.category)
     var category by remember { mutableStateOf(allCategory) } // 카테고리 필터 선택값
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         Modifier
@@ -96,7 +106,10 @@ fun SearchScreenContent(
                 modifier = Modifier
                     .size(width = Dimens.dp30, height = Dimens.dp40)
                     .padding(Dimens.dp8)
-                    .clickable {
+                    .clickable (
+                        interactionSource = interactionSource,
+                        indication = null,
+                    ){
                         handleBackButtonClick()
                     },
                 painter = painterResource(id = R.drawable.ic_back_left),
@@ -111,7 +124,8 @@ fun SearchScreenContent(
                     Timber.e("search Term : $searchText")
                     CoroutineScope(Dispatchers.IO).launch {
                         searchClicked = true
-                        val categoryFilter = categoryViewModel.getCategoryId(category) // category name 으로 id 추출
+                        val categoryFilter =
+                            categoryViewModel.getCategoryId(category) // category name 으로 id 추출
                         handleClickSearch(categoryFilter)
                     }
                 },
@@ -127,8 +141,7 @@ fun SearchScreenContent(
                         .border(Dimens.dp1, Grey100, RoundedCornerShape(Dimens.dp5))
                         .clickable {
                             categorySpinnerExpanded = !categorySpinnerExpanded
-                        }
-                        ,
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -162,7 +175,11 @@ fun SearchScreenContent(
             }
         }
         result?.forEach {
-            DiaryCardView(it)
+            DiaryCardView(
+                it,
+                handleCardClick = handleDiaryCardClick,
+                handleDelete = handleDeleteDiary
+            )
         } ?: if (searchClicked) {
             ResultNotFoundedScreen()
         } else {

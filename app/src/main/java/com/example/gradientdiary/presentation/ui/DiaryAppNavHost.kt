@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -47,12 +48,13 @@ fun DiaryAppNavHost(
         startDestination = DiaryAppScreen.Home.name
     ) {
         val handleClickCalendarColumn = { date: String ->
-            navController.navigate("${DiaryAppScreen.Write.name}/${date}") {
+            //Timber.e("handleClickCalendarColumn : $date")
+            navController.navigate("${DiaryAppScreen.Write.name}/updateDate/${date}") {
                 popUpTo(DiaryAppScreen.Home.name)
             }
         }
         val handleClickAddDiaryButton = { date: String ->
-            navController.navigate("${DiaryAppScreen.Write.name}/${date}") {
+            navController.navigate("${DiaryAppScreen.Write.name}/updateDate/${date}") {
                 popUpTo(DiaryAppScreen.Home.name)
             }
         }
@@ -68,6 +70,12 @@ fun DiaryAppNavHost(
         val handleSettingClick = {
             //todo
         }
+        val handleDiaryCardClick = { id : Long ->
+            navController.navigate("${DiaryAppScreen.Write.name}/id/${id}") {
+                //popUpTo(DiaryAppScreen.Home.name)
+            }
+        }
+
         composable(DiaryAppScreen.Home.name) {
             DiaryScreen(
                 // memoViewModel = memoViewModel,
@@ -79,63 +87,104 @@ fun DiaryAppNavHost(
                 handleSettingClick = handleSettingClick
             )
         }
-        composable(DiaryAppScreen.Search.name){
+        composable(DiaryAppScreen.Search.name) {
             SearchScreen(
                 searchViewModel,
                 categoryViewModel,
+                handleDiaryCardClick,
                 handleBackButtonClick = { handleBackButtonClick() },
             )
         }
-        composable(DiaryAppScreen.ListView.name){
+        composable(DiaryAppScreen.ListView.name) {
             ListViewScreen(
                 listViewViewModel,
                 categoryViewModel,
-                handleBackButtonClick ={}
+                handleDiaryCardClick,
+                handleBackButtonClick = {}
             )
         }
         composable(
-            route = "${DiaryAppScreen.Write.name}/{${DIARY_ARGS_KEY}}",
+            route = "${DiaryAppScreen.Write.name}/updateDate/{${DIARY_ARGS_KEY}}",
             arguments = listOf(navArgument(DIARY_ARGS_KEY) {
                 type = NavType.StringType
             })
         ) { entry ->
-            Timber.e("ARGUMENT : ${entry.arguments?.getString(DIARY_ARGS_KEY)}")
-            val date = entry.arguments?.getString(DIARY_ARGS_KEY) ?: ""
-            var content by remember { mutableStateOf<DiaryEntity?>(null) }
-            var isLoading by remember { mutableStateOf(true) }
+            HandleDiaryRoute(
+                navType = "updateDate",
+                argumentValue = entry.arguments?.getString(DIARY_ARGS_KEY),
+                writeViewModel = writeViewModel,
+                categoryViewModel = categoryViewModel,
+                handleBackButtonClick = { handleBackButtonClick() }
+            )
+        }
+        composable(
+            route = "${DiaryAppScreen.Write.name}/id/{${DIARY_ARGS_KEY}}",
+            arguments = listOf(navArgument(DIARY_ARGS_KEY) {
+                type = NavType.LongType
+            })
+        ) { entry ->
+            HandleDiaryRoute(
+                navType = "id",
+                argumentValue = entry.arguments?.getLong(DIARY_ARGS_KEY).toString(),
+                writeViewModel = writeViewModel,
+                categoryViewModel = categoryViewModel,
+                handleBackButtonClick = { handleBackButtonClick() }
+            )
+        }
+    }
+}
 
-            LaunchedEffect(date) {
-                // room db 에서 데이터 get 완료될 때까지 대기 process
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val categoryId = categoryViewModel.getCategoryId()
-                        val task: Deferred<DiaryEntity?> =
-                            async { writeViewModel.getDiaryByDateAndCategory(categoryId,date) }
-                        content = task.await()
-                    } finally {
-                        isLoading = false
+@Composable
+fun HandleDiaryRoute(
+    navType: String,
+    argumentValue: String?,
+    writeViewModel: WriteViewModel,
+    categoryViewModel: CategoryViewModel,
+    handleBackButtonClick: () -> Unit
+) {
+    var date = ""
+    var content by remember { mutableStateOf<DiaryEntity?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(argumentValue) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val categoryId = categoryViewModel.getCategoryId()
+                val task: Deferred<DiaryEntity?> = async {
+                    if (navType == "updateDate") {
+                        argumentValue?.let {
+                            writeViewModel.getDiaryByDateAndCategory(
+                                categoryId,
+                                it
+                            )
+                        }
+                    } else {
+                        writeViewModel.getDiaryById(argumentValue?.toLong() ?: 0L)
                     }
                 }
-            }
-
-            if (isLoading) {
-                LoadingScreen()
-            } else {
-                Timber.e("navhost get content : ${content?.contents}")
-                val contentBlockViewModel = remember {
-                    mutableStateOf(ContentBlockViewModel(content))
-                }
-
-                WriteScreen(
-                    date = date,
-                    content = content,
-                    writeViewModel = writeViewModel,
-                    categoryViewModel = categoryViewModel,
-                    contentBlockViewModel = contentBlockViewModel.value,
-                    handleBackButtonClick = { handleBackButtonClick() }
-                )
+                content = task.await()
+            } finally {
+                isLoading = false
             }
         }
+    }
+
+    if (isLoading) {
+        LoadingScreen()
+    } else {
+        Timber.e("navhost get content : ${content?.contents}")
+        val contentBlockViewModel = remember {
+            mutableStateOf(ContentBlockViewModel(content))
+        }
+        date = if(navType == "id"){ content!!.updateDate }else { argumentValue?:"" }
+        WriteScreen(
+            date = date,
+            content = content,
+            writeViewModel = writeViewModel,
+            categoryViewModel = categoryViewModel,
+            contentBlockViewModel = contentBlockViewModel.value,
+            handleBackButtonClick = handleBackButtonClick
+        )
     }
 }
 

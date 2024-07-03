@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,15 +51,22 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ListViewScreen(
-    listViewViewModel : ListViewViewModel,
-    categoryViewModel :CategoryViewModel,
+    listViewViewModel: ListViewViewModel,
+    categoryViewModel: CategoryViewModel,
+    handleDiaryCardClick: (Long) -> Unit,
     handleBackButtonClick: () -> Unit
 ) {
+
+    val handleDeleteDiary = { id: Long ->
+
+    }
     var categorySpinnerExpanded by remember { mutableStateOf(false) }
     val allCategory = stringResource(id = R.string.category)
     var category by remember { mutableStateOf(allCategory) } // 카테고리 필터 선택값
     val result by listViewViewModel.listResult.collectAsState()
-    LaunchedEffect(category){
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(category) {
         CoroutineScope(Dispatchers.IO).launch {
             val categoryId = categoryViewModel.getCategoryId(category)
             listViewViewModel.refreshAction(categoryId)
@@ -80,7 +88,10 @@ fun ListViewScreen(
                 modifier = Modifier
                     .size(width = Dimens.dp30, height = Dimens.dp40)
                     .padding(Dimens.dp8)
-                    .clickable {
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
                         handleBackButtonClick()
                     },
                 painter = painterResource(id = R.drawable.ic_back_left),
@@ -96,8 +107,7 @@ fun ListViewScreen(
                         .border(Dimens.dp1, Grey100, RoundedCornerShape(Dimens.dp5))
                         .clickable {
                             categorySpinnerExpanded = !categorySpinnerExpanded
-                        }
-                    ,
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -132,7 +142,11 @@ fun ListViewScreen(
         }
 
         result?.forEach {
-            DiaryCardView(it)
+            DiaryCardView(
+                it,
+                handleCardClick = handleDiaryCardClick,
+                handleDelete = handleDeleteDiary
+            )
         }
     }
 }
