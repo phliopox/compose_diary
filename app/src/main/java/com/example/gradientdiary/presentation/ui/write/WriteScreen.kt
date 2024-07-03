@@ -162,8 +162,7 @@ fun WriteScreen(
             outputDateString,
             contentValue.value,
             contentBlockViewModel,
-            handleDeleteDiary,
-            handleSaveDiary
+            handleDeleteDiary
         )
         //삭제 아이콘 클릭시 여기까지 타고올라와서 handling
         // dialog 띄우고 재차 확인하는 과정
@@ -206,7 +205,6 @@ private fun WriteScreenContent(
     contents: List<ContentBlock<*>>,
     contentBlockViewModel: ContentBlockViewModel,
     handleDeleteDiary: () -> Unit,
-    handleSaveDiary : () ->Job
 ) {
     val hint = stringResource(R.string.title_hint)
     var diaryTitle by rememberSaveable { mutableStateOf(contentBlockViewModel.title) }
@@ -241,7 +239,6 @@ private fun WriteScreenContent(
         }
         ContentBlockScreen(
             handleDeleteDiary,
-            handleSaveDiary,
             contentBlockViewModel = contentBlockViewModel,
             contents = contents
         )

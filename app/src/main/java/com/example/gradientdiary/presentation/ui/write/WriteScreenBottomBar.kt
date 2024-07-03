@@ -51,7 +51,6 @@ import kotlinx.coroutines.Job
 fun WriteScreenBottomBar(
     handleAddImage: (Uri?) -> Unit,
     handleDeleteDiary: () -> Unit,
-    handleSaveDiary: () -> Job,
     handleTextAlignment: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
