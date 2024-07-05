@@ -8,6 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.TextStyle
 
+//https://techblog.lycorp.co.jp/ko/how-to-develop-font-customizing-function-in-android-app
 // Set of Material typography styles to start with
 private val regular = FontFamily(Font(R.font.restart, FontWeight.Normal))/*
 private val medium = FontFamily(Font(R.font.restart, FontWeight.Medium))

@@ -5,5 +5,8 @@ enum class DiaryAppScreen {
     Write,
     Search,
     ListView,
-    Setting
+    Setting,
+    TextStyleSetting,
+    LanguageSetting,
+    AlertSetting
 }

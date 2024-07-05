@@ -18,6 +18,8 @@ import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
 import com.example.gradientdiary.presentation.ui.listview.ListViewScreen
 import com.example.gradientdiary.presentation.ui.search.SearchScreen
+import com.example.gradientdiary.presentation.ui.setting.SettingScreen
+import com.example.gradientdiary.presentation.ui.setting.TextStyleSettingScreen
 import com.example.gradientdiary.presentation.ui.write.WriteScreen
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
@@ -128,6 +130,35 @@ fun DiaryAppNavHost(
                 writeViewModel = writeViewModel,
                 categoryViewModel = categoryViewModel,
                 handleBackButtonClick = { handleBackButtonClick() }
+            )
+        }
+
+
+
+        val handleAlertSetting = {
+
+        }
+        val handleTextStyleSetting = {
+            navController.navigate(DiaryAppScreen.TextStyleSetting.name) {
+            }
+        }
+        val handleLanguageSetting ={
+
+        }
+        val handleReviewIntent ={
+
+        }
+        composable(DiaryAppScreen.Setting.name) {
+            SettingScreen(
+                handleAlertSetting,
+                handleTextStyleSetting,
+                handleLanguageSetting,
+                handleReviewIntent
+            )
+        }
+        composable(DiaryAppScreen.TextStyleSetting.name){
+            TextStyleSettingScreen(
+
             )
         }
     }
