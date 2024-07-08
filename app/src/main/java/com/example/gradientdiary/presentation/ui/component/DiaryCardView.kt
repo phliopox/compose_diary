@@ -66,7 +66,7 @@ fun DiaryCardView(
     Column(
         Modifier
             .padding(horizontal = Dimens.dp10, vertical = Dimens.dp16) //외부패딩
-            .shadow(elevation = 2.dp, shape = cornerShape)
+            .shadow(elevation = 1.dp, shape = cornerShape)
             .background(color = Color.White, shape = cornerShape)
             .padding(Dimens.dp10) //내부 패딩
             .combinedClickable(

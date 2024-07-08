@@ -1,12 +1,12 @@
 package com.example.gradientdiary.data.storage
 
 import android.content.Context
-import androidx.compose.ui.text.style.TextAlign
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getYear
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private const val PREF_CURRENT_YEAR = "currentYear"
         const val default = "일기"
         private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
-
+        const val PREF_TEXT_STYLE ="font_prefs"
     }
 
     /*  private val category = context.getSharedPreferences(
@@ -44,6 +43,9 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         PREF_CURRENT_YEAR, Context.MODE_PRIVATE
     )
 
+    private val currentFont = context.getSharedPreferences(
+        PREF_TEXT_STYLE , Context.MODE_PRIVATE
+    )
     val category: Flow<String>
         get() = context.userDataStore.data.map { preferences ->
             preferences[PREF_CATEGORY]?:default
@@ -114,11 +116,31 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         currentYear.edit().clear().apply()
     }
 
+
+    fun saveFontSelection(font: String) {
+        currentFont.edit().putString(PREF_TEXT_STYLE, font).apply()
+    }
+
+    fun getSavedFontSelection(): String {
+        return currentFont.getString(PREF_TEXT_STYLE , "restart") ?: "restart"
+    }
     suspend fun clearAll() {
         context.userDataStore.edit { pref ->
             pref.clear()
         }
         /* category.edit().clear().apply()
          currentMonth.edit().clear().apply()*/
+    }
+}
+
+fun getFontResource(fontName: String): Int {
+    return when (fontName) {
+        "restart" -> R.font.restart
+        "saeenum" -> R.font.saeeum
+        "ongeul_julison" -> R.font.ongeul_julison
+        "ongeul_iplyuttung" -> R.font.ongeul_iplyuttung
+        "leeseoyun" -> R.font.leeseoyun
+        "adultkid" -> R.font.adultkid
+        else -> R.font.kopub_worlddotum_medium
     }
 }

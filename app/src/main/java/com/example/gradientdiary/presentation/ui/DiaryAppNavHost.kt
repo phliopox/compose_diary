@@ -25,6 +25,7 @@ import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
+import com.example.gradientdiary.presentation.viewModel.SettingViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -39,6 +40,7 @@ fun DiaryAppNavHost(
     categoryViewModel: CategoryViewModel,
     searchViewModel: SearchViewModel,
     listViewViewModel: ListViewViewModel,
+    settingViewModel : SettingViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -158,7 +160,7 @@ fun DiaryAppNavHost(
         }
         composable(DiaryAppScreen.TextStyleSetting.name){
             TextStyleSettingScreen(
-
+                settingViewModel
             )
         }
     }

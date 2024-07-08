@@ -11,50 +11,69 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
+import com.example.gradientdiary.data.storage.getFontResource
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
+import com.example.gradientdiary.presentation.theme.getTypography
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
+import com.example.gradientdiary.presentation.viewModel.SettingViewModel
 import com.example.gradientdiary.presentation.viewModel.WriteViewModel
+
 val localSnackBarManager = compositionLocalOf<SnackBarManager> {
     error("No SnackbarManager provided")
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DiaryApp(
     writeViewModel: WriteViewModel = hiltViewModel(),
     categoryViewModel: CategoryViewModel = hiltViewModel(),
-    searchViewModel : SearchViewModel = hiltViewModel(),
-    listViewViewModel: ListViewViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    listViewViewModel: ListViewViewModel = hiltViewModel(),
+    settingViewModel: SettingViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-
     val snackBarManager = remember { SnackBarManager() }
 
-    GradientDiaryTheme {
+    //font
+    val context = LocalContext.current
+    val selectedFont by settingViewModel.selectedFont.collectAsState()
+    val storage = SharedPrefsStorageProvider(context)
+    val typography = getTypography(FontFamily(Font(getFontResource(selectedFont))))
+
+    GradientDiaryTheme(typography = typography) {
         CompositionLocalProvider(localSnackBarManager provides snackBarManager) {
 
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(WindowInsets.systemBars.asPaddingValues()),
-            topBar = {
-                SnackbarHost(hostState = snackBarManager.snackbarHostState)
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(WindowInsets.systemBars.asPaddingValues()),
+                topBar = {
+                    SnackbarHost(hostState = snackBarManager.snackbarHostState)
+                }
+            ) {
+                DiaryAppNavHost(
+                    writeViewModel = writeViewModel,
+                    categoryViewModel = categoryViewModel,
+                    searchViewModel = searchViewModel,
+                    listViewViewModel = listViewViewModel,
+                    settingViewModel = settingViewModel,
+                    navController = navController
+                )
             }
-        ) {
-            DiaryAppNavHost(
-                writeViewModel = writeViewModel,
-                categoryViewModel = categoryViewModel,
-                searchViewModel = searchViewModel,
-                listViewViewModel = listViewViewModel,
-                navController = navController
-            )
         }
-    }}
+    }
 }

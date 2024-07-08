@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -27,13 +28,13 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Color.Black,
-    onPrimary = Color.White,
+    onPrimary = backgroundDefault,
     secondary = DarkGrey300,
-    onSecondary = Color.White,
-    background = Color.White,
+    onSecondary = backgroundDefault,
+    background = backgroundDefault,
     onBackground = Color.Black,
-    surface = Color.White,
-    onSurface = Color.White,
+    surface = backgroundDefault,
+    onSurface = backgroundDefault,
 )
 /*
 https://developer.android.com/codelabs/basic-android-kotlin-compose-material-theming?hl=ko&continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-3-pathway-3%3Fhl%3Dko%26_gl%3D1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-material-theming&_gl=1*cmspl9*_up*MQ..*_ga*MTkwMTI5Mjg0NS4xNzEyNTM5NDk0*_ga_6HH9YJMN9M*MTcxMjUzOTQ5My4xLjAuMTcxMjUzOTQ5My4wLjAuMA..#3
@@ -41,7 +42,7 @@ https://developer.android.com/codelabs/basic-android-kotlin-compose-material-the
 @Composable
 fun GradientDiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    typography: Typography = Typography,
+    typography: Typography,
     shapes: Shapes = Shapes,
     dynamicColor: Boolean = true,     // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
