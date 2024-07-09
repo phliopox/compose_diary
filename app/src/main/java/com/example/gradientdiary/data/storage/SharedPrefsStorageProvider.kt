@@ -29,7 +29,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private const val PREF_CURRENT_YEAR = "currentYear"
         const val default = "일기"
         private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
-        const val PREF_TEXT_STYLE ="font_prefs"
+        private val PREF_TEXT_STYLE = stringPreferencesKey("font_prefs")
     }
 
     /*  private val category = context.getSharedPreferences(
@@ -43,9 +43,6 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         PREF_CURRENT_YEAR, Context.MODE_PRIVATE
     )
 
-    private val currentFont = context.getSharedPreferences(
-        PREF_TEXT_STYLE , Context.MODE_PRIVATE
-    )
     val category: Flow<String>
         get() = context.userDataStore.data.map { preferences ->
             preferences[PREF_CATEGORY]?:default
@@ -55,6 +52,11 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
             preferences[PREF_TEXT_ALIGN]?:"start"
         }
 
+
+    val currentFont : Flow<String>
+        get() = context.userDataStore.data.map { preferences ->
+            preferences[PREF_TEXT_STYLE] ?:"restart"
+        }
     suspend fun saveTextAlignStatus(value: String) {
         context.userDataStore.edit { pref -> pref[PREF_TEXT_ALIGN] = value }
     }
@@ -73,7 +75,6 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
 
     suspend fun saveSelectedCategory(value: String) {
         context.userDataStore.edit { pref -> pref[PREF_CATEGORY] = value }
-        //category.edit().putString(PREF_CATEGORY, value).commit()
     }
 
 
@@ -84,7 +85,6 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
             }
         val result = category.await()
         return result ?: default
-        //category.getString(PREF_CATEGORY, default) ?: default
     }
 
 
@@ -92,7 +92,6 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         context.userDataStore.edit { pref ->
             pref.remove(PREF_CATEGORY)
         }
-        //category.edit().remove(PREF_CATEGORY).apply()
     }
 
     fun getCurrentMonth(): Int {
@@ -116,20 +115,24 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         currentYear.edit().clear().apply()
     }
 
-
-    fun saveFontSelection(font: String) {
-        currentFont.edit().putString(PREF_TEXT_STYLE, font).apply()
+    suspend fun saveFontSelection(font: String) {
+        context.userDataStore.edit{pref -> pref[PREF_TEXT_STYLE] = font}
     }
 
-    fun getSavedFontSelection(): String {
-        return currentFont.getString(PREF_TEXT_STYLE , "restart") ?: "restart"
+
+    suspend fun getSavedFontSelection(): String {
+        val font: Deferred<String?> =
+            CoroutineScope(Dispatchers.IO).async {
+                currentFont.first()
+            }
+        val result = font.await()
+        return result ?: "restart"
     }
+
     suspend fun clearAll() {
         context.userDataStore.edit { pref ->
             pref.clear()
         }
-        /* category.edit().clear().apply()
-         currentMonth.edit().clear().apply()*/
     }
 }
 

@@ -18,21 +18,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val storage : SharedPrefsStorageProvider
+    private val storage: SharedPrefsStorageProvider
 ) : ViewModel() {
     private val _selectedFont = MutableStateFlow("restart")
     val selectedFont: StateFlow<String> = _selectedFont.asStateFlow()
 
-    private val _previewTextStyle = MutableStateFlow(TextStyle(fontFamily = FontFamily(Font(R.font.restart))))
+
+    private val _previewTextStyle =
+        MutableStateFlow(TextStyle(fontFamily = FontFamily(Font(R.font.restart))))
     val previewTextStyle: StateFlow<TextStyle> = _previewTextStyle.asStateFlow()
+
     init {
         loadSelectedFont()
     }
 
     fun updateFontSelection(font: String) {
-        _selectedFont.value = font
-        _previewTextStyle.value = TextStyle(fontFamily = FontFamily(Font(getFontResource(font))))
-        storage.saveFontSelection(font)
+        viewModelScope.launch {
+            _selectedFont.value = font
+            _previewTextStyle.value =
+                TextStyle(fontFamily = FontFamily(Font(getFontResource(font))))
+            storage.saveFontSelection(font)
+        }
     }
 
     fun applyFontSelection() {
@@ -45,7 +51,8 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             val font = storage.getSavedFontSelection()
             _selectedFont.value = font
-            _previewTextStyle.value = TextStyle(fontFamily = FontFamily(Font(getFontResource(font))))
+            _previewTextStyle.value =
+                TextStyle(fontFamily = FontFamily(Font(getFontResource(font))))
         }
     }
 }

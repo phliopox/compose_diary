@@ -72,6 +72,7 @@ fun DiaryAppNavHost(
         }
         val handleSettingClick = {
             //todo
+            navController.navigate(DiaryAppScreen.Setting.name)
         }
         val handleDiaryCardClick = { id: Long ->
             navController.navigate("${DiaryAppScreen.Write.name}/id/${id}") {

@@ -50,9 +50,10 @@ fun DiaryApp(
 
     //font
     val context = LocalContext.current
-    val selectedFont by settingViewModel.selectedFont.collectAsState()
+    //val selectedFont by settingViewModel.selectedFont.collectAsState()
     val storage = SharedPrefsStorageProvider(context)
-    val typography = getTypography(FontFamily(Font(getFontResource(selectedFont))))
+    val savedFont by storage.currentFont.collectAsState(initial = "restart")
+    val typography = getTypography(FontFamily(Font(getFontResource(savedFont))))
 
     GradientDiaryTheme(typography = typography) {
         CompositionLocalProvider(localSnackBarManager provides snackBarManager) {

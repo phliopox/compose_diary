@@ -1,5 +1,7 @@
 package com.example.gradientdiary.presentation.ui.setting
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,20 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.F
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -49,7 +43,8 @@ fun TextStyleSettingScreen(
 
 
     val previewTextStyle by settingViewModel.previewTextStyle.collectAsState()
-   // var selectedFont by remember { mutableStateOf("restart") }
+
+    val selectedFont by settingViewModel.selectedFont.collectAsState()
     LazyColumn {
         item {
             Column(
@@ -67,20 +62,25 @@ fun TextStyleSettingScreen(
                 Text("오늘도 다양한 기록을 카테고리로 분류해서 보관해요", style = previewTextStyle)
             }
         }
-        this@LazyColumn.fontSelectionColumn(onFontSelected = settingViewModel::updateFontSelection)
+        this@LazyColumn.fontSelectionColumn(selectedFont,onFontSelected = settingViewModel::updateFontSelection)
     }
 }
 
 
 
-fun LazyListScope.fontSelectionColumn(onFontSelected: (String) -> Unit) {
+fun LazyListScope.fontSelectionColumn(selectedFont: String, onFontSelected: (String) -> Unit) {
 
     items(fontNames) {
-        val fontResource = FontFamily(Font(fontResource = getFontResource(it)))
-        val isSelected = //it == selectedFont
+        val fontResource = FontFamily(Font(getFontResource(it)))
+        val isSelected = it == selectedFont
 
 
-        Row {
+        Row(modifier = Modifier.clickable(
+            MutableInteractionSource(),
+            null
+        ) {
+            onFontSelected(it)
+        }) {
             Text(getFontName(it),fontFamily = fontResource,
                 fontSize = 18.sp)
             if (isSelected) {

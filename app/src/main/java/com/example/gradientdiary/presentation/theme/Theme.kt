@@ -18,7 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.core.view.WindowCompat
+import com.example.gradientdiary.R
+import com.example.gradientdiary.data.storage.getFontResource
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -42,7 +46,7 @@ https://developer.android.com/codelabs/basic-android-kotlin-compose-material-the
 @Composable
 fun GradientDiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    typography: Typography,
+    typography: Typography ?= getTypography(FontFamily(Font(R.font.restart))),
     shapes: Shapes = Shapes,
     dynamicColor: Boolean = true,     // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
@@ -67,7 +71,7 @@ fun GradientDiaryTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = typography,
+        typography = typography!!,
         shapes = shapes,
         content = content
     )
