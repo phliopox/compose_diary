@@ -27,7 +27,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private val PREF_CATEGORY = stringPreferencesKey("category")
         private const val PREF_CURRENT_MONTH = "currentMonth"
         private const val PREF_CURRENT_YEAR = "currentYear"
-        const val default = "일기"
+        //const val default = "일기"
         private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
         private val PREF_TEXT_STYLE = stringPreferencesKey("font_prefs")
     }
@@ -45,7 +45,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
 
     val category: Flow<String>
         get() = context.userDataStore.data.map { preferences ->
-            preferences[PREF_CATEGORY]?:default
+            preferences[PREF_CATEGORY]?:""
         }
     val textAlign: Flow<String>
         get() = context.userDataStore.data.map { preferences ->
@@ -84,7 +84,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
                 category.first()
             }
         val result = category.await()
-        return result ?: default
+        return result ?: ""
     }
 
 

@@ -8,8 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.ui.localSnackBarManager
 import timber.log.Timber
+import java.text.DateFormatSymbols
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -67,6 +70,33 @@ fun PersistedPermissionsCheck(
             hasShownSnackbar = true
         }
     }
+}
+
+@Composable
+fun getLocalizedMonthName(month: Int): String {
+  //  val locale = Locale.getDefault()
+    return when (month) {
+        1 -> stringResource(id = R.string.january)
+        2 -> stringResource(id = R.string.february)
+        3 -> stringResource(id = R.string.march)
+        4 -> stringResource(id = R.string.april)
+        5 -> stringResource(id = R.string.may)
+        6 -> stringResource(id = R.string.june)
+        7 -> stringResource(id = R.string.july)
+        8 -> stringResource(id = R.string.august)
+        9 -> stringResource(id = R.string.september)
+        10 -> stringResource(id = R.string.october)
+        11 -> stringResource(id = R.string.november)
+        12 -> stringResource(id = R.string.december)
+        else -> throw IllegalArgumentException("Invalid month: $month")
+    }
+}
+
+fun getDayNames(locale: Locale): List<String> {
+    val dateFormatSymbols = DateFormatSymbols(locale)
+    val dayNames = dateFormatSymbols.shortWeekdays
+    // 요일 배열의 첫 번째 요소는 빈 문자열이므로 제외하고 반환
+    return dayNames.filter { it.isNotEmpty() }
 }
 /*fun getDaysInCurrentMonth() : Int{
     // 현재 월의 일 갯수 구하기

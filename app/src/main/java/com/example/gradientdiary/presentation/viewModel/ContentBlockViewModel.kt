@@ -12,7 +12,8 @@ import timber.log.Timber
 import kotlin.properties.Delegates
 
 class ContentBlockViewModel(
-    diary: DiaryEntity?
+    diary: DiaryEntity?,
+    titleHint : String
 ) : ViewModel() {
     private val _contentBlocksSource = MutableStateFlow<List<ContentBlock<*>>>(emptyList())
     val contentBlocks: StateFlow<List<ContentBlock<*>>> = _contentBlocksSource
@@ -21,7 +22,7 @@ class ContentBlockViewModel(
     private var toBeDeleteBlockList: MutableList<ContentBlock<*>> = mutableListOf()
     private var focusedIndex by Delegates.notNull<Int>()
     private val initialContentBlock = diary?.contents ?: emptyList()
-    var title = diary?.title ?: "제목"
+    var title = diary?.title ?: titleHint
 
     init {
         Timber.e("initialContentBlock : ${initialContentBlock.isEmpty()}")

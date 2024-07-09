@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">gradientDiary</string>
+    <string name="search_hint">Search your diary</string>
+    <string name="title_hint">title</string>
+    <string name="setting">setting</string> <!--설정하기-->
+    <string name="result_not_founded">No search results</string>
+    <string name="category">Catgory</string>
+    <string name="search">search</string>
+    <string name="list_view">list</string>
+    <string name="setting_name">setting</string> <!--설정-->
+    <string name="setting_language">Language</string>
+    <string name="setting_font">Font Styles</string>
+    <string name="setting_app_review">Rate on app</string>
+    <string name="preview_font_text">
+        A diary where you can categorize your entries,\n%s!\nChoose a font and preview your style ^^</string>
+    <string name="category_default">Diary</string>
+
+
+    <string name="font_restart">Nanum DaSiSiJagHae</string>
+    <string name="font_saeenum">GangwonEduSaeeum</string>
+    <string name="font_ongeul_julison">Ownglyph julison</string>
+    <string name="font_ongeul_iplyuttung">Ownglyph ryuttung</string>
+    <string name="font_leeseoyun">LeeSeoyun</string>
+    <string name="font_adultkid">AdultKid</string>
+    <string name="font_kopub">KoPubWorld Dotum</string>
+
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+</resources>

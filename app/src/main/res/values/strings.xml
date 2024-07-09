@@ -8,4 +8,32 @@
     <string name="search">검색</string>
     <string name="list_view">리스트</string>
     <string name="setting_name">설정</string>
+    <string name="setting_language">언어 설정</string>
+    <string name="setting_font">글꼴 설정</string>
+    <string name="setting_app_review">평가하기</string>
+    <string name="preview_font_text">
+        카테고리로 분류하여 기록할 수 있는 다이어리,\n%s 입니다 !\n글꼴을 선택하여 스타일을 미리 확인해보세요 ^^</string>
+    <string name="category_default">일기</string>
+
+
+    <string name="font_restart">나눔손글씨 다시 시작해</string>
+    <string name="font_saeenum">강원교육새움</string>
+    <string name="font_ongeul_julison">온글잎 주리손편지</string>
+    <string name="font_ongeul_iplyuttung">온글잎 류똥체</string>
+    <string name="font_leeseoyun">이서윤체</string>
+    <string name="font_adultkid">어른아이</string>
+    <string name="font_kopub">KoPubWorld 돋움체</string>
+
+    <string name="january">1월</string>
+    <string name="february">2월</string>
+    <string name="march">3월</string>
+    <string name="april">4월</string>
+    <string name="may">5월</string>
+    <string name="june">6월</string>
+    <string name="july">7월</string>
+    <string name="august">8월</string>
+    <string name="september">9월</string>
+    <string name="october">10월</string>
+    <string name="november">11월</string>
+    <string name="december">12월</string>
 </resources>

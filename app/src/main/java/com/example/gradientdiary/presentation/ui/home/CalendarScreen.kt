@@ -38,8 +38,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
+import com.example.gradientdiary.presentation.getDayNames
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getFirstDayOfWeek
+import com.example.gradientdiary.presentation.getLocalizedMonthName
 import com.example.gradientdiary.presentation.getMonth
 import com.example.gradientdiary.presentation.getNow
 import com.example.gradientdiary.presentation.theme.DefaultText
@@ -48,8 +50,7 @@ import com.example.gradientdiary.presentation.ui.component.CategorySpinner
 import com.example.gradientdiary.presentation.ui.component.DayBlock
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import java.time.format.DateTimeFormatter
-
-val dayName = listOf("일", "월", "화", "수", "목", "금", "토")
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -86,7 +87,7 @@ fun CalendarScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "${month}월  ",
+                    getLocalizedMonthName(month),
                     style = MaterialTheme.typography.displayMedium,
                     modifier = Modifier.padding(end = Dimens.dp10)
                 )
@@ -131,7 +132,9 @@ fun CalendarScreen(
                     .padding(top = Dimens.dp30),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                dayName.forEach {
+                val locale = Locale.getDefault()
+                val dayNames = getDayNames(locale)
+                dayNames.forEach {
                     Text(
                         text = it,
                         modifier = Modifier.width(dayNameWidth),

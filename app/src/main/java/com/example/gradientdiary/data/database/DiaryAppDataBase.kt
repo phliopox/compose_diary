@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.gradientdiary.R
 import com.example.gradientdiary.data.database.entity.CategoryEntity
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import kotlinx.coroutines.runBlocking
@@ -43,7 +44,7 @@ abstract class DiaryAppDataBase : RoomDatabase() {
                             Executors.newSingleThreadExecutor().execute {
                                 runBlocking {
                                     getInstance(context).categoryDao().insertCategoryEntity(
-                                        CategoryEntity(1, "일기")
+                                        CategoryEntity(1,  getLocalizedCategoryName(context))
                                     )
                                     Timber.e("SQL 호출됨")
                                 }
@@ -62,15 +63,17 @@ abstract class DiaryAppDataBase : RoomDatabase() {
                 instance
             }
         }
-
+        private fun getLocalizedCategoryName(context: Context): String {
+            return context.getString(R.string.category_default)
+        }
         private fun populateInitialData(context: Context) {
             Executors.newSingleThreadExecutor().execute {
                 runBlocking {
                     val categoryDao = getInstance(context).categoryDao()
-                    val categoryId = categoryDao.getCategoryIdByName("일기")
+                    val categoryId = categoryDao.getCategoryIdByName( getLocalizedCategoryName(context))
                     val categoryNotExists = categoryId == 0L // category 없음
                     if (categoryNotExists) {
-                        categoryDao.insertCategoryEntity(CategoryEntity(1, "일기"))
+                        categoryDao.insertCategoryEntity(CategoryEntity(1,  getLocalizedCategoryName(context)))
                         Timber.e("Initial data inserted")
                     }
                 }

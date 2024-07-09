@@ -208,7 +208,7 @@ fun PreviewWriteScreen2() {
             val sampleContents = emptyList<ContentBlock<*>>()
             ContentBlockScreen(
                 {},
-                ContentBlockViewModel(null),
+                ContentBlockViewModel(null,""),
                 sampleContents
             )
         }

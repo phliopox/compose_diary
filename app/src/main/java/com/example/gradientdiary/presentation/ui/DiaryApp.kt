@@ -50,7 +50,6 @@ fun DiaryApp(
 
     //font
     val context = LocalContext.current
-    //val selectedFont by settingViewModel.selectedFont.collectAsState()
     val storage = SharedPrefsStorageProvider(context)
     val savedFont by storage.currentFont.collectAsState(initial = "restart")
     val typography = getTypography(FontFamily(Font(getFontResource(savedFont))))

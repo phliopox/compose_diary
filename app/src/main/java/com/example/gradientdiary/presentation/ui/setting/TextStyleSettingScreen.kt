@@ -1,5 +1,6 @@
 package com.example.gradientdiary.presentation.ui.setting
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -55,6 +57,7 @@ fun TextStyleSettingScreen(
     val previewTextStyle by settingViewModel.previewTextStyle.collectAsState()
 
     val selectedFont by settingViewModel.selectedFont.collectAsState()
+    val context = LocalContext.current
     LazyColumn {
         item {
             Column(
@@ -67,13 +70,17 @@ fun TextStyleSettingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "카테고리로 분류하여 기록할 수 있는 다이어리,\n${stringResource(id = R.string.app_name)} 입니다 !\n글꼴을 선택하여 스타일을 미리 확인해보세요 ^^",
+                    stringResource(
+                        id = R.string.preview_font_text,
+                        stringResource(id = R.string.app_name)
+                    ),
                     style = previewTextStyle,
                     fontSize = 20.sp
                 )
             }
         }
         this@LazyColumn.fontSelectionColumn(
+            context,
             selectedFont,
             onFontSelected = settingViewModel::updateFontSelection
         )
@@ -81,9 +88,13 @@ fun TextStyleSettingScreen(
 }
 
 
-fun LazyListScope.fontSelectionColumn(selectedFont: String, onFontSelected: (String) -> Unit) {
+fun LazyListScope.fontSelectionColumn(
+    context: Context,
+    selectedFont: String,
+    onFontSelected: (String) -> Unit
+) {
 
-    item{
+    item {
         Spacer(modifier = Modifier.height(Dimens.dp20))
         Divider(
             color = Grey70,
@@ -110,7 +121,7 @@ fun LazyListScope.fontSelectionColumn(selectedFont: String, onFontSelected: (Str
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                getFontName(it), fontFamily = fontResource,
+                getFontName(context, it), fontFamily = fontResource,
                 fontSize = 18.sp
             )
             RadioButton(
@@ -129,14 +140,14 @@ fun LazyListScope.fontSelectionColumn(selectedFont: String, onFontSelected: (Str
     }
 }
 
-fun getFontName(str: String): String {
+fun getFontName(context: Context, str: String): String {
     return when (str) {
-        "restart" -> "나눔 손글씨 다시 시작해체"
-        "saeenum" -> "강원교육새움체"
-        "ongeul_julison" -> "온글잎 주리 손편지체"
-        "ongeul_iplyuttung" -> "온글잎 류뚱체"
-        "leeseoyun" -> "이서연체"
-        "adultkid" -> "어른아이체"
-        else -> "kopub world 돋움체"
+        "restart" -> context.getString(R.string.font_restart)
+        "saeenum" -> context.getString(R.string.font_saeenum)
+        "ongeul_julison" -> context.getString(R.string.font_ongeul_julison)
+        "ongeul_iplyuttung" -> context.getString(R.string.font_ongeul_iplyuttung)
+        "leeseoyun" -> context.getString(R.string.font_leeseoyun)
+        "adultkid" -> context.getString(R.string.font_adultkid)
+        else -> context.getString(R.string.font_kopub)
     }
 }

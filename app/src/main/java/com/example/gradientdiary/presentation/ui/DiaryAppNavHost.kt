@@ -7,11 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.gradientdiary.R
 import com.example.gradientdiary.data.database.entity.DiaryEntity
 import com.example.gradientdiary.presentation.ui.Key.DIARY_ARGS_KEY
 import com.example.gradientdiary.presentation.ui.component.LoadingScreen
@@ -206,8 +208,9 @@ fun HandleDiaryRoute(
         LoadingScreen()
     } else {
         Timber.e("navhost get content : ${content?.contents}")
+        val titleHint = stringResource(id = R.string.title_hint)
         val contentBlockViewModel = remember {
-            mutableStateOf(ContentBlockViewModel(content))
+            mutableStateOf(ContentBlockViewModel(content , titleHint))
         }
         date = if (navType == "id") {
             content!!.updateDate

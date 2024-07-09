@@ -16,13 +16,16 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val saveCategoryUseCase: SaveCategoryUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase,
     private val getCategoryIdUseCase: GetCategoryUseCase,
-    private val storage: SharedPrefsStorageProvider
+    private val storage: SharedPrefsStorageProvider,
+    @Named("defaultCategory") private val defaultCategory: String
+
 ) : ViewModel() {
 
     private var _savedCategory = MutableStateFlow<List<CategoryEntity>?>(emptyList())
@@ -31,7 +34,7 @@ class CategoryViewModel @Inject constructor(
     private val _allCategory = mutableStateListOf<CategoryEntity>()
     val allCategory: List<CategoryEntity> get() = _allCategory
 
-    var selectedCategory = MutableStateFlow("일기")
+    var selectedCategory = MutableStateFlow(defaultCategory)
 
     init {
         viewModelScope.launch {
@@ -45,7 +48,7 @@ class CategoryViewModel @Inject constructor(
                 selectedCategory.value = if (exist) {
                     storage.getCurrentCategory()
                 } else {
-                    val refreshValue = _savedCategory.value?.get(0)?.categoryName ?: "일기"
+                    val refreshValue = _savedCategory.value?.get(0)?.categoryName ?: defaultCategory
                     storage.saveSelectedCategory(refreshValue)
                     refreshValue
                 }
@@ -85,9 +88,9 @@ class CategoryViewModel @Inject constructor(
         //Timber.e("allCategory ${_allCategory.joinToString(separator = ", ") { it.toString() }}")
 
         val categoryName = if (!_savedCategory.value.isNullOrEmpty()) {
-            _savedCategory.value?.get(0)?.categoryName ?: "일기"
+            _savedCategory.value?.get(0)?.categoryName ?: defaultCategory
         } else {
-            "일기"
+            defaultCategory
         }
         selectedCategory.value = categoryName
     }
