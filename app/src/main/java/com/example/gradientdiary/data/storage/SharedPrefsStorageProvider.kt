@@ -29,7 +29,7 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private const val PREF_CURRENT_YEAR = "currentYear"
         private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
         private val PREF_TEXT_STYLE = stringPreferencesKey("font_prefs")
-
+        private val PREF_LANGUAGE = stringPreferencesKey("language")
     }
 
     /*  private val category = context.getSharedPreferences(
@@ -52,11 +52,16 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
             preferences[PREF_TEXT_ALIGN]?:"start"
         }
 
-
     val currentFont : Flow<String>
         get() = context.userDataStore.data.map { preferences ->
             preferences[PREF_TEXT_STYLE] ?:"restart"
         }
+
+    val language : Flow<String>
+        get() = context.userDataStore.data.map { preferences ->
+            preferences[PREF_LANGUAGE] ?:"ko"
+        }
+
     suspend fun saveTextAlignStatus(value: String) {
         context.userDataStore.edit { pref -> pref[PREF_TEXT_ALIGN] = value }
     }
@@ -119,7 +124,6 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         context.userDataStore.edit{pref -> pref[PREF_TEXT_STYLE] = font}
     }
 
-
     suspend fun getSavedFontSelection(): String {
         val font: Deferred<String?> =
             CoroutineScope(Dispatchers.IO).async {
@@ -127,6 +131,10 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
             }
         val result = font.await()
         return result ?: "restart"
+    }
+
+    suspend fun saveLanguageSetting(str :String){
+        context.userDataStore.edit { pref -> pref[PREF_LANGUAGE] = str }
     }
 
     suspend fun clearAll() {

@@ -10,6 +10,7 @@
     <string name="list_view">list</string>
     <string name="setting_name">setting</string> <!--설정-->
     <string name="setting_language">Language</string>
+    <string name="setting_alarm">Notification setting</string>
     <string name="setting_font">Font Styles</string>
     <string name="setting_app_review">Rate on app</string>
     <string name="preview_font_text">

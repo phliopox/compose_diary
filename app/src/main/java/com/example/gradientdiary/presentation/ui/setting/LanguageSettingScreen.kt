@@ -32,11 +32,12 @@ import timber.log.Timber
 
 @Composable
 fun LanguageSettingScreen(settingViewModel: SettingViewModel) {
-    val textStyle = MaterialTheme.typography.titleLarge.copy(color = DefaultText , fontSize = 25.sp)
-    var context = LocalContext.current
+    val textStyle = MaterialTheme.typography.titleLarge.copy(color = DefaultText, fontSize = 25.sp)
+    val context = LocalContext.current
     var currentLanguage by remember { mutableStateOf(getCurrentLanguage(context)) }
     var isKo by remember { mutableStateOf(currentLanguage == "ko") }
-    val handleClickRadioBtn = { it :String ->
+    val handleClickRadioBtn = { it: String ->
+        settingViewModel.updateLocaleLanguage(it)
         setLocale(context, it)
         currentLanguage = getCurrentLanguage(context)
         isKo = currentLanguage == "ko"

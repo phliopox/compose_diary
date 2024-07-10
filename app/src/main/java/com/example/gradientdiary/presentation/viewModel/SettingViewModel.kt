@@ -41,18 +41,19 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun applyFontSelection() {
-        viewModelScope.launch {
-            storage.saveFontSelection(_selectedFont.value)
-        }
-    }
-
     private fun loadSelectedFont() {
         viewModelScope.launch {
             val font = storage.getSavedFontSelection()
             _selectedFont.value = font
             _previewTextStyle.value =
                 TextStyle(fontFamily = FontFamily(Font(getFontResource(font))))
+        }
+    }
+
+    fun updateLocaleLanguage(string : String ){
+        viewModelScope.launch {
+            storage.saveLanguageSetting(string)
+
         }
     }
 }

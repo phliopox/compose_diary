@@ -48,13 +48,13 @@ fun DiaryApp(
     val navController = rememberNavController()
     val snackBarManager = remember { SnackBarManager() }
 
-    //font
+    /*//font
     val context = LocalContext.current
     val storage = SharedPrefsStorageProvider(context)
     val savedFont by storage.currentFont.collectAsState(initial = "restart")
-    val typography = getTypography(FontFamily(Font(getFontResource(savedFont))))
+    val typography = getTypography(FontFamily(Font(getFontResource(savedFont))))*/
 
-    GradientDiaryTheme(typography = typography) {
+   // GradientDiaryTheme(typography = typography) {
         CompositionLocalProvider(localSnackBarManager provides snackBarManager) {
 
             Scaffold(
@@ -75,5 +75,5 @@ fun DiaryApp(
                 )
             }
         }
-    }
+    //}
 }

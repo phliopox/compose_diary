@@ -10,6 +10,7 @@
     <string name="setting_name">설정</string>
     <string name="setting_language">언어 설정</string>
     <string name="setting_font">글꼴 설정</string>
+    <string name="setting_alarm">알림 설정</string>
     <string name="setting_app_review">평가하기</string>
     <string name="preview_font_text">
         카테고리로 분류하여 기록할 수 있는 다이어리,\n%s 입니다 !\n글꼴을 선택하여 스타일을 미리 확인해보세요 ^^</string>

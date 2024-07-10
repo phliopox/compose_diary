@@ -87,6 +87,35 @@ fun SettingScreen(
              )
 
          }*/
+
+        Row(
+            modifier = rowModifier
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ) {
+                    //handleTextStyleSetting()
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            //horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                modifier = iconModifier,
+                painter = painterResource(id = R.drawable.ic_alert),
+                contentDescription = "diary_notification"
+            )
+            Text(
+                stringResource(id = R.string.setting_alarm),
+                style = textStyle,
+                modifier = Modifier.padding(end = Dimens.dp5)
+            )
+        }
+        Divider(
+            color = Grey70,
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+        )
         Row(
             modifier = rowModifier
                 .clickable(
@@ -109,6 +138,7 @@ fun SettingScreen(
                 modifier = Modifier.padding(end = Dimens.dp5)
             )
         }
+
         Divider(
             color = Grey70,
             modifier = Modifier
