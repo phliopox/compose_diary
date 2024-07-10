@@ -20,6 +20,7 @@ import com.example.gradientdiary.presentation.ui.component.LoadingScreen
 import com.example.gradientdiary.presentation.ui.home.DiaryScreen
 import com.example.gradientdiary.presentation.ui.listview.ListViewScreen
 import com.example.gradientdiary.presentation.ui.search.SearchScreen
+import com.example.gradientdiary.presentation.ui.setting.LanguageSettingScreen
 import com.example.gradientdiary.presentation.ui.setting.SettingScreen
 import com.example.gradientdiary.presentation.ui.setting.TextStyleSettingScreen
 import com.example.gradientdiary.presentation.ui.write.WriteScreen
@@ -34,6 +35,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.Language
 import timber.log.Timber
 
 @Composable
@@ -148,7 +150,7 @@ fun DiaryAppNavHost(
             }
         }
         val handleLanguageSetting ={
-
+            navController.navigate(DiaryAppScreen.LanguageSetting.name)
         }
         val handleReviewIntent ={
 
@@ -163,6 +165,11 @@ fun DiaryAppNavHost(
         }
         composable(DiaryAppScreen.TextStyleSetting.name){
             TextStyleSettingScreen(
+                settingViewModel
+            )
+        }
+        composable(DiaryAppScreen.LanguageSetting.name){
+            LanguageSettingScreen(
                 settingViewModel
             )
         }

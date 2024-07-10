@@ -27,9 +27,9 @@ class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private
         private val PREF_CATEGORY = stringPreferencesKey("category")
         private const val PREF_CURRENT_MONTH = "currentMonth"
         private const val PREF_CURRENT_YEAR = "currentYear"
-        //const val default = "일기"
         private val PREF_TEXT_ALIGN = stringPreferencesKey("textAlign")
         private val PREF_TEXT_STYLE = stringPreferencesKey("font_prefs")
+
     }
 
     /*  private val category = context.getSharedPreferences(

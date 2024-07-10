@@ -36,4 +36,8 @@
     <string name="october">10월</string>
     <string name="november">11월</string>
     <string name="december">12월</string>
+
+    <string name="language_en">영어</string>
+    <string name="language_ko">한국어</string>
+
 </resources>

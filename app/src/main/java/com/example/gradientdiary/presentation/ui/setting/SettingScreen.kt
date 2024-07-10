@@ -83,7 +83,7 @@ fun SettingScreen(
                     interactionSource = interactionSource,
                     indication = null,
                 ) {
-                    handleReviewIntent()
+                    handleLanguageSetting()
                 },
             verticalAlignment = Alignment.CenterVertically,
             //horizontalArrangement = Arrangement.SpaceBetween

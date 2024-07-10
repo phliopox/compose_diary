@@ -1,7 +1,11 @@
 package com.example.gradientdiary.presentation
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.os.LocaleListCompat
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.ui.localSnackBarManager
 import timber.log.Timber
@@ -97,6 +102,19 @@ fun getDayNames(locale: Locale): List<String> {
     val dayNames = dateFormatSymbols.shortWeekdays
     // 요일 배열의 첫 번째 요소는 빈 문자열이므로 제외하고 반환
     return dayNames.filter { it.isNotEmpty() }
+}
+
+fun setLocale(context: Context, language: String) {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+    val config = Configuration()
+    config.setLocale(locale)
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+}
+
+fun getCurrentLanguage(context: Context): String {
+    val locale = context.resources.configuration.locales[0]
+    return locale.language
 }
 /*fun getDaysInCurrentMonth() : Int{
     // 현재 월의 일 갯수 구하기
