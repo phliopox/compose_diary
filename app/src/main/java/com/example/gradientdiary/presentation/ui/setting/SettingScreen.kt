@@ -4,9 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,10 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
+import com.example.gradientdiary.presentation.theme.Grey70
 
 /*
 * 설정 메뉴
@@ -40,12 +45,18 @@ fun SettingScreen(
     handleLanguageSetting: () -> Unit,
     handleReviewIntent: () -> Unit
 ) {
-    val textStyle = MaterialTheme.typography.titleLarge.copy(color = DefaultText)
+    val textStyle = MaterialTheme.typography.titleLarge.copy(color = DefaultText, fontSize = 25.sp)
+    val rowModifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = Dimens.dp8)
+
     val interactionSource = remember { MutableInteractionSource() }
     val iconModifier = Modifier
-        .size(32.dp)
-        .padding(horizontal = 8.dp, vertical = 8.dp)
+        .size(Dimens.dp40)
+        .padding(Dimens.dp8)
+        .padding(end = Dimens.dp5)
 
+    Spacer(modifier = Modifier.height(Dimens.dp30))
     Column(
         Modifier
             .fillMaxWidth()
@@ -77,8 +88,7 @@ fun SettingScreen(
 
          }*/
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = rowModifier
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
@@ -88,21 +98,25 @@ fun SettingScreen(
             verticalAlignment = Alignment.CenterVertically,
             //horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Icon(
+                modifier = iconModifier,
+                painter = painterResource(id = R.drawable.ic_language),
+                contentDescription = "language"
+            )
             Text(
                 stringResource(id = R.string.setting_language),
                 style = textStyle,
                 modifier = Modifier.padding(end = Dimens.dp5)
             )
-
-            Icon(
-                modifier = iconModifier,
-                painter = painterResource(id = R.drawable.ic_thumb_up),
-                contentDescription = "text_style"
-            )
         }
-        Row(
+        Divider(
+            color = Grey70,
             modifier = Modifier
+                .height(1.dp)
                 .fillMaxWidth()
+        )
+        Row(
+            modifier = rowModifier
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
@@ -112,21 +126,25 @@ fun SettingScreen(
             verticalAlignment = Alignment.CenterVertically,
             //horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                stringResource(id = R.string.setting_font),
-                style = textStyle,
-                modifier = Modifier.padding(end = Dimens.dp5)
-            )
-
             Icon(
                 modifier = iconModifier,
                 painter = painterResource(id = R.drawable.ic_text),
                 contentDescription = "text_style"
             )
+            Text(
+                stringResource(id = R.string.setting_font),
+                style = textStyle,
+                modifier = Modifier.padding(end = Dimens.dp5)
+            )
         }
-        Row(
+        Divider(
+            color = Grey70,
             modifier = Modifier
+                .height(1.dp)
                 .fillMaxWidth()
+        )
+        Row(
+            modifier = rowModifier
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
@@ -136,18 +154,23 @@ fun SettingScreen(
             verticalAlignment = Alignment.CenterVertically,
             //horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                stringResource(id = R.string.setting_app_review),
-                style = textStyle,
-                modifier = Modifier.padding(end = Dimens.dp5)
-            )
-
             Icon(
                 modifier = iconModifier,
                 painter = painterResource(id = R.drawable.ic_thumb_up),
                 contentDescription = "text_style"
             )
+            Text(
+                stringResource(id = R.string.setting_app_review),
+                style = textStyle,
+                modifier = Modifier.padding(end = Dimens.dp5)
+            )
         }
+        Divider(
+            color = Grey70,
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+        )
 
     }
 }

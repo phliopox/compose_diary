@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -24,12 +25,14 @@ import androidx.compose.ui.unit.sp
 import com.example.gradientdiary.R
 import com.example.gradientdiary.presentation.getCurrentLanguage
 import com.example.gradientdiary.presentation.setLocale
+import com.example.gradientdiary.presentation.theme.DefaultText
 import com.example.gradientdiary.presentation.theme.Dimens
 import com.example.gradientdiary.presentation.viewModel.SettingViewModel
 import timber.log.Timber
 
 @Composable
 fun LanguageSettingScreen(settingViewModel: SettingViewModel) {
+    val textStyle = MaterialTheme.typography.titleLarge.copy(color = DefaultText , fontSize = 25.sp)
     var context = LocalContext.current
     var currentLanguage by remember { mutableStateOf(getCurrentLanguage(context)) }
     var isKo by remember { mutableStateOf(currentLanguage == "ko") }
@@ -59,7 +62,7 @@ fun LanguageSettingScreen(settingViewModel: SettingViewModel) {
         ) {
             Text(
                 stringResource(id = R.string.language_ko),
-                fontSize = 18.sp
+                style = textStyle,
             )
             RadioButton(
                 selected = isKo,
@@ -82,7 +85,7 @@ fun LanguageSettingScreen(settingViewModel: SettingViewModel) {
         ) {
             Text(
                 stringResource(id = R.string.language_en),
-                fontSize = 18.sp
+                style = textStyle,
             )
             RadioButton(
                 selected = !isKo,

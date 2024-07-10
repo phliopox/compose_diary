@@ -122,7 +122,7 @@ fun LazyListScope.fontSelectionColumn(
         ) {
             Text(
                 getFontName(context, it), fontFamily = fontResource,
-                fontSize = 18.sp
+                fontSize = 20.sp
             )
             RadioButton(
                 selected = isSelected,
