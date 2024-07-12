@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gradientdiary.data.database.entity.CategoryEntity
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
+import com.example.gradientdiary.data.storage.UserDataStoreProvider
 import com.example.gradientdiary.domain.DeleteCategoryUseCase
 import com.example.gradientdiary.domain.GetCategoryUseCase
 import com.example.gradientdiary.domain.SaveCategoryUseCase
@@ -23,7 +23,7 @@ class CategoryViewModel @Inject constructor(
     private val saveCategoryUseCase: SaveCategoryUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase,
     private val getCategoryIdUseCase: GetCategoryUseCase,
-    private val storage: SharedPrefsStorageProvider,
+    private val storage: UserDataStoreProvider,
     @Named("defaultCategory") private val defaultCategory: String
 
 ) : ViewModel() {

@@ -13,12 +13,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -34,13 +32,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
+import com.example.gradientdiary.data.storage.UserDataStoreProvider
 import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
 import com.example.gradientdiary.presentation.ui.component.ContentBlock
 import com.example.gradientdiary.presentation.viewModel.ContentBlockViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -51,7 +48,7 @@ fun ColumnScope.ContentBlockScreen(
     contents: List<ContentBlock<*>>,
 ) {
     val context = LocalContext.current
-    val pref = SharedPrefsStorageProvider(context)
+    val pref = UserDataStoreProvider(context)
     val textAlignStatus by pref.textAlign.collectAsState(initial = "start")
     var textAlign by remember { mutableStateOf(statusToAlign(textAlignStatus)) }
 

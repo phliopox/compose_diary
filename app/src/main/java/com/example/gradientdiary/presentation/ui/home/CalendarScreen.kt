@@ -37,7 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.gradientdiary.R
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
+import com.example.gradientdiary.data.storage.UserDataStoreProvider
 import com.example.gradientdiary.presentation.getDayNames
 import com.example.gradientdiary.presentation.getDaysInMonth
 import com.example.gradientdiary.presentation.getFirstDayOfWeek
@@ -65,7 +65,7 @@ fun CalendarScreen(
     val dayNameWidth = availableWidth / 7
 
     val context = LocalContext.current
-    val pref = SharedPrefsStorageProvider(context)
+    val pref = UserDataStoreProvider(context)
     val category by categoryViewModel.selectedCategory.collectAsState() // 현재 선택된 category , 스토리지에 없을시 "일기" 로 반환된다.
     val currentMonth = pref.getCurrentMonth()
     val currentYear = pref.getCurrentYear()

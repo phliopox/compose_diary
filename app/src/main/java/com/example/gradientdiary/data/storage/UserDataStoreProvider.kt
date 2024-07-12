@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "my_data_store")
 
-class SharedPrefsStorageProvider @Inject constructor(@ApplicationContext private val context: Context) {
+class UserDataStoreProvider @Inject constructor(@ApplicationContext private val context: Context) {
 
     companion object {
         private val PREF_CATEGORY = stringPreferencesKey("category")

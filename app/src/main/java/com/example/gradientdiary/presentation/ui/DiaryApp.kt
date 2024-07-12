@@ -11,20 +11,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.gradientdiary.data.storage.SharedPrefsStorageProvider
-import com.example.gradientdiary.data.storage.getFontResource
-import com.example.gradientdiary.presentation.theme.GradientDiaryTheme
-import com.example.gradientdiary.presentation.theme.getTypography
 import com.example.gradientdiary.presentation.viewModel.CategoryViewModel
 import com.example.gradientdiary.presentation.viewModel.ListViewViewModel
 import com.example.gradientdiary.presentation.viewModel.SearchViewModel
@@ -48,32 +39,24 @@ fun DiaryApp(
     val navController = rememberNavController()
     val snackBarManager = remember { SnackBarManager() }
 
-    /*//font
-    val context = LocalContext.current
-    val storage = SharedPrefsStorageProvider(context)
-    val savedFont by storage.currentFont.collectAsState(initial = "restart")
-    val typography = getTypography(FontFamily(Font(getFontResource(savedFont))))*/
+    CompositionLocalProvider(localSnackBarManager provides snackBarManager) {
 
-   // GradientDiaryTheme(typography = typography) {
-        CompositionLocalProvider(localSnackBarManager provides snackBarManager) {
-
-            Scaffold(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(WindowInsets.systemBars.asPaddingValues()),
-                topBar = {
-                    SnackbarHost(hostState = snackBarManager.snackbarHostState)
-                }
-            ) {
-                DiaryAppNavHost(
-                    writeViewModel = writeViewModel,
-                    categoryViewModel = categoryViewModel,
-                    searchViewModel = searchViewModel,
-                    listViewViewModel = listViewViewModel,
-                    settingViewModel = settingViewModel,
-                    navController = navController
-                )
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(WindowInsets.systemBars.asPaddingValues()),
+            topBar = {
+                SnackbarHost(hostState = snackBarManager.snackbarHostState)
             }
+        ) {
+            DiaryAppNavHost(
+                writeViewModel = writeViewModel,
+                categoryViewModel = categoryViewModel,
+                searchViewModel = searchViewModel,
+                listViewViewModel = listViewViewModel,
+                settingViewModel = settingViewModel,
+                navController = navController
+            )
         }
-    //}
+    }
 }
